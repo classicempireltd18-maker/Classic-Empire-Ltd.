@@ -1,0 +1,150 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="theme-color" content="#080808">
+  <title>Classic Empire Ltd.</title>
+  <style>
+    :root {
+      --gold: #ffd700;
+      --bg: #080808;
+      --panel: #151515;
+      --text: #f5f5f5;
+      --muted: #b9b9b9;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      font-family: Arial, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+    }
+
+    header {
+      padding: 20px;
+      text-align: center;
+      border-bottom: 1px solid #413800;
+    }
+
+    .logo {
+      width: 64px;
+      height: 64px;
+      margin: auto;
+      display: grid;
+      place-items: center;
+      border: 2px solid var(--gold);
+      border-radius: 50%;
+      color: var(--gold);
+      font-size: 25px;
+      font-weight: bold;
+    }
+
+    h1 { color: var(--gold); font-size: 25px; }
+    nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
+    nav a { color: var(--gold); padding: 8px; text-decoration: none; }
+
+    main { width: min(900px, 92%); margin: 28px auto; }
+    .hero, .panel {
+      background: var(--panel);
+      border: 1px solid #393000;
+      border-radius: 14px;
+      padding: 22px;
+      margin-bottom: 18px;
+    }
+
+    .hero { text-align: center; padding: 42px 20px; }
+    .hero h2 { color: var(--gold); font-size: 30px; }
+    .muted { color: var(--muted); line-height: 1.7; }
+
+    .button {
+      display: inline-block;
+      background: var(--gold);
+      color: #080808;
+      padding: 12px 18px;
+      margin-top: 10px;
+      border-radius: 7px;
+      text-decoration: none;
+      font-weight: bold;
+    }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 24px 12px;
+      border-top: 1px solid #333;
+      font-size: 13px;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <div class="logo" aria-label="Classic Empire logo">CE</div>
+    <h1>CLASSIC EMPIRE LTD.</h1>
+    <nav aria-label="Main navigation">
+      <a href="#home">Home</a>
+      <a href="#about">About</a>
+      <a href="#updates">Updates</a>
+      <a href="#cards">Cards</a>
+      <a href="#contact">Contact</a>
+    </nav>
+  </header>
+
+  <main>
+    <section class="hero" id="home">
+      <h2>Welcome to Classic Empire</h2>
+      <p class="muted">
+        One platform for members, teamwork, records and internal services.
+      </p>
+      <a class="button" href="#about">Explore Website</a>
+    </section>
+
+    <section class="panel" id="about">
+      <h2>About Us</h2>
+      <p class="muted">
+        Classic Empire Ltd. is building an organized internal platform
+        for membership, work reporting and team coordination.
+      </p>
+    </section>
+
+    <section class="panel" id="updates">
+      <h2>Empire Updates</h2>
+      <p class="muted">
+        Updates and notices will appear here after the notice system
+        is connected.
+      </p>
+    </section>
+
+    <section class="panel" id="cards">
+      <h2>Empire Cards</h2>
+      <p class="muted">
+        Silver, Gold and Black Card information will be displayed here.
+        Benefits and internal game-currency rules will be configurable.
+      </p>
+    </section>
+
+    <section class="panel" id="contact">
+      <h2>Contact & Head Office</h2>
+      <p class="muted">
+        Head Office: Chakla Ghat, Kishanganj, Bihar, India
+      </p>
+      <p class="muted">
+        Official contact details will be added after confirmation.
+      </p>
+    </section>
+  </main>
+
+  <footer>
+    © <span id="year"></span> Classic Empire Ltd.
+    <br>Internal organization platform.
+  </footer>
+
+  <script>
+    document.getElementById("year").textContent =
+      new Date().getFullYear();
+  </script>
+</body>
+</html>
