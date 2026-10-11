@@ -1,0 +1,130 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>President Admin Panel | Classic Empire Ltd.</title>
+<style>
+:root{--gold:#ffd700;--bg:#080808;--panel:#151515;--muted:#bbb;--line:#514600}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
+header{padding:18px 14px;text-align:center;border-bottom:1px solid var(--line)}
+.logo{margin:auto;border:2px solid var(--gold);border-radius:50%;width:54px;height:54px;display:grid;place-items:center;color:var(--gold);font-size:22px;font-weight:bold}
+h1,h2,h3{color:var(--gold)}h1{font-size:22px}
+main{width:min(1050px,94%);margin:22px auto}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px;margin-bottom:16px}
+.muted{color:var(--muted);line-height:1.6}
+button,.link{background:var(--gold);color:#080808;border:0;border-radius:7px;padding:11px 15px;font-weight:bold;cursor:pointer;display:inline-block;margin:4px 3px;text-decoration:none}
+button:disabled{opacity:.55;cursor:wait}
+input{width:100%;padding:12px;margin:7px 0 13px;background:#080808;color:white;border:1px solid #665800;border-radius:7px}
+label{color:#ddd;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+.tile{border:1px solid #514600;border-radius:10px;padding:15px;background:#101010}
+.hidden{display:none!important}
+.notice{padding:12px;background:#24200d;border-radius:8px;color:#ffe66a;overflow-wrap:anywhere;line-height:1.5}
+footer{text-align:center;padding:20px;color:#999;border-top:1px solid #333;font-size:13px}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">CE</div>
+  <h1>CLASSIC EMPIRE LTD.</h1>
+  <p class="muted">President Admin Panel</p>
+</header>
+<main>
+  <section class="panel" id="checking">
+    <h2>Checking secure session…</h2>
+    <p class="muted">This page checks your Supabase login and active President profile before showing the panel.</p>
+  </section>
+
+  <section class="panel hidden" id="denied">
+    <h2>Access not granted</h2>
+    <p id="deniedMessage" class="notice">Please log in with an active President account.</p>
+    <a class="link" href="./index.html">Return to website</a>
+  </section>
+
+  <section class="hidden" id="admin">
+    <section class="panel">
+      <h2>Welcome, President</h2>
+      <p id="presidentDetails" class="muted"></p>
+      <p class="notice">Secure starter panel: the President session and profile were verified. Module actions are not enabled until their database policies and server-side operations are tested.</p>
+      <button id="refreshButton" onclick="checkPresident()">Refresh session</button>
+      <button id="logoutButton" onclick="logout()">Logout</button>
+    </section>
+
+    <section class="panel">
+      <h2>Administration Modules</h2>
+      <div class="grid">
+        <div class="tile"><h3>Member Management</h3><p class="muted">Review member profiles and account status. Database-backed approval actions are not enabled yet.</p><span class="muted">Next module to build</span></div>
+        <div class="tile"><h3>Salary Management</h3><p class="muted">Weekly salary settings and payment records.</p><span class="muted">Not connected yet</span></div>
+        <div class="tile"><h3>Wallet & Transfers</h3><p class="muted">Internal CD/INR ledger and transfer history.</p><span class="muted">Not connected yet</span></div>
+        <div class="tile"><h3>Expenses & Purchases</h3><p class="muted">Expense records and President Purchase category.</p><span class="muted">Not connected yet</span></div>
+        <div class="tile"><h3>Cards & Settings</h3><p class="muted">Card prices, discount rules and editable system settings.</p><span class="muted">Not connected yet</span></div>
+        <div class="tile"><h3>Notices & Attendance</h3><p class="muted">Official notices and member attendance records.</p><span class="muted">Not connected yet</span></div>
+      </div>
+    </section>
+  </section>
+</main>
+<footer>© <span id="year"></span> Classic Empire Ltd. — Admin access is subject to Supabase database policies.</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script>
+document.getElementById("year").textContent = new Date().getFullYear();
+
+/* Only public browser key belongs here. Never add a service-role/secret key. */
+const SUPABASE_URL = "https://wcyozectzscqwvtzetkc.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+function show(id){document.getElementById(id).classList.remove("hidden")}
+function hide(id){document.getElementById(id).classList.add("hidden")}
+
+async function checkPresident(){
+  const refresh = document.getElementById("refreshButton");
+  if(refresh){refresh.disabled=true;refresh.textContent="Checking..."}
+  hide("admin");hide("denied");show("checking");
+  document.querySelector("#checking h2").textContent="Checking secure session…";
+  try{
+    const {data:sessionData,error:sessionError}=await db.auth.getSession();
+    if(sessionError) throw sessionError;
+    if(!sessionData.session){
+      hide("checking");show("denied");
+      document.getElementById("deniedMessage").textContent="No active login session found. Open the main website, sign in, then open this Admin Panel.";
+      return;
+    }
+    const {data:userData,error:userError}=await db.auth.getUser();
+    if(userError||!userData.user) throw userError||new Error("Could not verify login.");
+    const {data:profile,error:profileError}=await db.from("member_profiles")
+      .select("account_number,member_id,full_name,post,status")
+      .eq("user_id",userData.user.id).maybeSingle();
+    if(profileError) throw new Error("Could not verify member profile. Check member_profiles SELECT RLS policy.");
+    if(!profile||profile.status!=="active"||profile.post!=="President"){
+      hide("checking");show("denied");
+      document.getElementById("deniedMessage").textContent="Only an active President profile can open this panel. No management data has been changed.";
+      return;
+    }
+    document.getElementById("presidentDetails").textContent=
+      (profile.full_name||"President")+" | "+(profile.account_number||"No account number")+" | "+(profile.member_id||"No member ID")+" | Active";
+    hide("checking");hide("denied");show("admin");
+  }catch(err){
+    hide("checking");show("denied");
+    document.getElementById("deniedMessage").textContent="Verification error: "+(err.message||String(err))+". Check Supabase session and member_profiles RLS.";
+  }finally{
+    if(refresh){refresh.disabled=false;refresh.textContent="Refresh session"}
+  }
+}
+async function logout(){
+  const {error}=await db.auth.signOut();
+  if(error){
+    document.getElementById("deniedMessage").textContent="Logout error: "+error.message;
+    hide("admin");show("denied");
+  }else{
+    hide("admin");show("denied");
+    document.getElementById("deniedMessage").textContent="You have been logged out.";
+  }
+}
+checkPresident();
+</script>
+</body>
+</html>
