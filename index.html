@@ -3,13 +3,13 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#080808">
 <title>Classic Empire Ltd.</title>
 <style>
-:root{--bg:#080808;--panel:#151515;--gold:#ffd700;--text:#f5f5f5;--muted:#aaa;--line:#393323}
+:root{--bg:#080808;--panel:#151515;--gold:#ffd700;--muted:#aaa;--line:#3b3420}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
 header{display:flex;align-items:center;gap:12px;padding:15px;background:#101010;border-bottom:1px solid var(--line)}
 .logo{width:58px;height:58px;object-fit:contain}
 .brand{font-size:19px;font-weight:bold;color:var(--gold)}
@@ -20,7 +20,7 @@ nav button,.secondary{background:#222;color:var(--gold);border:1px solid var(--l
 button:disabled{opacity:.5}
 main{max-width:950px;margin:auto;padding:16px}
 .panel,.hero,.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:15px}
-.hero{text-align:center;padding:32px 15px}
+.hero{text-align:center;padding:30px 15px}
 h1,h2,h3{color:var(--gold)}
 p{line-height:1.6}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
@@ -40,6 +40,7 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var
 <img class="logo" src="classic-empire-logo.png" alt="Classic Empire Ltd. Logo" onerror="this.style.display='none'">
 <div><div class="brand">CLASSIC EMPIRE LTD.</div><div class="small">Official Website</div></div>
 </header>
+
 <nav>
 <button onclick="show('home')">Home</button>
 <button onclick="show('members')">Members</button>
@@ -50,38 +51,48 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var
 <button onclick="show('register')">Registration</button>
 <button onclick="show('about')">About / Contact</button>
 </nav>
+
 <main>
 <section id="home">
 <div class="hero">
 <h1>Welcome to Classic Empire Ltd.</h1>
-<p>Member information, Empire updates and account services.</p>
+<p>Member accounts, Empire updates and internal account services.</p>
 <button onclick="show('login')">Member Login</button>
-<button onclick="show('register')">Join Classic Empire</button>
+<button onclick="show('register')">Create Account</button>
 </div>
 <div class="grid">
 <div class="stat"><h3>Member Accounts</h3><p class="muted">Secure access for registered members.</p></div>
-<div class="stat"><h3>Empire Wallet</h3><p class="muted">View balances and transactions after login.</p></div>
-<div class="stat"><h3>Empire Updates</h3><p class="muted">Official announcements and information.</p></div>
+<div class="stat"><h3>Empire Wallet</h3><p class="muted">View balances after signing in.</p></div>
+<div class="stat"><h3>Empire Updates</h3><p class="muted">Official announcements.</p></div>
 </div>
 </section>
+
 <section id="members" class="hidden">
 <div class="panel"><h2>Members</h2><p>Private member information is available only to authorized members.</p><button onclick="show('login')">Member Login</button></div>
 </section>
+
 <section id="updates" class="hidden">
 <div class="panel"><h2>Empire Updates</h2><p>Notices will appear here when the notice system is connected.</p></div>
 </section>
+
 <section id="currency" class="hidden">
 <div class="panel"><h2>Currency</h2><div class="grid">
 <div class="stat"><h3>Classic Dinar</h3><p>Code: CLD</p><p>Short code: CD</p><p>Symbol: د.ك</p></div>
 <div class="stat"><h3>Indian Rupee</h3><p>Code: INR</p><p>Symbol: ₹</p></div>
 </div><p class="muted">Classic Dinar is an internal fictional project currency, not official legal tender.</p></div>
 </section>
+
 <section id="salaries" class="hidden">
-<div class="panel"><h2>Salaries</h2><p>Salary information is controlled by the authorized President/Admin system.</p><p class="muted">Live salary records are not connected to this page yet.</p></div>
+<div class="panel"><h2>Salaries</h2><p>Salary information is managed by the authorized administration system.</p><p class="muted">Live salary records have not yet been connected to this public page.</p></div>
 </section>
+
 <section id="about" class="hidden">
-<div class="panel"><h2>About Classic Empire Ltd.</h2><p>Online member accounts and internal project services.</p><p><b>Head Office:</b> Chakla Ghat, Kishanganj, Bihar, India</p></div>
+<div class="panel"><h2>About Classic Empire Ltd.</h2>
+<p>Member accounts and internal project services.</p>
+<p><b>Head Office:</b> Chakla Ghat, Kishanganj, Bihar, India</p>
+</div>
 </section>
+
 <section id="login" class="hidden">
 <div class="panel">
 <h2>Member Login</h2>
@@ -96,10 +107,11 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var
 <div id="loginMessage" class="notice hidden" role="status"></div>
 </div>
 </section>
+
 <section id="register" class="hidden">
 <div class="panel">
 <h2>Member Registration</h2>
-<p class="muted">Submit your details for administrator review. Do not select President or another senior post for yourself.</p>
+<p class="muted">Registration requests must be approved by an administrator.</p>
 <form id="registerForm">
 <label for="regName">Full Name</label><input id="regName" maxlength="100" required>
 <label for="regEmail">Email Address</label><input id="regEmail" type="email" required>
@@ -108,74 +120,95 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var
 <label for="regPost">Requested Post</label>
 <select id="regPost" required>
 <option value="">Select requested post</option>
-<option value="Other Employee">Other Employee</option>
-<option value="President's Assistant">President's Assistant</option>
-<option value="DM">DM</option>
-<option value="DM's Assistant">DM's Assistant</option>
-<option value="SDM">SDM</option><option value="SP">SP</option><option value="DSP">DSP</option>
+<option>Other Employee</option>
+<option>President's Assistant</option>
+<option>DM</option>
+<option>DM's Assistant</option>
+<option>SDM</option>
+<option>SP</option>
+<option>DSP</option>
 </select>
 <button id="registerBtn" style="margin-top:15px">Submit Registration</button>
 </form>
 <div id="registerMessage" class="notice hidden" role="status"></div>
 </div>
 </section>
+
 <section id="dashboard" class="hidden">
-<div class="panel"><h2>Member Account</h2><div id="profile">Loading profile...</div><button class="secondary" onclick="loadWallet()">Refresh Wallet</button><button onclick="logout()">Logout</button></div>
+<div class="panel">
+<h2>Member Account</h2>
+<div id="profile">Loading profile...</div>
+<button class="secondary" onclick="loadWallet()">Refresh Wallet</button>
+<button onclick="logout()">Logout</button>
+</div>
+
 <div class="panel">
 <h2>Empire Wallet</h2>
 <div class="grid">
 <div class="stat"><p class="muted">Classic Dinar (CD)</p><div class="amount" id="balanceCD">—</div></div>
 <div class="stat"><p class="muted">Indian Rupees (INR)</p><div class="amount" id="balanceINR">—</div></div>
-</div><div id="walletMessage" class="notice">Wallet information will appear here.</div>
 </div>
+<div id="walletMessage" class="notice">Wallet has not been loaded.</div>
+</div>
+
 <div class="panel">
 <h2>Money Transfer</h2>
 <form id="transferForm">
 <label for="recipient">Recipient Account Number</label><input id="recipient" required>
-<label for="currencySelect">Currency</label><select id="currencySelect"><option value="CD">Classic Dinar (CD)</option><option value="INR">Indian Rupees (INR)</option></select>
+<label for="currencySelect">Currency</label>
+<select id="currencySelect"><option value="CD">Classic Dinar (CD)</option><option value="INR">Indian Rupees (INR)</option></select>
 <label for="amount">Amount</label><input id="amount" type="number" min="0.01" step="any" required>
 <label for="description">Description (optional)</label><input id="description" maxlength="200">
 <button id="transferBtn" style="margin-top:15px">Transfer</button>
-</form><div id="transferMessage" class="notice hidden" role="status"></div>
+</form>
+<div id="transferMessage" class="notice hidden" role="status"></div>
 </div>
+
 <div class="panel">
-<h2>Transaction History</h2><button class="secondary" onclick="loadTransactions()">Refresh History</button>
+<h2>Transaction History</h2>
+<button class="secondary" onclick="loadTransactions()">Refresh History</button>
 <div id="historyMessage" class="notice">No history loaded.</div>
-<div class="tablewrap"><table><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Currency</th><th>Status</th><th>Transfer ID</th></tr></thead><tbody id="historyRows"></tbody></table></div>
+<div class="tablewrap"><table>
+<thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Currency</th><th>Status</th><th>Transfer ID</th></tr></thead>
+<tbody id="historyRows"></tbody>
+</table></div>
 </div>
 </section>
 </main>
-<footer>Classic Empire Ltd. · Head Office: Chakla Ghat, Kishanganj, Bihar, India</footer>
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 
+<footer>Classic Empire Ltd. · Head Office: Chakla Ghat, Kishanganj, Bihar, India</footer>
+
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 const SUPABASE_URL="https://wcyozectzscqwvtzetkc.supabase.co";
 const SUPABASE_KEY="sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
 const LOGIN_FUNCTION="member-login";
-
-/* IMPORTANT:
-   Replace REGISTRATION_FUNCTION with the exact deployed registration
-   Edge Function name and adapt its request/response to that function.
-*/
 const REGISTRATION_FUNCTION="member-register";
 
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null;
+let currentProfile=null;
 
 function show(id){
  ["home","members","updates","currency","salaries","login","register","about","dashboard"]
  .forEach(s=>document.getElementById(s).classList.add("hidden"));
  document.getElementById(id).classList.remove("hidden");
- if(id==="dashboard")loadWallet();
 }
 function msg(id,text){
  const el=document.getElementById(id);
- el.textContent=text;el.classList.remove("hidden");
+ el.textContent=text;
+ el.classList.remove("hidden");
+}
+function setMsg(id,text){
+ const el=document.getElementById(id);
+ el.textContent=text;
+ el.classList.remove("hidden");
 }
 
 document.getElementById("loginForm").addEventListener("submit",async e=>{
  e.preventDefault();
- const btn=document.getElementById("loginBtn");btn.disabled=true;
+ const btn=document.getElementById("loginBtn");
+ btn.disabled=true;
  msg("loginMessage","Signing in...");
  try{
   const {data,error}=await db.functions.invoke(LOGIN_FUNCTION,{
@@ -185,83 +218,145 @@ document.getElementById("loginForm").addEventListener("submit",async e=>{
    }
   });
   if(error)throw error;
+
   const session=data?.session||data?.data?.session||data;
-  if(!session?.access_token||!session?.refresh_token)
-   throw new Error("Login function did not return a session. Check its response format.");
-  const {error:se}=await db.auth.setSession({
-   access_token:session.access_token,refresh_token:session.refresh_token
+  if(!session?.access_token||!session?.refresh_token){
+   throw new Error("Login function did not return a valid session.");
+  }
+
+  const {error:sessionError}=await db.auth.setSession({
+   access_token:session.access_token,
+   refresh_token:session.refresh_token
   });
-  if(se)throw se;
+  if(sessionError)throw sessionError;
+
   await verifyProfile();
- }catch(err){msg("loginMessage","Login failed: "+(err.message||"Unknown error"));}
- finally{btn.disabled=false;}
+ }catch(err){
+  setMsg("loginMessage","Login failed: "+(err.message||"Unknown error"));
+ }finally{
+  btn.disabled=false;
+ }
 });
 
 document.getElementById("registerForm").addEventListener("submit",async e=>{
  e.preventDefault();
  const btn=document.getElementById("registerBtn");
  const password=document.getElementById("regPassword").value;
- const confirm=document.getElementById("regConfirm").value;
- if(password!==confirm){msg("registerMessage","Passwords do not match.");return;}
- if(password.length<8){msg("registerMessage","Password must be at least 8 characters.");return;}
- btn.disabled=true;msg("registerMessage","Submitting registration...");
+ if(password!==document.getElementById("regConfirm").value){
+  msg("registerMessage","Passwords do not match.");return;
+ }
+ if(password.length<8){
+  msg("registerMessage","Password must be at least 8 characters.");return;
+ }
+ btn.disabled=true;
+ msg("registerMessage","Submitting registration...");
  try{
   const {data,error}=await db.functions.invoke(REGISTRATION_FUNCTION,{
    body:{
     full_name:document.getElementById("regName").value.trim(),
     email:document.getElementById("regEmail").value.trim(),
-    password:password,
+    password,
     requested_post:document.getElementById("regPost").value
    }
   });
   if(error)throw error;
-  msg("registerMessage",data?.message||
-   "Registration request sent. Check the response and wait for administrator approval.");
+  msg("registerMessage",data?.message||"Registration request submitted. Wait for administrator review.");
   document.getElementById("registerForm").reset();
  }catch(err){
-  msg("registerMessage","Registration could not be submitted: "+
-   (err.message||"Check whether the member-register Edge Function exists."));
- }finally{btn.disabled=false;}
+  setMsg("registerMessage","Registration failed: "+(err.message||"Check the registration backend."));
+ }finally{
+  btn.disabled=false;
+ }
 });
 
 async function verifyProfile(){
  const {data:{user},error:authError}=await db.auth.getUser();
- if(authError||!user){currentUser=null;show("login");return;}
- const {data,error}=await db.from("member_profiles")
-  .select("account_number,member_id,full_name,post,status")
-  .eq("id",user.id).maybeSingle();
- if(error||!data||String(data.status).toLowerCase()!=="active"){
-  await db.auth.signOut();currentUser=null;
-  msg("loginMessage","Active member profile could not be verified.");
-  show("login");return;
+ if(authError||!user){
+  currentUser=null;
+  show("login");
+  setMsg("loginMessage","Could not verify the signed-in user.");
+  return;
  }
+
+ /*
+  Correct schema: member_profiles.user_id, NOT member_profiles.id.
+ */
+ const {data,error}=await db.from("member_profiles")
+  .select("user_id,account_number,member_id,full_name,post,status")
+  .eq("user_id",user.id)
+  .maybeSingle();
+
+ if(error){
+  await db.auth.signOut();
+  currentUser=null;
+  show("login");
+  setMsg("loginMessage","Profile lookup failed: "+error.message);
+  return;
+ }
+
+ if(!data){
+  await db.auth.signOut();
+  currentUser=null;
+  show("login");
+  setMsg("loginMessage","No member profile is linked to this Auth user. Check user_id matching.");
+  return;
+ }
+
+ if(String(data.status||"").toLowerCase()!=="active"){
+  await db.auth.signOut();
+  currentUser=null;
+  show("login");
+  setMsg("loginMessage","This member profile is not active.");
+  return;
+ }
+
  currentUser=user;
+ currentProfile=data;
  document.getElementById("profile").textContent=
   data.full_name+" | "+data.account_number+" | "+data.post+" | "+data.status;
  show("dashboard");
+ await loadWallet();
 }
 
 async function loadWallet(){
  if(!currentUser)return;
- msg("walletMessage","Loading wallet...");
+ setMsg("walletMessage","Loading wallet...");
  const {data,error}=await db.from("wallet_accounts")
-  .select("balance_cd,balance_inr")
-  .eq("user_id",currentUser.id).maybeSingle();
- if(error){msg("walletMessage","Wallet error: "+error.message);return;}
- if(!data){msg("walletMessage","No wallet record found.");return;}
+  .select("*")
+  .eq("user_id",currentUser.id)
+  .maybeSingle();
+
+ if(error){
+  setMsg("walletMessage","Wallet error: "+error.message);
+  return;
+ }
+ if(!data){
+  setMsg("walletMessage","No wallet record found for this user.");
+  document.getElementById("balanceCD").textContent="—";
+  document.getElementById("balanceINR").textContent="—";
+  return;
+ }
+
+ /*
+  Accept common balance column names while inspecting the returned row.
+  Actual database column names should be confirmed if either is missing.
+ */
+ const cd=data.balance_cd??data.cd_balance??data.balance_cld;
+ const inr=data.balance_inr??data.inr_balance;
  document.getElementById("balanceCD").textContent=
-  Number(data.balance_cd||0).toLocaleString("en-IN");
+  cd==null?"Not available":Number(cd).toLocaleString("en-IN");
  document.getElementById("balanceINR").textContent=
-  Number(data.balance_inr||0).toLocaleString("en-IN");
- msg("walletMessage","Wallet loaded.");
+  inr==null?"Not available":Number(inr).toLocaleString("en-IN");
+ setMsg("walletMessage","Wallet record loaded.");
  await loadTransactions();
 }
 
 document.getElementById("transferForm").addEventListener("submit",async e=>{
  e.preventDefault();
  if(!currentUser){show("login");return;}
- const btn=document.getElementById("transferBtn");btn.disabled=true;
- msg("transferMessage","Processing transfer...");
+ const btn=document.getElementById("transferBtn");
+ btn.disabled=true;
+ setMsg("transferMessage","Processing transfer...");
  try{
   const amount=Number(document.getElementById("amount").value);
   if(!Number.isFinite(amount)||amount<=0)throw new Error("Enter a positive amount.");
@@ -272,42 +367,67 @@ document.getElementById("transferForm").addEventListener("submit",async e=>{
    p_description:document.getElementById("description").value.trim()
   });
   if(error)throw error;
-  msg("transferMessage","Transfer request returned successfully. Verify wallet and history.");
+  setMsg("transferMessage","Transfer RPC returned successfully. Check the balance and transaction history.");
   document.getElementById("transferForm").reset();
   await loadWallet();
- }catch(err){msg("transferMessage","Transfer failed: "+(err.message||"Unknown error"));}
- finally{btn.disabled=false;}
+ }catch(err){
+  setMsg("transferMessage","Transfer failed: "+(err.message||"Unknown error"));
+ }finally{
+  btn.disabled=false;
+ }
 });
 
 async function loadTransactions(){
  if(!currentUser)return;
- const tbody=document.getElementById("historyRows");tbody.replaceChildren();
- msg("historyMessage","Loading history...");
+ const tbody=document.getElementById("historyRows");
+ tbody.replaceChildren();
+ setMsg("historyMessage","Loading transaction history...");
  const {data,error}=await db.from("wallet_transactions")
-  .select("created_at,transaction_type,amount,currency,status,transaction_code")
+  .select("*")
   .eq("user_id",currentUser.id)
-  .order("created_at",{ascending:false}).limit(50);
- if(error){msg("historyMessage","History error: "+error.message);return;}
- if(!data||!data.length){msg("historyMessage","No transactions found.");return;}
+  .order("created_at",{ascending:false})
+  .limit(50);
+
+ if(error){
+  setMsg("historyMessage","History error: "+error.message);
+  return;
+ }
+ if(!data||!data.length){
+  setMsg("historyMessage","No transactions found.");
+  return;
+ }
+
  document.getElementById("historyMessage").textContent="Latest transactions";
  data.forEach(t=>{
   const tr=document.createElement("tr");
-  [
+  const values=[
    t.created_at?new Date(t.created_at).toLocaleString():"—",
-   t.transaction_type||"—",String(t.amount??"—"),t.currency||"—",
-   t.status||"—",t.transaction_code||"—"
-  ].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});
+   t.transaction_type??t.type??"—",
+   String(t.amount??"—"),
+   t.currency??"—",
+   t.status??"—",
+   t.transaction_code??t.transfer_id??"—"
+  ];
+  values.forEach(v=>{
+   const td=document.createElement("td");
+   td.textContent=String(v);
+   tr.appendChild(td);
+  });
   tbody.appendChild(tr);
  });
 }
 
 async function logout(){
- await db.auth.signOut();currentUser=null;show("home");
+ await db.auth.signOut();
+ currentUser=null;
+ currentProfile=null;
+ document.getElementById("loginForm").reset();
+ show("home");
 }
 
 (async()=>{
- const {data}=await db.auth.getSession();
- if(data.session)await verifyProfile();
+ const {data,error}=await db.auth.getSession();
+ if(!error&&data.session)await verifyProfile();
 })();
 </script>
 </body>
