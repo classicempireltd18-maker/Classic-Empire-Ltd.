@@ -2,149 +2,129 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <meta name="theme-color" content="#080808">
-  <title>Classic Empire Ltd.</title>
-  <style>
-    :root {
-      --gold: #ffd700;
-      --bg: #080808;
-      --panel: #151515;
-      --text: #f5f5f5;
-      --muted: #b9b9b9;
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      font-family: Arial, sans-serif;
-      background: var(--bg);
-      color: var(--text);
-    }
-
-    header {
-      padding: 20px;
-      text-align: center;
-      border-bottom: 1px solid #413800;
-    }
-
-    .logo {
-      width: 64px;
-      height: 64px;
-      margin: auto;
-      display: grid;
-      place-items: center;
-      border: 2px solid var(--gold);
-      border-radius: 50%;
-      color: var(--gold);
-      font-size: 25px;
-      font-weight: bold;
-    }
-
-    h1 { color: var(--gold); font-size: 25px; }
-    nav { display: flex; flex-wrap: wrap; justify-content: center; gap: 8px; }
-    nav a { color: var(--gold); padding: 8px; text-decoration: none; }
-
-    main { width: min(900px, 92%); margin: 28px auto; }
-    .hero, .panel {
-      background: var(--panel);
-      border: 1px solid #393000;
-      border-radius: 14px;
-      padding: 22px;
-      margin-bottom: 18px;
-    }
-
-    .hero { text-align: center; padding: 42px 20px; }
-    .hero h2 { color: var(--gold); font-size: 30px; }
-    .muted { color: var(--muted); line-height: 1.7; }
-
-    .button {
-      display: inline-block;
-      background: var(--gold);
-      color: #080808;
-      padding: 12px 18px;
-      margin-top: 10px;
-      border-radius: 7px;
-      text-decoration: none;
-      font-weight: bold;
-    }
-
-    footer {
-      text-align: center;
-      color: var(--muted);
-      padding: 24px 12px;
-      border-top: 1px solid #333;
-      font-size: 13px;
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>Classic Empire Ltd.</title>
+<style>
+:root{--gold:#ffd700;--bg:#080808;--panel:#151515;--muted:#bbb}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
+header{text-align:center;padding:22px 12px;border-bottom:1px solid #554800}
+.logo{margin:auto;border:2px solid var(--gold);border-radius:50%;width:60px;height:60px;display:grid;place-items:center;color:var(--gold);font-size:24px;font-weight:bold}
+h1,h2,h3{color:var(--gold)}
+h1{font-size:24px}
+nav{display:flex;justify-content:center;gap:13px;flex-wrap:wrap}
+a{color:var(--gold);text-decoration:none}
+nav a{padding:7px}
+main{width:min(900px,92%);margin:24px auto}
+.hero,.panel{background:var(--panel);border:1px solid #403700;border-radius:14px;padding:22px;margin-bottom:18px}
+.hero{text-align:center;padding:38px 18px}
+.muted{color:var(--muted);line-height:1.7}
+button,.button{background:var(--gold);color:#080808;border:0;border-radius:7px;padding:12px 17px;font-weight:bold;cursor:pointer;display:inline-block;margin:5px 3px}
+input,select{width:100%;padding:12px;margin:7px 0 13px;background:#080808;color:white;border:1px solid #665800;border-radius:7px}
+label{color:#ddd;font-size:14px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.card{border:1px solid #5b4c00;border-radius:10px;padding:16px;background:#101010}
+.hidden{display:none}
+.notice{padding:12px;background:#24200d;border-radius:8px;color:#ffe66a}
+footer{text-align:center;padding:22px;color:#aaa;border-top:1px solid #333;font-size:13px}
+</style>
 </head>
 <body>
-  <header>
-    <div class="logo" aria-label="Classic Empire logo">CE</div>
-    <h1>CLASSIC EMPIRE LTD.</h1>
-    <nav aria-label="Main navigation">
-      <a href="#home">Home</a>
-      <a href="#about">About</a>
-      <a href="#updates">Updates</a>
-      <a href="#cards">Cards</a>
-      <a href="#contact">Contact</a>
-    </nav>
-  </header>
+<header>
+  <div class="logo">CE</div>
+  <h1>CLASSIC EMPIRE LTD.</h1>
+  <nav>
+    <a href="#home">Home</a><a href="#about">About</a>
+    <a href="#updates">Updates</a><a href="#cards">Cards</a>
+    <a href="#contact">Contact</a>
+  </nav>
+  <button onclick="showAuth('login')">Member Login</button>
+  <button onclick="showAuth('register')">Register</button>
+</header>
 
-  <main>
-    <section class="hero" id="home">
-      <h2>Welcome to Classic Empire</h2>
-      <p class="muted">
-        One platform for members, teamwork, records and internal services.
-      </p>
-      <a class="button" href="#about">Explore Website</a>
-    </section>
+<main>
+<section class="hero" id="home">
+  <h2>Welcome to Classic Empire</h2>
+  <p class="muted">One platform for membership, teamwork, records and internal services.</p>
+  <button onclick="showAuth('login')">Member Login</button>
+  <button onclick="showAuth('register')">Join the Empire</button>
+</section>
 
-    <section class="panel" id="about">
-      <h2>About Us</h2>
-      <p class="muted">
-        Classic Empire Ltd. is building an organized internal platform
-        for membership, work reporting and team coordination.
-      </p>
-    </section>
+<section class="panel hidden" id="auth">
+  <h2 id="authTitle">Member Login</h2>
+  <p class="muted">Online account service will be activated after secure database connection.</p>
+  <div id="loginForm">
+    <label>Account Number</label>
+    <input id="loginAccount" placeholder="e.g. CE000001" autocomplete="username">
+    <label>Password</label>
+    <input id="loginPassword" type="password" placeholder="Your password" autocomplete="current-password">
+    <button onclick="demoMessage()">Login</button>
+    <button onclick="showAuth('register')">Create account</button>
+  </div>
+  <div id="registerForm" class="hidden">
+    <label>Full Name</label>
+    <input id="fullName" placeholder="Enter full name" autocomplete="name">
+    <label>Account Number (if already assigned)</label>
+    <input id="accountNumber" placeholder="Leave blank if not assigned">
+    <label>Email</label>
+    <input id="email" type="email" placeholder="Email for secure login" autocomplete="email">
+    <label>Create Password</label>
+    <input id="newPassword" type="password" minlength="8" placeholder="At least 8 characters" autocomplete="new-password">
+    <button onclick="demoMessage()">Submit registration</button>
+    <button onclick="showAuth('login')">Back to Login</button>
+  </div>
+  <p id="authMessage" class="notice hidden" role="status"></p>
+  <button onclick="document.getElementById('auth').classList.add('hidden')">Close</button>
+</section>
 
-    <section class="panel" id="updates">
-      <h2>Empire Updates</h2>
-      <p class="muted">
-        Updates and notices will appear here after the notice system
-        is connected.
-      </p>
-    </section>
+<section class="panel" id="about">
+  <h2>About Us</h2>
+  <p class="muted">A platform for member profiles, work coordination and internal record keeping.</p>
+</section>
 
-    <section class="panel" id="cards">
-      <h2>Empire Cards</h2>
-      <p class="muted">
-        Silver, Gold and Black Card information will be displayed here.
-        Benefits and internal game-currency rules will be configurable.
-      </p>
-    </section>
+<section class="panel" id="updates">
+  <h2>Empire Updates</h2>
+  <p class="muted">Official notices and updates will appear here after database connection.</p>
+</section>
 
-    <section class="panel" id="contact">
-      <h2>Contact & Head Office</h2>
-      <p class="muted">
-        Head Office: Chakla Ghat, Kishanganj, Bihar, India
-      </p>
-      <p class="muted">
-        Official contact details will be added after confirmation.
-      </p>
-    </section>
-  </main>
+<section class="panel" id="cards">
+  <h2>Empire Cards</h2>
+  <div class="grid">
+    <div class="card"><h3>Silver Card</h3><p>25% internal eligible-purchase discount</p><p>Price: 2.5 CD</p></div>
+    <div class="card"><h3>Gold Card</h3><p>Up to 42% internal eligible-purchase discount</p><p>Price: 10 CD</p></div>
+    <div class="card"><h3>Black Card</h3><p>Up to 57% internal eligible-purchase discount</p><p>President-awarded; not purchasable</p></div>
+  </div>
+  <p class="muted">Discounts and balances are internal game records, not real-money benefits.</p>
+</section>
 
-  <footer>
-    © <span id="year"></span> Classic Empire Ltd.
-    <br>Internal organization platform.
-  </footer>
+<section class="panel" id="contact">
+  <h2>Contact & Head Office</h2>
+  <p class="muted">Head Office: Chakla Ghat, Kishanganj, Bihar, India</p>
+</section>
+</main>
 
-  <script>
-    document.getElementById("year").textContent =
-      new Date().getFullYear();
-  </script>
+<footer>© <span id="year"></span> Classic Empire Ltd.<br>Internal organization platform.</footer>
+
+<script>
+document.getElementById("year").textContent=new Date().getFullYear();
+
+function showAuth(type){
+  const box=document.getElementById("auth");
+  box.classList.remove("hidden");
+  document.getElementById("loginForm").classList.toggle("hidden",type!=="login");
+  document.getElementById("registerForm").classList.toggle("hidden",type!=="register");
+  document.getElementById("authTitle").textContent=type==="login"?"Member Login":"Member Registration";
+  document.getElementById("authMessage").classList.add("hidden");
+  box.scrollIntoView({behavior:"smooth"});
+}
+
+function demoMessage(){
+  const msg=document.getElementById("authMessage");
+  msg.textContent="Online login/registration is not connected yet. Please wait for the secure Supabase setup.";
+  msg.classList.remove("hidden");
+}
+</script>
 </body>
 </html>
