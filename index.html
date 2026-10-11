@@ -1,131 +1,266 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080808">
-<title>President Admin Panel | Classic Empire Ltd.</title>
+<title>Classic Empire Ltd.</title>
 <style>
-:root{--gold:#ffd700;--bg:#080808;--panel:#151515;--muted:#bbb;--line:#514600}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
-header{padding:18px 14px;text-align:center;border-bottom:1px solid var(--line)}
-.logo{margin:auto;border:2px solid var(--gold);border-radius:50%;width:54px;height:54px;display:grid;place-items:center;color:var(--gold);font-size:22px;font-weight:bold}
-h1,h2,h3{color:var(--gold)}h1{font-size:22px}
-main{width:min(1100px,94%);margin:22px auto}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px;margin-bottom:16px}
-.muted{color:var(--muted);line-height:1.6}
-button,.link{background:var(--gold);color:#080808;border:0;border-radius:7px;padding:10px 13px;font-weight:bold;cursor:pointer;display:inline-block;margin:4px 3px;text-decoration:none}
-button:disabled{opacity:.5;cursor:not-allowed}
-input,select{width:100%;padding:11px;margin:7px 0 13px;background:#080808;color:#fff;border:1px solid #665800;border-radius:7px}
-label{color:#ddd;font-size:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(150px,1fr));gap:12px}
-.tile{border:1px solid #514600;border-radius:10px;padding:14px;background:#101010}
-.metric{font-size:27px;color:var(--gold);font-weight:bold;margin:8px 0}
-.hidden{display:none!important}.notice{padding:12px;background:#24200d;border-radius:8px;color:#ffe66a;overflow-wrap:anywhere;line-height:1.5}
-.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:720px}th,td{text-align:left;padding:10px;border-bottom:1px solid #393300;font-size:14px}th{color:var(--gold)}
-.danger{background:#a32929;color:#fff}.secondary{background:#333;color:#fff}
-footer{text-align:center;padding:20px;color:#999;border-top:1px solid #333;font-size:13px}
+:root{--bg:#080808;--panel:#151515;--gold:#ffd700;--text:#f5f5f5;--muted:#aaa;--line:#393323}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{display:flex;align-items:center;gap:12px;padding:15px;background:#101010;border-bottom:1px solid var(--line)}
+.logo{width:58px;height:58px;object-fit:contain}
+.brand{font-size:19px;font-weight:bold;color:var(--gold)}
+.small,.muted{font-size:13px;color:var(--muted)}
+nav{display:flex;flex-wrap:wrap;gap:7px;padding:12px;background:#101010}
+button{padding:11px 14px;border:0;border-radius:7px;background:var(--gold);color:#080808;font-weight:bold;cursor:pointer}
+nav button,.secondary{background:#222;color:var(--gold);border:1px solid var(--line)}
+button:disabled{opacity:.5}
+main{max-width:950px;margin:auto;padding:16px}
+.panel,.hero,.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:15px}
+.hero{text-align:center;padding:32px 15px}
+h1,h2,h3{color:var(--gold)}
+p{line-height:1.6}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
+label{display:block;margin:12px 0 6px}
+input,select{width:100%;padding:12px;border:1px solid #51472a;border-radius:7px;background:#080808;color:white}
+.hidden{display:none!important}
+.notice{padding:12px;border-radius:7px;background:#222116;margin:12px 0;overflow-wrap:anywhere}
+.amount{font-size:25px;color:var(--gold);font-weight:bold}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}
+footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
-<header><div class="logo">CE</div><h1>CLASSIC EMPIRE LTD.</h1><p class="muted">President Admin Panel</p></header>
+<header>
+<img class="logo" src="classic-empire-logo.png" alt="Classic Empire Ltd. Logo" onerror="this.style.display='none'">
+<div><div class="brand">CLASSIC EMPIRE LTD.</div><div class="small">Official Website</div></div>
+</header>
+<nav>
+<button onclick="show('home')">Home</button>
+<button onclick="show('members')">Members</button>
+<button onclick="show('updates')">Empire Updates</button>
+<button onclick="show('currency')">Currency</button>
+<button onclick="show('salaries')">Salaries</button>
+<button onclick="show('login')">Member Login</button>
+<button onclick="show('about')">About / Contact</button>
+</nav>
 <main>
-<section class="panel" id="checking"><h2>Checking secure session…</h2><p class="muted">Verifying your active President account.</p></section>
-<section class="panel hidden" id="denied"><h2>Access not granted</h2><p id="deniedMessage" class="notice"></p><a class="link" href="./index.html">Return to website</a></section>
-<div id="admin" class="hidden">
-<section class="panel">
-<h2>President Dashboard</h2><p id="presidentDetails" class="muted"></p>
-<p class="notice">Account listing is read-only until the secure President-only backend is installed. Account deletion must never be performed by exposing a secret key in this page.</p>
-<button onclick="loadMembers()" id="refreshButton">Refresh accounts</button><button onclick="logout()">Logout</button>
-</section>
-<section class="panel">
-<h2>Account Overview</h2>
+<section id="home">
+<div class="hero">
+<h1>Welcome to Classic Empire Ltd.</h1>
+<p>Member information, Empire updates and account services.</p>
+<button onclick="show('login')">Member Login</button>
+</div>
 <div class="grid">
-<div class="tile"><div>Total Profiles</div><div class="metric" id="totalCount">—</div></div>
-<div class="tile"><div>Active</div><div class="metric" id="activeCount">—</div></div>
-<div class="tile"><div>Pending</div><div class="metric" id="pendingCount">—</div></div>
-<div class="tile"><div>Inactive</div><div class="metric" id="inactiveCount">—</div></div>
+<div class="stat"><h3>Member Accounts</h3><p class="muted">Access your account securely.</p></div>
+<div class="stat"><h3>Empire Wallet</h3><p class="muted">View balances and transaction history after login.</p></div>
+<div class="stat"><h3>Empire Updates</h3><p class="muted">Official announcements and information.</p></div>
 </div>
 </section>
-<section class="panel">
-<h2>Member Management</h2>
-<label for="search">Search by name, Account Number, Member ID or Post</label>
-<input id="search" placeholder="Type to search..." oninput="renderMembers()">
-<label for="statusFilter">Filter by status</label>
-<select id="statusFilter" onchange="renderMembers()">
-<option value="all">All statuses</option><option value="active">Active</option><option value="pending">Pending</option><option value="inactive">Inactive</option>
-</select>
-<p id="listMessage" class="notice">Loading accounts…</p>
-<div class="table-wrap"><table>
-<thead><tr><th>Account Number</th><th>Member ID</th><th>Name</th><th>Post</th><th>Status</th><th>Actions</th></tr></thead>
-<tbody id="memberRows"></tbody>
+<section id="members" class="hidden">
+<div class="panel"><h2>Members</h2><p>Private member details are available only to authorized members.</p><button onclick="show('login')">Member Login</button></div>
+</section>
+<section id="updates" class="hidden">
+<div class="panel"><h2>Empire Updates</h2><p>Notices will appear here when the notice system is connected.</p><p class="muted">Live notices are not connected in this file yet.</p></div>
+</section>
+<section id="currency" class="hidden">
+<div class="panel"><h2>Currency</h2><div class="grid">
+<div class="stat"><h3>Classic Dinar</h3><p>Code: CLD</p><p>Short code: CD</p><p>Symbol: د.ك</p></div>
+<div class="stat"><h3>Indian Rupee</h3><p>Code: INR</p><p>Symbol: ₹</p></div>
+</div><p class="muted">Classic Dinar is an internal fictional project currency, not official legal tender.</p></div>
+</section>
+<section id="salaries" class="hidden">
+<div class="panel"><h2>Salaries</h2><p>Salary information is controlled by the authorized President/Admin system.</p><p class="muted">Live salary data is not connected to this public page.</p></div>
+</section>
+<section id="about" class="hidden">
+<div class="panel"><h2>About Classic Empire Ltd.</h2><p>Online member accounts and internal project services.</p><p><b>Head Office:</b> Chakla Ghat, Kishanganj, Bihar, India</p></div>
+</section>
+<section id="login" class="hidden">
+<div class="panel">
+<h2>Member Login</h2>
+<form id="loginForm">
+<label for="account">Account Number</label>
+<input id="account" autocomplete="username" placeholder="CE000001" required>
+<label for="password">Password</label>
+<input id="password" type="password" autocomplete="current-password" required>
+<button id="loginBtn" style="margin-top:15px">Login</button>
+</form>
+<div id="loginMessage" class="notice hidden" role="status"></div>
+</div>
+</section>
+<section id="dashboard" class="hidden">
+<div class="panel">
+<h2>Member Account</h2><div id="profile">Loading profile...</div>
+<button class="secondary" onclick="loadWallet()">Refresh Wallet</button>
+<button onclick="logout()">Logout</button>
+</div>
+<div class="panel">
+<h2>Empire Wallet</h2>
+<div class="grid">
+<div class="stat"><p class="muted">Classic Dinar (CD)</p><div class="amount" id="balanceCD">—</div></div>
+<div class="stat"><p class="muted">Indian Rupees (INR)</p><div class="amount" id="balanceINR">—</div></div>
+</div>
+<div id="walletMessage" class="notice">Wallet information will appear here.</div>
+</div>
+<div class="panel">
+<h2>Money Transfer</h2>
+<form id="transferForm">
+<label for="recipient">Recipient Account Number</label>
+<input id="recipient" placeholder="CE000002" required>
+<label for="currencySelect">Currency</label>
+<select id="currencySelect"><option value="CD">Classic Dinar (CD)</option><option value="INR">Indian Rupees (INR)</option></select>
+<label for="amount">Amount</label>
+<input id="amount" type="number" min="0.01" step="any" required>
+<label for="description">Description (optional)</label>
+<input id="description" maxlength="200">
+<button id="transferBtn" style="margin-top:15px">Transfer</button>
+</form>
+<div id="transferMessage" class="notice hidden" role="status"></div>
+</div>
+<div class="panel">
+<h2>Transaction History</h2>
+<button class="secondary" onclick="loadTransactions()">Refresh History</button>
+<div id="historyMessage" class="notice">No history loaded.</div>
+<div class="tablewrap"><table>
+<thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Currency</th><th>Status</th><th>Transfer ID</th></tr></thead>
+<tbody id="historyRows"></tbody>
 </table></div>
-<p class="muted">Deactivate and Delete are shown as protected actions, but remain disabled until a secure backend endpoint is deployed. Deleting must also handle the linked Supabase Auth user and related records safely.</p>
-</section>
-<section class="panel"><h2>Other Modules</h2><div class="grid">
-<div class="tile"><h3>Salary Management</h3><p class="muted">Weekly salary settings and payment records.</p></div>
-<div class="tile"><h3>Wallet & Transfers</h3><p class="muted">Internal ledger and transfer history.</p></div>
-<div class="tile"><h3>Expenses & Purchases</h3><p class="muted">Expense records and President Purchase category.</p></div>
-<div class="tile"><h3>Cards & Settings</h3><p class="muted">Card prices, discount rules and system settings.</p></div>
-<div class="tile"><h3>Notices & Attendance</h3><p class="muted">Official notices and attendance records.</p></div>
-</div></section>
 </div>
+</section>
 </main>
-<footer>© <span id="year"></span> Classic Empire Ltd. — Keep account administration protected.</footer>
+<footer>Classic Empire Ltd. · Head Office: Chakla Ghat, Kishanganj, Bihar, India</footer>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
 <script>
-document.getElementById("year").textContent=new Date().getFullYear();
 const SUPABASE_URL="https://wcyozectzscqwvtzetkc.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY="sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
-const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_PUBLISHABLE_KEY);
-let members=[];
-function show(id){document.getElementById(id).classList.remove("hidden")}
-function hide(id){document.getElementById(id).classList.add("hidden")}
-function msg(text){const el=document.getElementById("listMessage");el.textContent=text;el.classList.remove("hidden")}
-async function checkPresident(){
- try{
-  const {data:s,error:se}=await db.auth.getSession();if(se)throw se;
-  if(!s.session){deny("No active login session. Sign in on the main website first.");return}
-  const {data:u,error:ue}=await db.auth.getUser();if(ue||!u.user)throw ue||new Error("Could not verify login.");
-  const {data:p,error:pe}=await db.from("member_profiles").select("account_number,member_id,full_name,post,status").eq("user_id",u.user.id).maybeSingle();
-  if(pe)throw new Error("Profile verification failed. Check member_profiles SELECT policy.");
-  if(!p||p.status!=="active"||p.post!=="President"){deny("Only an active President profile can access this page.");return}
-  document.getElementById("presidentDetails").textContent=`${p.full_name||"President"} | ${p.account_number||""} | ${p.member_id||""} | Active`;
-  hide("checking");hide("denied");show("admin");await loadMembers();
- }catch(e){deny("Verification error: "+(e.message||String(e)))}
+const SUPABASE_KEY="sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
+const LOGIN_FUNCTION="member-login";
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let currentUser=null;
+
+function show(id){
+ ["home","members","updates","currency","salaries","login","about","dashboard"]
+ .forEach(s=>document.getElementById(s).classList.add("hidden"));
+ if(id==="wallet")id=currentUser?"dashboard":"login";
+ document.getElementById(id).classList.remove("hidden");
+ if(id==="dashboard")loadWallet();
 }
-function deny(text){hide("checking");hide("admin");show("denied");document.getElementById("deniedMessage").textContent=text}
-async function loadMembers(){
- const b=document.getElementById("refreshButton");b.disabled=true;b.textContent="Loading…";msg("Loading member profiles…");
+function msg(id,text){
+ const el=document.getElementById(id);
+ el.textContent=text;
+ el.classList.remove("hidden");
+}
+async function verifyProfile(){
+ const {data:{user},error:authError}=await db.auth.getUser();
+ if(authError||!user){currentUser=null;show("login");return;}
+ const {data,error}=await db.from("member_profiles")
+ .select("account_number,member_id,full_name,post,status")
+ .eq("id",user.id).maybeSingle();
+ if(error||!data||String(data.status).toLowerCase()!=="active"){
+  await db.auth.signOut();currentUser=null;
+  msg("loginMessage","Active member profile could not be verified.");
+  show("login");return;
+ }
+ currentUser=user;
+ document.getElementById("profile").textContent=
+ data.full_name+" | "+data.account_number+" | "+data.post+" | "+data.status;
+ show("dashboard");
+}
+document.getElementById("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const btn=document.getElementById("loginBtn");btn.disabled=true;
+ msg("loginMessage","Signing in...");
  try{
-  const {data,error}=await db.from("member_profiles").select("account_number,member_id,full_name,post,status,user_id,created_at").order("created_at",{ascending:false}).limit(1000);
+  const account_number=document.getElementById("account").value.trim();
+  const password=document.getElementById("password").value;
+  const {data,error}=await db.functions.invoke(LOGIN_FUNCTION,{
+   body:{account_number,password}
+  });
   if(error)throw error;
-  members=data||[];
-  document.getElementById("totalCount").textContent=members.length;
-  document.getElementById("activeCount").textContent=members.filter(x=>x.status==="active").length;
-  document.getElementById("pendingCount").textContent=members.filter(x=>x.status==="pending").length;
-  document.getElementById("inactiveCount").textContent=members.filter(x=>x.status==="inactive").length;
-  msg(members.length?`Loaded ${members.length} profile(s). The list may be limited by database policies.`:"No profiles returned. Check database permissions and whether profiles exist.");
-  renderMembers();
- }catch(e){members=[];renderMembers();msg("Could not load accounts: "+(e.message||String(e))+". President SELECT access must be allowed by a secure RLS policy.");}
- finally{b.disabled=false;b.textContent="Refresh accounts"}
+  const session=data?.session||data?.data?.session||data;
+  if(!session?.access_token||!session?.refresh_token)
+   throw new Error("Login function response does not contain a session.");
+  const {error:se}=await db.auth.setSession({
+   access_token:session.access_token,refresh_token:session.refresh_token
+  });
+  if(se)throw se;
+  await verifyProfile();
+ }catch(err){
+  msg("loginMessage","Login failed: "+(err.message||"Check login settings."));
+ }finally{btn.disabled=false;}
+});
+async function loadWallet(){
+ if(!currentUser)return;
+ msg("walletMessage","Loading wallet...");
+ const {data,error}=await db.from("wallet_accounts")
+ .select("balance_cd,balance_inr").eq("user_id",currentUser.id).maybeSingle();
+ if(error){msg("walletMessage","Wallet error: "+error.message);return;}
+ if(!data){msg("walletMessage","No wallet record found.");return;}
+ document.getElementById("balanceCD").textContent=
+ Number(data.balance_cd||0).toLocaleString("en-IN");
+ document.getElementById("balanceINR").textContent=
+ Number(data.balance_inr||0).toLocaleString("en-IN");
+ msg("walletMessage","Wallet loaded.");
+ await loadTransactions();
 }
-function renderMembers(){
- const q=document.getElementById("search").value.trim().toLowerCase(),st=document.getElementById("statusFilter").value;
- const filtered=members.filter(m=>(st==="all"||m.status===st)&&[m.account_number,m.member_id,m.full_name,m.post,m.status].some(v=>String(v||"").toLowerCase().includes(q)));
- const body=document.getElementById("memberRows");body.replaceChildren();
- if(!filtered.length){const tr=document.createElement("tr"),td=document.createElement("td");td.colSpan=6;td.textContent="No matching accounts.";tr.appendChild(td);body.appendChild(tr);return}
- filtered.forEach(m=>{
+document.getElementById("transferForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ if(!currentUser){show("login");return;}
+ const btn=document.getElementById("transferBtn");btn.disabled=true;
+ msg("transferMessage","Processing transfer...");
+ try{
+  const recipient=document.getElementById("recipient").value.trim();
+  const currency=document.getElementById("currencySelect").value;
+  const amount=Number(document.getElementById("amount").value);
+  const description=document.getElementById("description").value.trim();
+  if(!Number.isFinite(amount)||amount<=0)throw new Error("Enter a positive amount.");
+  const {data,error}=await db.rpc("transfer_wallet",{
+   p_recipient_account_number:recipient,
+   p_currency:currency,p_amount:amount,p_description:description
+  });
+  if(error)throw error;
+  msg("transferMessage","Transfer request completed. Refresh and verify the wallet and history.");
+  document.getElementById("transferForm").reset();
+  await loadWallet();
+ }catch(err){
+  msg("transferMessage","Transfer failed: "+(err.message||"Unknown error"));
+ }finally{btn.disabled=false;}
+});
+async function loadTransactions(){
+ if(!currentUser)return;
+ const tbody=document.getElementById("historyRows");
+ tbody.replaceChildren();msg("historyMessage","Loading history...");
+ const {data,error}=await db.from("wallet_transactions")
+ .select("created_at,transaction_type,amount,currency,status,transaction_code")
+ .eq("user_id",currentUser.id)
+ .order("created_at",{ascending:false}).limit(50);
+ if(error){msg("historyMessage","History error: "+error.message);return;}
+ if(!data||!data.length){msg("historyMessage","No transactions found.");return;}
+ document.getElementById("historyMessage").textContent="Latest transactions";
+ data.forEach(t=>{
   const tr=document.createElement("tr");
-  [m.account_number,m.member_id,m.full_name,m.post,m.status].forEach(v=>{const td=document.createElement("td");td.textContent=v||"—";tr.appendChild(td)});
-  const actions=document.createElement("td");
-  const off=document.createElement("button");off.textContent="Deactivate";off.disabled=true;off.title="Enable after secure backend endpoint is installed";
-  const del=document.createElement("button");del.textContent="Delete";del.className="danger";del.disabled=true;del.title="Enable after secure backend endpoint is installed";
-  actions.append(off,del);tr.appendChild(actions);body.appendChild(tr);
+  [
+   t.created_at?new Date(t.created_at).toLocaleString():"—",
+   t.transaction_type||"—",String(t.amount??"—"),
+   t.currency||"—",t.status||"—",t.transaction_code||"—"
+  ].forEach(value=>{
+   const td=document.createElement("td");td.textContent=value;tr.appendChild(td);
+  });
+  tbody.appendChild(tr);
  });
 }
-async function logout(){const {error}=await db.auth.signOut();if(error)deny("Logout error: "+error.message);else deny("You have been logged out.")}
-checkPresident();
+async function logout(){
+ await db.auth.signOut();currentUser=null;show("home");
+}
+(async()=>{
+ const {data}=await db.auth.getSession();
+ if(data.session)await verifyProfile();
+})();
 </script>
 </body>
 </html>
