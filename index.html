@@ -1,4 +1,3 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -12,22 +11,21 @@
 body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
 header{text-align:center;padding:22px 12px;border-bottom:1px solid #554800}
 .logo{margin:auto;border:2px solid var(--gold);border-radius:50%;width:60px;height:60px;display:grid;place-items:center;color:var(--gold);font-size:24px;font-weight:bold}
-h1,h2,h3{color:var(--gold)}
-h1{font-size:24px}
+h1,h2,h3{color:var(--gold)} h1{font-size:24px}
 nav{display:flex;justify-content:center;gap:13px;flex-wrap:wrap}
-a{color:var(--gold);text-decoration:none}
-nav a{padding:7px}
+a{color:var(--gold);text-decoration:none} nav a{padding:7px}
 main{width:min(900px,92%);margin:24px auto}
 .hero,.panel{background:var(--panel);border:1px solid #403700;border-radius:14px;padding:22px;margin-bottom:18px}
 .hero{text-align:center;padding:38px 18px}
 .muted{color:var(--muted);line-height:1.7}
 button,.button{background:var(--gold);color:#080808;border:0;border-radius:7px;padding:12px 17px;font-weight:bold;cursor:pointer;display:inline-block;margin:5px 3px}
+button:disabled{opacity:.55;cursor:wait}
 input,select{width:100%;padding:12px;margin:7px 0 13px;background:#080808;color:white;border:1px solid #665800;border-radius:7px}
 label{color:#ddd;font-size:14px}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
 .card{border:1px solid #5b4c00;border-radius:10px;padding:16px;background:#101010}
-.hidden{display:none}
-.notice{padding:12px;background:#24200d;border-radius:8px;color:#ffe66a}
+.hidden{display:none!important}
+.notice{padding:12px;background:#24200d;border-radius:8px;color:#ffe66a;overflow-wrap:anywhere;line-height:1.5}
 footer{text-align:center;padding:22px;color:#aaa;border-top:1px solid #333;font-size:13px}
 </style>
 </head>
@@ -54,29 +52,46 @@ footer{text-align:center;padding:22px;color:#aaa;border-top:1px solid #333;font-
 
 <section class="panel hidden" id="auth">
   <h2 id="authTitle">Member Login</h2>
-  <p class="muted">Online account service will be activated after secure database connection.</p>
   <div id="loginForm">
-    <label>Account Number</label>
-    <input id="loginAccount" placeholder="e.g. CE000001" autocomplete="username">
-    <label>Password</label>
+    <label for="loginAccount">Account Number</label>
+    <input id="loginAccount" placeholder="e.g. CE000001" autocomplete="username" maxlength="40">
+    <label for="loginPassword">Password</label>
     <input id="loginPassword" type="password" placeholder="Your password" autocomplete="current-password">
-    <button onclick="demoMessage()">Login</button>
+    <button id="loginButton" onclick="memberLogin()">Login</button>
     <button onclick="showAuth('register')">Create account</button>
   </div>
+
   <div id="registerForm" class="hidden">
-    <label>Full Name</label>
-    <input id="fullName" placeholder="Enter full name" autocomplete="name">
-    <label>Account Number (if already assigned)</label>
-    <input id="accountNumber" placeholder="Leave blank if not assigned">
-    <label>Email</label>
-    <input id="email" type="email" placeholder="Email for secure login" autocomplete="email">
-    <label>Create Password</label>
+    <label for="fullName">Full Name</label>
+    <input id="fullName" placeholder="Enter full name" autocomplete="name" maxlength="100">
+    <label for="requestedPost">Requested Post</label>
+    <select id="requestedPost">
+      <option value="President Assistant">President Assistant</option>
+      <option value="DM">DM</option>
+      <option value="DM Assistant">DM Assistant</option>
+      <option value="SDM">SDM</option>
+      <option value="SP">SP</option>
+      <option value="DSP">DSP</option>
+      <option value="Other Employees">Other Employees</option>
+    </select>
+    <label for="email">Email</label>
+    <input id="email" type="email" placeholder="Email address" autocomplete="email" maxlength="254">
+    <label for="newPassword">Create Password (minimum 8 characters)</label>
     <input id="newPassword" type="password" minlength="8" placeholder="At least 8 characters" autocomplete="new-password">
-    <button onclick="demoMessage()">Submit registration</button>
+    <button id="registerButton" onclick="registerMember()">Submit registration</button>
     <button onclick="showAuth('login')">Back to Login</button>
   </div>
-  <p id="authMessage" class="notice hidden" role="status"></p>
+
+  <p id="authMessage" class="notice hidden" role="status" aria-live="polite"></p>
   <button onclick="document.getElementById('auth').classList.add('hidden')">Close</button>
+</section>
+
+<section class="panel hidden" id="dashboard">
+  <h2>Member Account</h2>
+  <p id="memberInfo" class="muted"></p>
+  <p id="memberStatus" class="notice"></p>
+  <p class="muted">This is only the account confirmation area. Management features must be separately secured by database policies before being added.</p>
+  <button onclick="memberLogout()">Logout</button>
 </section>
 
 <section class="panel" id="about">
@@ -92,39 +107,164 @@ footer{text-align:center;padding:22px;color:#aaa;border-top:1px solid #333;font-
 <section class="panel" id="cards">
   <h2>Empire Cards</h2>
   <div class="grid">
-    <div class="card"><h3>Silver Card</h3><p>25% internal eligible-purchase discount</p><p>Price: 2.5 CD</p></div>
-    <div class="card"><h3>Gold Card</h3><p>Up to 42% internal eligible-purchase discount</p><p>Price: 10 CD</p></div>
-    <div class="card"><h3>Black Card</h3><p>Up to 57% internal eligible-purchase discount</p><p>President-awarded; not purchasable</p></div>
+    <div class="card"><h3>Silver Card</h3><p>25% eligible-purchase discount</p><p>Price: 2.5 CD</p></div>
+    <div class="card"><h3>Gold Card</h3><p>Up to 42% eligible-purchase discount</p><p>Price: 10 CD</p></div>
+    <div class="card"><h3>Black Card</h3><p>Up to 57% eligible-purchase discount</p><p>President-awarded; not purchasable</p></div>
   </div>
-  <p class="muted">Discounts and balances are internal game records, not real-money benefits.</p>
+  <p class="muted">CD balances and discounts are fictional internal records, not real-money benefits.</p>
 </section>
 
 <section class="panel" id="contact">
-  <h2>Contact & Head Office</h2>
+  <h2>Contact &amp; Head Office</h2>
   <p class="muted">Head Office: Chakla Ghat, Kishanganj, Bihar, India</p>
 </section>
 </main>
 
 <footer>© <span id="year"></span> Classic Empire Ltd.<br>Internal organization platform.</footer>
 
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-document.getElementById("year").textContent=new Date().getFullYear();
+document.getElementById("year").textContent = new Date().getFullYear();
 
-function showAuth(type){
-  const box=document.getElementById("auth");
-  box.classList.remove("hidden");
-  document.getElementById("loginForm").classList.toggle("hidden",type!=="login");
-  document.getElementById("registerForm").classList.toggle("hidden",type!=="register");
-  document.getElementById("authTitle").textContent=type==="login"?"Member Login":"Member Registration";
-  document.getElementById("authMessage").classList.add("hidden");
-  box.scrollIntoView({behavior:"smooth"});
+/* Browser-safe values only. NEVER add a service-role/secret key here. */
+const SUPABASE_URL = "https://wcyozectzscqwvtzetkc.supabase.co";
+const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+
+function showAuth(type) {
+  document.getElementById("auth").classList.remove("hidden");
+  document.getElementById("dashboard").classList.add("hidden");
+  document.getElementById("loginForm").classList.toggle("hidden", type !== "login");
+  document.getElementById("registerForm").classList.toggle("hidden", type !== "register");
+  document.getElementById("authTitle").textContent =
+    type === "login" ? "Member Login" : "Member Registration";
+  showMessage("");
+  document.getElementById("auth").scrollIntoView({behavior:"smooth"});
+}
+function showMessage(text) {
+  const el = document.getElementById("authMessage");
+  el.textContent = text;
+  el.classList.toggle("hidden", !text);
+}
+function friendlyError(error) {
+  const text = (error && error.message) ? error.message : String(error || "Unknown error");
+  if (/Failed to fetch|NetworkError/i.test(text)) return "Network error: internet, Supabase URL aur Function deployment check karein.";
+  if (/Invalid login credentials/i.test(text)) return "Account Number ya password galat hai.";
+  if (/Email not confirmed/i.test(text)) return "Email confirmation pending hai. Email check karein ya Supabase Auth settings dekhein.";
+  return text;
 }
 
-function demoMessage(){
-  const msg=document.getElementById("authMessage");
-  msg.textContent="Online login/registration is not connected yet. Please wait for the secure Supabase setup.";
-  msg.classList.remove("hidden");
+async function memberLogin() {
+  const account_number = document.getElementById("loginAccount").value.trim().toUpperCase();
+  const password = document.getElementById("loginPassword").value;
+  if (!account_number || !password) return showMessage("Account Number aur Password dono bhariye.");
+
+  const button = document.getElementById("loginButton");
+  button.disabled = true; button.textContent = "Logging in..."; showMessage("");
+  try {
+    const response = await fetch(SUPABASE_URL + "/functions/v1/member-login", {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+        "apikey": SUPABASE_PUBLISHABLE_KEY,
+        "Authorization": "Bearer " + SUPABASE_PUBLISHABLE_KEY
+      },
+      body: JSON.stringify({account_number, password})
+    });
+    const result = await response.json().catch(() => ({}));
+    if (!response.ok || !result.access_token || !result.refresh_token) {
+      throw new Error(result.error || result.message || ("Login Function error (HTTP " + response.status + ")."));
+    }
+    const {error: sessionError} = await db.auth.setSession({
+      access_token: result.access_token,
+      refresh_token: result.refresh_token
+    });
+    if (sessionError) throw sessionError;
+    await displayMember();
+  } catch (error) {
+    showMessage(friendlyError(error));
+  } finally {
+    button.disabled = false; button.textContent = "Login";
+  }
 }
+
+/* Registration creates an Auth user. A secure DB trigger or registration
+   Edge Function must create the pending member_profiles row. */
+async function registerMember() {
+  const full_name = document.getElementById("fullName").value.trim();
+  const requested_post = document.getElementById("requestedPost").value;
+  const email = document.getElementById("email").value.trim();
+  const password = document.getElementById("newPassword").value;
+  if (!full_name || !email || !password) return showMessage("Name, email aur password bhariye.");
+  if (password.length < 8) return showMessage("Password kam se kam 8 characters ka hona chahiye.");
+
+  const button = document.getElementById("registerButton");
+  button.disabled = true; button.textContent = "Submitting..."; showMessage("");
+  try {
+    const {data, error} = await db.auth.signUp({
+      email, password,
+      options: {data: {full_name, requested_post}}
+    });
+    if (error) throw error;
+    if (data.user && data.session) {
+      await db.auth.signOut();
+      showMessage("Registration request submitted. Account activation ke liye President approval aur pending member profile setup zaroori hai.");
+    } else {
+      showMessage("Signup request accepted. Agar email confirmation enabled hai to email verify karein. Member profile aur President approval workflow backend mein configured hona chahiye.");
+    }
+  } catch (error) {
+    showMessage("Registration error: " + friendlyError(error));
+  } finally {
+    button.disabled = false; button.textContent = "Submit registration";
+  }
+}
+
+async function displayMember() {
+  const {data: authData, error: authError} = await db.auth.getUser();
+  if (authError || !authData.user) throw authError || new Error("Session verify nahi hua.");
+  const user = authData.user;
+
+  const {data: profile, error: profileError} = await db
+    .from("member_profiles")
+    .select("account_number,member_id,full_name,post,status")
+    .eq("user_id", user.id)
+    .maybeSingle();
+
+  document.getElementById("auth").classList.add("hidden");
+  document.getElementById("dashboard").classList.remove("hidden");
+  document.getElementById("memberInfo").textContent = profile
+    ? `${profile.full_name || "Member"} | ${profile.account_number || "Account pending"} | ${profile.post || "Post pending"}`
+    : (user.email || "Signed-in account");
+
+  if (profileError) {
+    document.getElementById("memberStatus").textContent =
+      "Login successful, but member profile could not be loaded. Check member_profiles RLS policy.";
+  } else if (!profile) {
+    document.getElementById("memberStatus").textContent =
+      "Signed in, but no member profile is linked to this Auth user. Ask the administrator to finish profile setup.";
+  } else if (profile.status !== "active") {
+    document.getElementById("memberStatus").textContent =
+      "Account status: " + (profile.status || "pending") + ". Active approval is required for member services.";
+  } else {
+    document.getElementById("memberStatus").textContent =
+      "Account status: Active. This page does not yet include secured management features.";
+  }
+  document.getElementById("dashboard").scrollIntoView({behavior:"smooth"});
+}
+
+async function memberLogout() {
+  const {error} = await db.auth.signOut();
+  document.getElementById("dashboard").classList.add("hidden");
+  if (error) showMessage("Logout error: " + friendlyError(error));
+  else { showAuth("login"); showMessage("You have been logged out."); }
+}
+
+(async function restoreSession() {
+  try {
+    const {data} = await db.auth.getSession();
+    if (data.session) await displayMember();
+  } catch (_) { /* Leave public page visible if session restore fails. */ }
+})();
 </script>
 </body>
 </html>
