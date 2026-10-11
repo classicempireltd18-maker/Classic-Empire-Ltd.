@@ -47,6 +47,7 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var
 <button onclick="show('currency')">Currency</button>
 <button onclick="show('salaries')">Salaries</button>
 <button onclick="show('login')">Member Login</button>
+<button onclick="show('register')">Registration</button>
 <button onclick="show('about')">About / Contact</button>
 </nav>
 <main>
@@ -55,18 +56,19 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var
 <h1>Welcome to Classic Empire Ltd.</h1>
 <p>Member information, Empire updates and account services.</p>
 <button onclick="show('login')">Member Login</button>
+<button onclick="show('register')">Join Classic Empire</button>
 </div>
 <div class="grid">
-<div class="stat"><h3>Member Accounts</h3><p class="muted">Access your account securely.</p></div>
-<div class="stat"><h3>Empire Wallet</h3><p class="muted">View balances and transaction history after login.</p></div>
+<div class="stat"><h3>Member Accounts</h3><p class="muted">Secure access for registered members.</p></div>
+<div class="stat"><h3>Empire Wallet</h3><p class="muted">View balances and transactions after login.</p></div>
 <div class="stat"><h3>Empire Updates</h3><p class="muted">Official announcements and information.</p></div>
 </div>
 </section>
 <section id="members" class="hidden">
-<div class="panel"><h2>Members</h2><p>Private member details are available only to authorized members.</p><button onclick="show('login')">Member Login</button></div>
+<div class="panel"><h2>Members</h2><p>Private member information is available only to authorized members.</p><button onclick="show('login')">Member Login</button></div>
 </section>
 <section id="updates" class="hidden">
-<div class="panel"><h2>Empire Updates</h2><p>Notices will appear here when the notice system is connected.</p><p class="muted">Live notices are not connected in this file yet.</p></div>
+<div class="panel"><h2>Empire Updates</h2><p>Notices will appear here when the notice system is connected.</p></div>
 </section>
 <section id="currency" class="hidden">
 <div class="panel"><h2>Currency</h2><div class="grid">
@@ -75,7 +77,7 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var
 </div><p class="muted">Classic Dinar is an internal fictional project currency, not official legal tender.</p></div>
 </section>
 <section id="salaries" class="hidden">
-<div class="panel"><h2>Salaries</h2><p>Salary information is controlled by the authorized President/Admin system.</p><p class="muted">Live salary data is not connected to this public page.</p></div>
+<div class="panel"><h2>Salaries</h2><p>Salary information is controlled by the authorized President/Admin system.</p><p class="muted">Live salary records are not connected to this page yet.</p></div>
 </section>
 <section id="about" class="hidden">
 <div class="panel"><h2>About Classic Empire Ltd.</h2><p>Online member accounts and internal project services.</p><p><b>Head Office:</b> Chakla Ghat, Kishanganj, Bihar, India</p></div>
@@ -90,46 +92,56 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var
 <input id="password" type="password" autocomplete="current-password" required>
 <button id="loginBtn" style="margin-top:15px">Login</button>
 </form>
+<p>New member?</p><button class="secondary" onclick="show('register')">Create Account</button>
 <div id="loginMessage" class="notice hidden" role="status"></div>
 </div>
 </section>
-<section id="dashboard" class="hidden">
+<section id="register" class="hidden">
 <div class="panel">
-<h2>Member Account</h2><div id="profile">Loading profile...</div>
-<button class="secondary" onclick="loadWallet()">Refresh Wallet</button>
-<button onclick="logout()">Logout</button>
+<h2>Member Registration</h2>
+<p class="muted">Submit your details for administrator review. Do not select President or another senior post for yourself.</p>
+<form id="registerForm">
+<label for="regName">Full Name</label><input id="regName" maxlength="100" required>
+<label for="regEmail">Email Address</label><input id="regEmail" type="email" required>
+<label for="regPassword">Password</label><input id="regPassword" type="password" minlength="8" autocomplete="new-password" required>
+<label for="regConfirm">Confirm Password</label><input id="regConfirm" type="password" minlength="8" autocomplete="new-password" required>
+<label for="regPost">Requested Post</label>
+<select id="regPost" required>
+<option value="">Select requested post</option>
+<option value="Other Employee">Other Employee</option>
+<option value="President's Assistant">President's Assistant</option>
+<option value="DM">DM</option>
+<option value="DM's Assistant">DM's Assistant</option>
+<option value="SDM">SDM</option><option value="SP">SP</option><option value="DSP">DSP</option>
+</select>
+<button id="registerBtn" style="margin-top:15px">Submit Registration</button>
+</form>
+<div id="registerMessage" class="notice hidden" role="status"></div>
 </div>
+</section>
+<section id="dashboard" class="hidden">
+<div class="panel"><h2>Member Account</h2><div id="profile">Loading profile...</div><button class="secondary" onclick="loadWallet()">Refresh Wallet</button><button onclick="logout()">Logout</button></div>
 <div class="panel">
 <h2>Empire Wallet</h2>
 <div class="grid">
 <div class="stat"><p class="muted">Classic Dinar (CD)</p><div class="amount" id="balanceCD">—</div></div>
 <div class="stat"><p class="muted">Indian Rupees (INR)</p><div class="amount" id="balanceINR">—</div></div>
-</div>
-<div id="walletMessage" class="notice">Wallet information will appear here.</div>
+</div><div id="walletMessage" class="notice">Wallet information will appear here.</div>
 </div>
 <div class="panel">
 <h2>Money Transfer</h2>
 <form id="transferForm">
-<label for="recipient">Recipient Account Number</label>
-<input id="recipient" placeholder="CE000002" required>
-<label for="currencySelect">Currency</label>
-<select id="currencySelect"><option value="CD">Classic Dinar (CD)</option><option value="INR">Indian Rupees (INR)</option></select>
-<label for="amount">Amount</label>
-<input id="amount" type="number" min="0.01" step="any" required>
-<label for="description">Description (optional)</label>
-<input id="description" maxlength="200">
+<label for="recipient">Recipient Account Number</label><input id="recipient" required>
+<label for="currencySelect">Currency</label><select id="currencySelect"><option value="CD">Classic Dinar (CD)</option><option value="INR">Indian Rupees (INR)</option></select>
+<label for="amount">Amount</label><input id="amount" type="number" min="0.01" step="any" required>
+<label for="description">Description (optional)</label><input id="description" maxlength="200">
 <button id="transferBtn" style="margin-top:15px">Transfer</button>
-</form>
-<div id="transferMessage" class="notice hidden" role="status"></div>
+</form><div id="transferMessage" class="notice hidden" role="status"></div>
 </div>
 <div class="panel">
-<h2>Transaction History</h2>
-<button class="secondary" onclick="loadTransactions()">Refresh History</button>
+<h2>Transaction History</h2><button class="secondary" onclick="loadTransactions()">Refresh History</button>
 <div id="historyMessage" class="notice">No history loaded.</div>
-<div class="tablewrap"><table>
-<thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Currency</th><th>Status</th><th>Transfer ID</th></tr></thead>
-<tbody id="historyRows"></tbody>
-</table></div>
+<div class="tablewrap"><table><thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Currency</th><th>Status</th><th>Transfer ID</th></tr></thead><tbody id="historyRows"></tbody></table></div>
 </div>
 </section>
 </main>
@@ -140,27 +152,84 @@ footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var
 const SUPABASE_URL="https://wcyozectzscqwvtzetkc.supabase.co";
 const SUPABASE_KEY="sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
 const LOGIN_FUNCTION="member-login";
+
+/* IMPORTANT:
+   Replace REGISTRATION_FUNCTION with the exact deployed registration
+   Edge Function name and adapt its request/response to that function.
+*/
+const REGISTRATION_FUNCTION="member-register";
+
 const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
 let currentUser=null;
 
 function show(id){
- ["home","members","updates","currency","salaries","login","about","dashboard"]
+ ["home","members","updates","currency","salaries","login","register","about","dashboard"]
  .forEach(s=>document.getElementById(s).classList.add("hidden"));
- if(id==="wallet")id=currentUser?"dashboard":"login";
  document.getElementById(id).classList.remove("hidden");
  if(id==="dashboard")loadWallet();
 }
 function msg(id,text){
  const el=document.getElementById(id);
- el.textContent=text;
- el.classList.remove("hidden");
+ el.textContent=text;el.classList.remove("hidden");
 }
+
+document.getElementById("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const btn=document.getElementById("loginBtn");btn.disabled=true;
+ msg("loginMessage","Signing in...");
+ try{
+  const {data,error}=await db.functions.invoke(LOGIN_FUNCTION,{
+   body:{
+    account_number:document.getElementById("account").value.trim(),
+    password:document.getElementById("password").value
+   }
+  });
+  if(error)throw error;
+  const session=data?.session||data?.data?.session||data;
+  if(!session?.access_token||!session?.refresh_token)
+   throw new Error("Login function did not return a session. Check its response format.");
+  const {error:se}=await db.auth.setSession({
+   access_token:session.access_token,refresh_token:session.refresh_token
+  });
+  if(se)throw se;
+  await verifyProfile();
+ }catch(err){msg("loginMessage","Login failed: "+(err.message||"Unknown error"));}
+ finally{btn.disabled=false;}
+});
+
+document.getElementById("registerForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const btn=document.getElementById("registerBtn");
+ const password=document.getElementById("regPassword").value;
+ const confirm=document.getElementById("regConfirm").value;
+ if(password!==confirm){msg("registerMessage","Passwords do not match.");return;}
+ if(password.length<8){msg("registerMessage","Password must be at least 8 characters.");return;}
+ btn.disabled=true;msg("registerMessage","Submitting registration...");
+ try{
+  const {data,error}=await db.functions.invoke(REGISTRATION_FUNCTION,{
+   body:{
+    full_name:document.getElementById("regName").value.trim(),
+    email:document.getElementById("regEmail").value.trim(),
+    password:password,
+    requested_post:document.getElementById("regPost").value
+   }
+  });
+  if(error)throw error;
+  msg("registerMessage",data?.message||
+   "Registration request sent. Check the response and wait for administrator approval.");
+  document.getElementById("registerForm").reset();
+ }catch(err){
+  msg("registerMessage","Registration could not be submitted: "+
+   (err.message||"Check whether the member-register Edge Function exists."));
+ }finally{btn.disabled=false;}
+});
+
 async function verifyProfile(){
  const {data:{user},error:authError}=await db.auth.getUser();
  if(authError||!user){currentUser=null;show("login");return;}
  const {data,error}=await db.from("member_profiles")
- .select("account_number,member_id,full_name,post,status")
- .eq("id",user.id).maybeSingle();
+  .select("account_number,member_id,full_name,post,status")
+  .eq("id",user.id).maybeSingle();
  if(error||!data||String(data.status).toLowerCase()!=="active"){
   await db.auth.signOut();currentUser=null;
   msg("loginMessage","Active member profile could not be verified.");
@@ -168,77 +237,56 @@ async function verifyProfile(){
  }
  currentUser=user;
  document.getElementById("profile").textContent=
- data.full_name+" | "+data.account_number+" | "+data.post+" | "+data.status;
+  data.full_name+" | "+data.account_number+" | "+data.post+" | "+data.status;
  show("dashboard");
 }
-document.getElementById("loginForm").addEventListener("submit",async e=>{
- e.preventDefault();
- const btn=document.getElementById("loginBtn");btn.disabled=true;
- msg("loginMessage","Signing in...");
- try{
-  const account_number=document.getElementById("account").value.trim();
-  const password=document.getElementById("password").value;
-  const {data,error}=await db.functions.invoke(LOGIN_FUNCTION,{
-   body:{account_number,password}
-  });
-  if(error)throw error;
-  const session=data?.session||data?.data?.session||data;
-  if(!session?.access_token||!session?.refresh_token)
-   throw new Error("Login function response does not contain a session.");
-  const {error:se}=await db.auth.setSession({
-   access_token:session.access_token,refresh_token:session.refresh_token
-  });
-  if(se)throw se;
-  await verifyProfile();
- }catch(err){
-  msg("loginMessage","Login failed: "+(err.message||"Check login settings."));
- }finally{btn.disabled=false;}
-});
+
 async function loadWallet(){
  if(!currentUser)return;
  msg("walletMessage","Loading wallet...");
  const {data,error}=await db.from("wallet_accounts")
- .select("balance_cd,balance_inr").eq("user_id",currentUser.id).maybeSingle();
+  .select("balance_cd,balance_inr")
+  .eq("user_id",currentUser.id).maybeSingle();
  if(error){msg("walletMessage","Wallet error: "+error.message);return;}
  if(!data){msg("walletMessage","No wallet record found.");return;}
  document.getElementById("balanceCD").textContent=
- Number(data.balance_cd||0).toLocaleString("en-IN");
+  Number(data.balance_cd||0).toLocaleString("en-IN");
  document.getElementById("balanceINR").textContent=
- Number(data.balance_inr||0).toLocaleString("en-IN");
+  Number(data.balance_inr||0).toLocaleString("en-IN");
  msg("walletMessage","Wallet loaded.");
  await loadTransactions();
 }
+
 document.getElementById("transferForm").addEventListener("submit",async e=>{
  e.preventDefault();
  if(!currentUser){show("login");return;}
  const btn=document.getElementById("transferBtn");btn.disabled=true;
  msg("transferMessage","Processing transfer...");
  try{
-  const recipient=document.getElementById("recipient").value.trim();
-  const currency=document.getElementById("currencySelect").value;
   const amount=Number(document.getElementById("amount").value);
-  const description=document.getElementById("description").value.trim();
   if(!Number.isFinite(amount)||amount<=0)throw new Error("Enter a positive amount.");
   const {data,error}=await db.rpc("transfer_wallet",{
-   p_recipient_account_number:recipient,
-   p_currency:currency,p_amount:amount,p_description:description
+   p_recipient_account_number:document.getElementById("recipient").value.trim(),
+   p_currency:document.getElementById("currencySelect").value,
+   p_amount:amount,
+   p_description:document.getElementById("description").value.trim()
   });
   if(error)throw error;
-  msg("transferMessage","Transfer request completed. Refresh and verify the wallet and history.");
+  msg("transferMessage","Transfer request returned successfully. Verify wallet and history.");
   document.getElementById("transferForm").reset();
   await loadWallet();
- }catch(err){
-  msg("transferMessage","Transfer failed: "+(err.message||"Unknown error"));
- }finally{btn.disabled=false;}
+ }catch(err){msg("transferMessage","Transfer failed: "+(err.message||"Unknown error"));}
+ finally{btn.disabled=false;}
 });
+
 async function loadTransactions(){
  if(!currentUser)return;
- const tbody=document.getElementById("historyRows");
- tbody.replaceChildren();msg("historyMessage","Loading history...");
+ const tbody=document.getElementById("historyRows");tbody.replaceChildren();
+ msg("historyMessage","Loading history...");
  const {data,error}=await db.from("wallet_transactions")
- .select("created_at,transaction_type,amount,currency,status,transaction_code")
- .eq("user_id",currentUser.id)
- .order("created_at",{ascending:false}).limit(50);
+  .select("created_at,transaction_type,amount,currency,status,transaction_code")
+  .eq("user_id",currentUser.id)
+  .order("created_at",{ascending:false}).limit(50);
  if(error){msg("historyMessage","History error: "+error.message);return;}
  if(!data||!data.length){msg("historyMessage","No transactions found.");return;}
  document.getElementById("historyMessage").textContent="Latest transactions";
@@ -246,17 +294,17 @@ async function loadTransactions(){
   const tr=document.createElement("tr");
   [
    t.created_at?new Date(t.created_at).toLocaleString():"—",
-   t.transaction_type||"—",String(t.amount??"—"),
-   t.currency||"—",t.status||"—",t.transaction_code||"—"
-  ].forEach(value=>{
-   const td=document.createElement("td");td.textContent=value;tr.appendChild(td);
-  });
+   t.transaction_type||"—",String(t.amount??"—"),t.currency||"—",
+   t.status||"—",t.transaction_code||"—"
+  ].forEach(v=>{const td=document.createElement("td");td.textContent=v;tr.appendChild(td);});
   tbody.appendChild(tr);
  });
 }
+
 async function logout(){
  await db.auth.signOut();currentUser=null;show("home");
 }
+
 (async()=>{
  const {data}=await db.auth.getSession();
  if(data.session)await verifyProfile();
