@@ -1,3 +1,4 @@
+
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -6,125 +7,342 @@
 <meta name="theme-color" content="#080808">
 <title>President Admin Panel | Classic Empire Ltd.</title>
 <style>
-:root{--gold:#ffd700;--bg:#080808;--panel:#151515;--muted:#bbb;--line:#514600}
+:root{--bg:#080808;--panel:#151515;--gold:#ffd700;--muted:#aaa;--line:#40371c;--red:#ff6868}
 *{box-sizing:border-box}
 body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
-header{padding:18px 14px;text-align:center;border-bottom:1px solid var(--line)}
-.logo{margin:auto;border:2px solid var(--gold);border-radius:50%;width:54px;height:54px;display:grid;place-items:center;color:var(--gold);font-size:22px;font-weight:bold}
-h1,h2,h3{color:var(--gold)}h1{font-size:22px}
-main{width:min(1050px,94%);margin:22px auto}
-.panel{background:var(--panel);border:1px solid var(--line);border-radius:13px;padding:18px;margin-bottom:16px}
-.muted{color:var(--muted);line-height:1.6}
-button,.link{background:var(--gold);color:#080808;border:0;border-radius:7px;padding:11px 15px;font-weight:bold;cursor:pointer;display:inline-block;margin:4px 3px;text-decoration:none}
-button:disabled{opacity:.55;cursor:wait}
-input{width:100%;padding:12px;margin:7px 0 13px;background:#080808;color:white;border:1px solid #665800;border-radius:7px}
-label{color:#ddd;font-size:14px}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-.tile{border:1px solid #514600;border-radius:10px;padding:15px;background:#101010}
+header{display:flex;align-items:center;gap:12px;padding:16px;background:#101010;border-bottom:1px solid var(--line)}
+.logo{width:55px;height:55px;object-fit:contain}
+.brand{font-size:19px;font-weight:bold;color:var(--gold)}
+.small,.muted{font-size:13px;color:var(--muted)}
+nav{display:flex;flex-wrap:wrap;gap:8px;padding:12px;background:#101010}
+button{border:0;border-radius:7px;padding:11px 14px;background:var(--gold);color:#080808;font-weight:bold;cursor:pointer}
+nav button,.secondary{background:#252525;color:var(--gold);border:1px solid var(--line)}
+button:disabled{opacity:.5;cursor:not-allowed}
+main{max-width:1100px;margin:auto;padding:16px}
+.panel,.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:18px;margin-bottom:15px}
+h1,h2,h3{color:var(--gold)}
+label{display:block;margin:12px 0 6px}
+input,select{width:100%;padding:12px;background:#080808;color:#fff;border:1px solid #51472a;border-radius:7px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(180px,1fr));gap:12px}
+.amount{font-size:24px;color:var(--gold);font-weight:bold}
 .hidden{display:none!important}
-.notice{padding:12px;background:#24200d;border-radius:8px;color:#ffe66a;overflow-wrap:anywhere;line-height:1.5}
-footer{text-align:center;padding:20px;color:#999;border-top:1px solid #333;font-size:13px}
+.notice{padding:12px;background:#242116;border-radius:7px;margin:12px 0;overflow-wrap:anywhere}
+.error{color:var(--red)}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13px}
+th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line)}
+footer{text-align:center;padding:22px;color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
 <header>
-  <div class="logo">CE</div>
-  <h1>CLASSIC EMPIRE LTD.</h1>
-  <p class="muted">President Admin Panel</p>
+<img class="logo" src="classic-empire-logo.png" alt="Classic Empire Ltd." onerror="this.style.display='none'">
+<div>
+<div class="brand">CLASSIC EMPIRE LTD.</div>
+<div class="small">President Administration Panel</div>
+</div>
 </header>
+
+<nav>
+<button onclick="show('overview')">Overview</button>
+<button onclick="show('accounts')">Member Accounts</button>
+<button onclick="show('registrations')">Registrations</button>
+<button onclick="show('wallet')">Wallet Check</button>
+<button onclick="show('security')">Security</button>
+<button onclick="logout()">Logout</button>
+</nav>
+
 <main>
-  <section class="panel" id="checking">
-    <h2>Checking secure session…</h2>
-    <p class="muted">This page checks your Supabase login and active President profile before showing the panel.</p>
-  </section>
+<section id="login">
+<div class="panel">
+<h2>Admin Login</h2>
+<p class="muted">Sign in with your authorized Classic Empire member account. A President post alone is not a substitute for verified administrative authorization.</p>
+<form id="loginForm">
+<label for="account">Account Number</label>
+<input id="account" placeholder="CE000001" autocomplete="username" required>
+<label for="password">Password</label>
+<input id="password" type="password" autocomplete="current-password" required>
+<button id="loginBtn" style="margin-top:14px">Sign In</button>
+</form>
+<div id="loginMessage" class="notice hidden" role="status"></div>
+</div>
+</section>
 
-  <section class="panel hidden" id="denied">
-    <h2>Access not granted</h2>
-    <p id="deniedMessage" class="notice">Please log in with an active President account.</p>
-    <a class="link" href="./index.html">Return to website</a>
-  </section>
+<div id="adminArea" class="hidden">
+<section id="overview">
+<h2>President Admin Panel</h2>
+<div class="grid">
+<div class="stat"><h3>Member Accounts</h3><div id="accountCount" class="amount">—</div></div>
+<div class="stat"><h3>Pending Registrations</h3><div id="pendingCount" class="amount">—</div></div>
+<div class="stat"><h3>Active Members</h3><div id="activeCount" class="amount">—</div></div>
+</div>
+<div class="panel">
+<h3>Administrator Session</h3>
+<div id="adminIdentity">Checking authorization...</div>
+<p class="muted">Management data is loaded only after authorization checks.</p>
+<button onclick="refreshData()">Refresh Data</button>
+</div>
+</section>
 
-  <section class="hidden" id="admin">
-    <section class="panel">
-      <h2>Welcome, President</h2>
-      <p id="presidentDetails" class="muted"></p>
-      <p class="notice">Secure starter panel: the President session and profile were verified. Module actions are not enabled until their database policies and server-side operations are tested.</p>
-      <button id="refreshButton" onclick="checkPresident()">Refresh session</button>
-      <button id="logoutButton" onclick="logout()">Logout</button>
-    </section>
+<section id="accounts" class="hidden">
+<div class="panel">
+<h2>Member Accounts</h2>
+<p class="muted">Account listing requires authorized database access.</p>
+<button onclick="loadMembers()">Refresh Members</button>
+<div id="membersMessage" class="notice">No data loaded.</div>
+<div class="tablewrap"><table>
+<thead><tr><th>Account</th><th>Name</th><th>Post</th><th>Status</th><th>Member ID</th></tr></thead>
+<tbody id="membersRows"></tbody>
+</table></div>
+</div>
+</section>
 
-    <section class="panel">
-      <h2>Administration Modules</h2>
-      <div class="grid">
-        <div class="tile"><h3>Member Management</h3><p class="muted">Review member profiles and account status. Database-backed approval actions are not enabled yet.</p><span class="muted">Next module to build</span></div>
-        <div class="tile"><h3>Salary Management</h3><p class="muted">Weekly salary settings and payment records.</p><span class="muted">Not connected yet</span></div>
-        <div class="tile"><h3>Wallet & Transfers</h3><p class="muted">Internal CD/INR ledger and transfer history.</p><span class="muted">Not connected yet</span></div>
-        <div class="tile"><h3>Expenses & Purchases</h3><p class="muted">Expense records and President Purchase category.</p><span class="muted">Not connected yet</span></div>
-        <div class="tile"><h3>Cards & Settings</h3><p class="muted">Card prices, discount rules and editable system settings.</p><span class="muted">Not connected yet</span></div>
-        <div class="tile"><h3>Notices & Attendance</h3><p class="muted">Official notices and member attendance records.</p><span class="muted">Not connected yet</span></div>
-      </div>
-    </section>
-  </section>
+<section id="registrations" class="hidden">
+<div class="panel">
+<h2>Registration Requests</h2>
+<p class="muted">Approve or reject requests only through a verified server-side Admin operation.</p>
+<button onclick="loadPending()">Refresh Requests</button>
+<div id="pendingMessage" class="notice">No requests loaded.</div>
+<div class="tablewrap"><table>
+<thead><tr><th>Name</th><th>Requested Post</th><th>Status</th></tr></thead>
+<tbody id="pendingRows"></tbody>
+</table></div>
+</div>
+</section>
+
+<section id="wallet" class="hidden">
+<div class="panel">
+<h2>Wallet Overview</h2>
+<p class="muted">Balances and transactions are private database records. This panel will show them only after the correct Admin policy is configured.</p>
+<button onclick="loadWalletSummary()">Check Wallet Records</button>
+<div id="walletMessage" class="notice">Not checked yet.</div>
+</div>
+</section>
+
+<section id="security" class="hidden">
+<div class="panel">
+<h2>Security Status</h2>
+<ul>
+<li>Admin access must be verified by trusted database policies or a server-side function.</li>
+<li>Never expose a Supabase service-role key in browser code.</li>
+<li>Never trust a role or account number sent by the browser alone.</li>
+<li>Use Row Level Security (RLS) to protect member, wallet and salary records.</li>
+</ul>
+<div id="securityMessage" class="notice">Session authorization is required.</div>
+</div>
+</section>
+</div>
 </main>
-<footer>© <span id="year"></span> Classic Empire Ltd. — Admin access is subject to Supabase database policies.</footer>
+
+<footer>Classic Empire Ltd. · Head Office: Chakla Ghat, Kishanganj, Bihar, India</footer>
 
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
-document.getElementById("year").textContent = new Date().getFullYear();
+const SUPABASE_URL="https://wcyozectzscqwvtzetkc.supabase.co";
+const SUPABASE_KEY="sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
+const LOGIN_FUNCTION="member-login";
 
-/* Only public browser key belongs here. Never add a service-role/secret key. */
-const SUPABASE_URL = "https://wcyozectzscqwvtzetkc.supabase.co";
-const SUPABASE_PUBLISHABLE_KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_PUBLISHABLE_KEY);
+const db=window.supabase.createClient(SUPABASE_URL,SUPABASE_KEY);
+let adminUser=null;
+let adminProfile=null;
 
-function show(id){document.getElementById(id).classList.remove("hidden")}
-function hide(id){document.getElementById(id).classList.add("hidden")}
+const sections=["overview","accounts","registrations","wallet","security"];
 
-async function checkPresident(){
-  const refresh = document.getElementById("refreshButton");
-  if(refresh){refresh.disabled=true;refresh.textContent="Checking..."}
-  hide("admin");hide("denied");show("checking");
-  document.querySelector("#checking h2").textContent="Checking secure session…";
-  try{
-    const {data:sessionData,error:sessionError}=await db.auth.getSession();
-    if(sessionError) throw sessionError;
-    if(!sessionData.session){
-      hide("checking");show("denied");
-      document.getElementById("deniedMessage").textContent="No active login session found. Open the main website, sign in, then open this Admin Panel.";
-      return;
-    }
-    const {data:userData,error:userError}=await db.auth.getUser();
-    if(userError||!userData.user) throw userError||new Error("Could not verify login.");
-    const {data:profile,error:profileError}=await db.from("member_profiles")
-      .select("account_number,member_id,full_name,post,status")
-      .eq("user_id",userData.user.id).maybeSingle();
-    if(profileError) throw new Error("Could not verify member profile. Check member_profiles SELECT RLS policy.");
-    if(!profile||profile.status!=="active"||profile.post!=="President"){
-      hide("checking");show("denied");
-      document.getElementById("deniedMessage").textContent="Only an active President profile can open this panel. No management data has been changed.";
-      return;
-    }
-    document.getElementById("presidentDetails").textContent=
-      (profile.full_name||"President")+" | "+(profile.account_number||"No account number")+" | "+(profile.member_id||"No member ID")+" | Active";
-    hide("checking");hide("denied");show("admin");
-  }catch(err){
-    hide("checking");show("denied");
-    document.getElementById("deniedMessage").textContent="Verification error: "+(err.message||String(err))+". Check Supabase session and member_profiles RLS.";
-  }finally{
-    if(refresh){refresh.disabled=false;refresh.textContent="Refresh session"}
-  }
+function show(id){
+ if(!adminUser){showLogin();return;}
+ sections.forEach(s=>document.getElementById(s).classList.add("hidden"));
+ document.getElementById(id).classList.remove("hidden");
 }
+
+function showLogin(){
+ document.getElementById("login").classList.remove("hidden");
+ document.getElementById("adminArea").classList.add("hidden");
+}
+
+function showAdmin(){
+ document.getElementById("login").classList.add("hidden");
+ document.getElementById("adminArea").classList.remove("hidden");
+ sections.forEach(s=>document.getElementById(s).classList.add("hidden"));
+ document.getElementById("overview").classList.remove("hidden");
+}
+
+function setMsg(id,text){
+ const el=document.getElementById(id);
+ el.textContent=text;
+ el.classList.remove("hidden");
+}
+
+function addCell(row,value){
+ const td=document.createElement("td");
+ td.textContent=value==null?"—":String(value);
+ row.appendChild(td);
+}
+
+document.getElementById("loginForm").addEventListener("submit",async e=>{
+ e.preventDefault();
+ const btn=document.getElementById("loginBtn");
+ btn.disabled=true;
+ setMsg("loginMessage","Signing in...");
+ try{
+  const {data,error}=await db.functions.invoke(LOGIN_FUNCTION,{
+   body:{
+    account_number:document.getElementById("account").value.trim(),
+    password:document.getElementById("password").value
+   }
+  });
+  if(error)throw error;
+
+  const session=data?.session||data?.data?.session||data;
+  if(!session?.access_token||!session?.refresh_token){
+   throw new Error("Login function did not return a valid session.");
+  }
+  const {error:sessionError}=await db.auth.setSession({
+   access_token:session.access_token,
+   refresh_token:session.refresh_token
+  });
+  if(sessionError)throw sessionError;
+
+  await verifyAdmin();
+ }catch(err){
+  await db.auth.signOut();
+  setMsg("loginMessage","Sign-in failed: "+(err.message||"Unknown error"));
+ }finally{
+  btn.disabled=false;
+ }
+});
+
+async function verifyAdmin(){
+ const {data:{user},error:authError}=await db.auth.getUser();
+ if(authError||!user)throw new Error("Could not verify signed-in user.");
+
+ const {data:profile,error}=await db.from("member_profiles")
+  .select("user_id,account_number,full_name,post,status,member_id")
+  .eq("user_id",user.id)
+  .maybeSingle();
+
+ if(error)throw new Error("Profile lookup failed: "+error.message);
+ if(!profile)throw new Error("No member profile is linked to this Auth user.");
+ if(String(profile.status||"").toLowerCase()!=="active")
+  throw new Error("Member account is not active.");
+
+ /*
+  This client-side check is only a UI guard.
+  Real Admin permissions MUST also be enforced by Supabase RLS/server-side policies.
+ */
+ const post=String(profile.post||"").trim().toLowerCase();
+ if(post!=="president"){
+  await db.auth.signOut();
+  throw new Error("This account is not assigned the President post.");
+ }
+
+ adminUser=user;
+ adminProfile=profile;
+ document.getElementById("adminIdentity").textContent=
+  profile.full_name+" | "+profile.account_number+" | "+profile.post;
+ setMsg("securityMessage","Signed-in President profile found. Database policies must independently enforce Admin access.");
+ showAdmin();
+ await refreshData();
+}
+
+async function loadMembers(){
+ if(!adminUser)return;
+ const body=document.getElementById("membersRows");
+ body.replaceChildren();
+ setMsg("membersMessage","Loading members...");
+ const {data,error}=await db.from("member_profiles")
+  .select("account_number,full_name,post,status,member_id")
+  .order("created_at",{ascending:false})
+  .limit(200);
+
+ if(error){
+  setMsg("membersMessage","Could not load members: "+error.message);
+  return;
+ }
+ if(!data||!data.length){
+  setMsg("membersMessage","No member profiles returned.");
+  return;
+ }
+ data.forEach(m=>{
+  const tr=document.createElement("tr");
+  addCell(tr,m.account_number);
+  addCell(tr,m.full_name);
+  addCell(tr,m.post);
+  addCell(tr,m.status);
+  addCell(tr,m.member_id);
+  body.appendChild(tr);
+ });
+ setMsg("membersMessage","Loaded "+data.length+" member profile(s).");
+}
+
+async function loadPending(){
+ if(!adminUser)return;
+ const body=document.getElementById("pendingRows");
+ body.replaceChildren();
+ setMsg("pendingMessage","Checking registrations...");
+ /*
+  The current member_profiles schema has requested_post but no confirmed
+  registration-request table/schema. Do not guess how pending rows are stored.
+ */
+ const {data,error}=await db.from("member_profiles")
+  .select("full_name,requested_post,status")
+  .ilike("status","pending")
+  .limit(200);
+
+ if(error){
+  setMsg("pendingMessage","Could not read pending registrations: "+error.message);
+  return;
+ }
+ if(!data||!data.length){
+  setMsg("pendingMessage","No pending profiles found. Registration storage still needs verification.");
+  return;
+ }
+ data.forEach(m=>{
+  const tr=document.createElement("tr");
+  addCell(tr,m.full_name);
+  addCell(tr,m.requested_post);
+  addCell(tr,m.status);
+  body.appendChild(tr);
+ });
+ setMsg("pendingMessage","Found "+data.length+" pending profile(s). Approval actions are not enabled until a secure Admin endpoint is configured.");
+}
+
+async function loadWalletSummary(){
+ if(!adminUser)return;
+ setMsg("walletMessage","Checking wallet table access...");
+ const {count,error}=await db.from("wallet_accounts")
+  .select("*",{count:"exact",head:true});
+ if(error){
+  setMsg("walletMessage","Wallet access denied or query failed: "+error.message);
+  return;
+ }
+ setMsg("walletMessage","Wallet records accessible: "+count+
+  ". This is a record count, not a balance summary.");
+}
+
+async function refreshData(){
+ if(!adminUser)return;
+ await Promise.all([loadMembers(),loadPending()]);
+}
+
 async function logout(){
-  const {error}=await db.auth.signOut();
-  if(error){
-    document.getElementById("deniedMessage").textContent="Logout error: "+error.message;
-    hide("admin");show("denied");
-  }else{
-    hide("admin");show("denied");
-    document.getElementById("deniedMessage").textContent="You have been logged out.";
-  }
+ await db.auth.signOut();
+ adminUser=null;
+ adminProfile=null;
+ document.getElementById("loginForm").reset();
+ showLogin();
 }
-checkPresident();
+
+(async()=>{
+ const {data,error}=await db.auth.getSession();
+ if(!error&&data.session){
+  try{await verifyAdmin();}
+  catch(err){
+   await db.auth.signOut();
+   setMsg("loginMessage",err.message||"Admin verification failed.");
+   showLogin();
+  }
+ }
+})();
 </script>
 </body>
 </html>
