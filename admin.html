@@ -2,314 +2,180 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1">
-  <meta name="theme-color" content="#ffffff">
-  <title>Card Benefits Management | Classic Empire Ltd.</title>
-
-  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
-  <style>
-    :root {
-      --bg: #f5f7fb;
-      --surface: #ffffff;
-      --text: #172033;
-      --muted: #667085;
-      --border: #e4e7ec;
-      --primary: #2457d6;
-      --primary-hover: #1946b5;
-      --danger: #c62828;
-      --success: #16794b;
-      --gold: #b58a00;
-      --shadow: 0 5px 22px rgba(20, 35, 70, .06);
-    }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: var(--text);
-      font-family: Arial, Helvetica, sans-serif;
-      line-height: 1.5;
-    }
-
-    header {
-      background: white;
-      border-bottom: 1px solid var(--border);
-      padding: 18px 16px;
-    }
-
-    .header-inner {
-      max-width: 1050px;
-      margin: auto;
-      display: flex;
-      align-items: center;
-      justify-content: space-between;
-      gap: 14px;
-      flex-wrap: wrap;
-    }
-
-    .brand {
-      font-weight: 800;
-      font-size: 19px;
-    }
-
-    .brand span { color: var(--gold); }
-
-    .subtitle {
-      font-size: 13px;
-      color: var(--muted);
-    }
-
-    main {
-      width: min(1050px, 100%);
-      padding: 24px 15px 50px;
-      margin: auto;
-    }
-
-    h1 { font-size: 27px; margin: 0 0 6px; }
-    h2 { font-size: 19px; margin-top: 0; }
-    h3 { font-size: 16px; }
-
-    .muted { color: var(--muted); font-size: 14px; }
-
-    .panel {
-      background: var(--surface);
-      border: 1px solid var(--border);
-      border-radius: 16px;
-      padding: 20px;
-      margin: 18px 0;
-      box-shadow: var(--shadow);
-    }
-
-    .toolbar {
-      display: flex;
-      gap: 10px;
-      flex-wrap: wrap;
-      align-items: center;
-    }
-
-    button, .button-link {
-      border: 0;
-      border-radius: 9px;
-      padding: 11px 15px;
-      font-size: 14px;
-      font-weight: 700;
-      cursor: pointer;
-      text-decoration: none;
-      display: inline-block;
-    }
-
-    button:disabled { opacity: .55; cursor: not-allowed; }
-
-    .primary { background: var(--primary); color: white; }
-    .primary:hover { background: var(--primary-hover); }
-    .secondary { background: #edf1f7; color: var(--text); }
-    .danger { background: #fff0f0; color: var(--danger); }
-    .small { padding: 8px 11px; font-size: 12px; }
-
-    .notice {
-      padding: 12px 14px;
-      border-radius: 10px;
-      background: #f0f4ff;
-      color: #2447a3;
-      margin: 14px 0;
-      overflow-wrap: anywhere;
-      white-space: pre-wrap;
-      font-size: 14px;
-    }
-
-    .notice.error { background: #fff0f0; color: #a61b1b; }
-    .notice.success { background: #ecfdf3; color: #16794b; }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
-      gap: 14px;
-    }
-
-    .benefit {
-      border: 1px solid var(--border);
-      border-radius: 13px;
-      padding: 16px;
-      min-width: 0;
-      background: white;
-    }
-
-    .benefit h3 { margin: 0 0 8px; }
-    .benefit p { overflow-wrap: anywhere; }
-    .benefit-actions { display: flex; gap: 8px; flex-wrap: wrap; }
-
-    .tag {
-      display: inline-block;
-      border-radius: 20px;
-      padding: 4px 9px;
-      background: #edf1f7;
-      font-size: 11px;
-      font-weight: 700;
-      margin: 3px 4px 8px 0;
-    }
-
-    .tag.active { background: #e8f8ef; color: #16794b; }
-    .tag.inactive { background: #fff0f0; color: #a61b1b; }
-
-    label {
-      display: block;
-      font-size: 13px;
-      font-weight: 700;
-      margin: 13px 0 6px;
-    }
-
-    input, select, textarea {
-      display: block;
-      width: 100%;
-      border: 1px solid #d0d5dd;
-      background: white;
-      color: var(--text);
-      border-radius: 9px;
-      padding: 12px;
-      font: inherit;
-      font-size: 14px;
-    }
-
-    textarea { min-height: 85px; resize: vertical; }
-    input:focus, select:focus, textarea:focus {
-      outline: 2px solid #b8caff;
-      border-color: var(--primary);
-    }
-
-    .form-grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
-      gap: 0 14px;
-    }
-
-    .hidden { display: none !important; }
-
-    hr { border: 0; border-top: 1px solid var(--border); margin: 22px 0; }
-
-    footer {
-      text-align: center;
-      padding: 20px;
-      color: var(--muted);
-      font-size: 12px;
-    }
-
-    @media (max-width: 480px) {
-      h1 { font-size: 23px; }
-      .panel { padding: 15px; }
-      .header-inner { align-items: flex-start; }
-    }
-  </style>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Classic Empire Ltd. | Admin Panel</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#f5f6fa;--panel:#fff;--ink:#171717;--muted:#666;--gold:#b08a00;--line:#e3e5eb;--red:#b42318;--green:#137547}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--ink);font:15px Arial,sans-serif}
+header{background:#fff;border-bottom:1px solid var(--line);padding:18px 22px;display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.brand{font-weight:800;font-size:19px}.brand span{color:var(--gold)}
+header small{display:block;color:var(--muted);margin-top:5px}
+button,input,select,textarea{font:inherit}
+button{border:0;border-radius:8px;padding:11px 15px;cursor:pointer;font-weight:700}
+.primary{background:#171717;color:#fff}.secondary{background:#eee;color:#222}
+.danger{background:#fff0ee;color:var(--red)}
+button:disabled{opacity:.5;cursor:not-allowed}
+.layout{max-width:1200px;margin:auto;padding:22px;display:grid;grid-template-columns:230px minmax(0,1fr);gap:20px}
+nav,.panel,.stat{background:var(--panel);border:1px solid var(--line);border-radius:13px}
+nav{padding:12px;height:max-content}
+nav button{display:block;width:100%;text-align:left;background:transparent;margin:3px 0}
+nav button.active,nav button:hover{background:#f3ecd0}
+main{min-width:0}.heading{margin:0 0 8px;font-size:26px}
+.muted{color:var(--muted);line-height:1.5}
+.stats{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:20px 0}
+.stat{padding:17px}.stat strong{font-size:24px;display:block;margin-bottom:6px}
+.panel{padding:20px;margin-bottom:18px}
+.panel h2{font-size:19px;margin:0 0 8px}
+.grid{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));gap:13px}
+.field{display:flex;flex-direction:column;gap:7px}
+.field.full{grid-column:1/-1}
+label{font-weight:700;font-size:13px}
+input,select,textarea{width:100%;border:1px solid #cfd2da;border-radius:8px;padding:11px;background:white;color:#171717}
+textarea{min-height:80px;resize:vertical}
+.actions{display:flex;gap:9px;flex-wrap:wrap;margin-top:15px}
+.status{padding:12px;border-radius:8px;background:#f1f2f5;margin:12px 0;overflow-wrap:anywhere}
+.status.error{background:#fff0ee;color:var(--red)}
+.status.success{background:#e9f8ef;color:var(--green)}
+.rowitem{border:1px solid var(--line);border-radius:10px;padding:15px;margin-top:12px}
+.rowtop{display:flex;justify-content:space-between;gap:10px;flex-wrap:wrap}
+.pill{display:inline-block;background:#f3ecd0;padding:5px 9px;border-radius:20px;font-size:12px;font-weight:700}
+.hidden{display:none!important}
+footer{text-align:center;color:var(--muted);padding:20px}
+@media(max-width:720px){.layout{grid-template-columns:1fr;padding:12px}nav{display:flex;overflow:auto;gap:5px}nav button{white-space:nowrap;width:auto}.stats{grid-template-columns:1fr}.grid{grid-template-columns:1fr}.field.full{grid-column:auto}header{padding:15px}}
+</style>
 </head>
-
 <body>
 <header>
-  <div class="header-inner">
-    <div>
-      <div class="brand"><span>CE</span> Classic Empire Ltd.</div>
-      <div class="subtitle">President Administration · Card Benefits</div>
-    </div>
-    <a class="button-link secondary" href="./">Main Website</a>
+  <div class="brand">CE <span>Classic Empire Ltd.</span>
+    <small>President Administration · Control Panel</small>
+  </div>
+  <div>
+    <button class="secondary" id="mainSite">Main Website</button>
+    <button class="secondary" id="refreshTop">Refresh</button>
   </div>
 </header>
 
-<main>
-  <h1>Card Benefits Management</h1>
-  <p class="muted">
-    Manage benefits for Silver, Gold and Black cards.
-    This page requires an authenticated President account.
-  </p>
+<div class="layout">
+  <nav aria-label="Admin navigation">
+    <button class="active" data-page="home">Dashboard</button>
+    <button data-page="benefits">Card Benefits</button>
+    <button data-page="modules">Other Systems</button>
+    <button data-page="account">Account & Session</button>
+  </nav>
 
-  <div id="status" class="notice">Checking your login session...</div>
+  <main>
+    <section id="home">
+      <h1 class="heading">Administration Dashboard</h1>
+      <p class="muted">Manage connected Classic Empire Ltd. administration tools.</p>
+      <div id="sessionBanner" class="status">Checking your login session…</div>
+      <div class="stats">
+        <div class="stat"><strong>Silver</strong><span class="muted">Card benefits</span></div>
+        <div class="stat"><strong>Gold</strong><span class="muted">Card benefits</span></div>
+        <div class="stat"><strong>Black</strong><span class="muted">Card benefits</span></div>
+      </div>
+      <div class="panel">
+        <h2>Card Benefits Management</h2>
+        <p class="muted">View, add, edit or deactivate configured benefits. Changes are sent to the secured Edge Function.</p>
+        <button class="primary" data-goto="benefits">Open Card Benefits</button>
+      </div>
+      <div class="panel">
+        <h2>Security</h2>
+        <p class="muted">This page never stores a service-role key. The server must independently verify the active President's authorization.</p>
+      </div>
+    </section>
 
-  <section id="app" class="hidden">
-    <div class="panel">
-      <div class="toolbar">
-        <div style="flex:1">
-          <h2 style="margin-bottom:4px">Benefits</h2>
-          <div class="muted">View, edit or deactivate existing benefits.</div>
+    <section id="benefits" class="hidden">
+      <h1 class="heading">Card Benefits Management</h1>
+      <p class="muted">Manage benefits for Silver, Gold and Black cards. Requires an authenticated active President account.</p>
+      <div id="benefitMessage" class="status">Ready.</div>
+      <div class="panel">
+        <div class="rowtop">
+          <div><h2>Existing Benefits</h2><p class="muted">View, edit or deactivate existing benefits.</p></div>
+          <button class="secondary" id="refreshBenefits">Refresh</button>
         </div>
-        <button class="primary" id="refreshBtn" type="button">
-          Refresh
-        </button>
+        <div id="benefitList"><p class="muted">Load benefits to begin.</p></div>
       </div>
 
-      <div id="benefitsList" class="grid" style="margin-top:18px"></div>
-    </div>
-
-    <div class="panel" id="editorPanel">
-      <h2 id="formHeading">Add a New Benefit</h2>
-      <p class="muted">
-        Add the benefit details. Changes are sent to the secured
-        manage-card-benefits Edge Function.
-      </p>
-
-      <form id="benefitForm">
-        <input id="benefitId" type="hidden">
-
-        <div class="form-grid">
-          <div>
-            <label for="cardCode">Card</label>
-            <select id="cardCode" required>
-              <option value="SILVER">Silver Card</option>
-              <option value="GOLD">Gold Card</option>
-              <option value="BLACK">Black Card</option>
-            </select>
+      <div class="panel" id="formPanel">
+        <h2 id="formTitle">Add a New Benefit</h2>
+        <p class="muted">Changes are sent to the secured manage-card-benefits Edge Function.</p>
+        <form id="benefitForm">
+          <div class="grid">
+            <div class="field">
+              <label for="card">Card</label>
+              <select id="card" required>
+                <option value="SILVER">Silver Card</option>
+                <option value="GOLD">Gold Card</option>
+                <option value="BLACK">Black Card</option>
+              </select>
+            </div>
+            <div class="field">
+              <label for="type">Benefit Type</label>
+              <select id="type" required>
+                <option value="discount">Discount</option>
+                <option value="waiver">Waiver</option>
+                <option value="privilege">Privilege</option>
+                <option value="other">Other</option>
+              </select>
+            </div>
+            <div class="field full">
+              <label for="name">Benefit Name</label>
+              <input id="name" required maxlength="120" placeholder="e.g. Purchase Discount">
+            </div>
+            <div class="field full">
+              <label for="description">Description</label>
+              <textarea id="description" placeholder="Explain the benefit and any conditions"></textarea>
+            </div>
+            <div class="field">
+              <label for="value">Benefit Value</label>
+              <input id="value" type="number" min="0" step="any" value="0" required>
+            </div>
+            <div class="field">
+              <label for="unit">Value Unit</label>
+              <select id="unit" required>
+                <option value="percent">Percent (%)</option>
+                <option value="INR">INR</option>
+                <option value="CD">CD</option>
+                <option value="text">Text</option>
+              </select>
+            </div>
           </div>
-
-          <div>
-            <label for="benefitType">Benefit Type</label>
-            <select id="benefitType" required>
-              <option value="discount">Discount</option>
-              <option value="waiver">Waiver</option>
-              <option value="privilege">Privilege</option>
-              <option value="other">Other</option>
-            </select>
+          <div class="actions">
+            <button class="primary" id="saveBenefit" type="submit">Add Benefit</button>
+            <button class="secondary hidden" id="cancelEdit" type="button">Cancel Edit</button>
           </div>
+        </form>
+      </div>
+    </section>
+
+    <section id="modules" class="hidden">
+      <h1 class="heading">Other Systems</h1>
+      <p class="muted">These modules must be connected to their actual database tables and secured server functions before they can be managed here. This panel will not pretend that an unconnected feature is working.</p>
+      <div class="panel"><h2>Member Management</h2><p class="muted">Requires verified member-profile schema and management endpoints.</p></div>
+      <div class="panel"><h2>Card Management</h2><p class="muted">Card requests, approval, activation and payment require their existing secured endpoints.</p></div>
+      <div class="panel"><h2>Wallet & Transfers</h2><p class="muted">Balance changes and transfers must use server-side validated transactions.</p></div>
+      <div class="panel"><h2>Attendance</h2><p class="muted">Requires the existing attendance and QR submission endpoints.</p></div>
+      <div class="panel"><h2>Expenses, Notices & Work System</h2><p class="muted">Their table names, authorization rules and endpoints must be connected before editing data.</p></div>
+    </section>
+
+    <section id="account" class="hidden">
+      <h1 class="heading">Account & Session</h1>
+      <div class="panel">
+        <h2>Current Session</h2>
+        <div id="accountInfo" class="status">Checking session…</div>
+        <div class="actions">
+          <button class="secondary" id="recheck">Check Session</button>
+          <button class="danger" id="signOut">Sign Out</button>
         </div>
-
-        <label for="benefitName">Benefit Name</label>
-        <input id="benefitName" maxlength="100" required
-          placeholder="e.g. Purchase Discount">
-
-        <label for="benefitDescription">Description</label>
-        <textarea id="benefitDescription" maxlength="1000"
-          placeholder="Explain the benefit and any conditions"></textarea>
-
-        <div class="form-grid">
-          <div>
-            <label for="benefitValue">Benefit Value</label>
-            <input id="benefitValue" type="number"
-              min="0" max="1000000000" step="0.01"
-              value="0" required>
-          </div>
-
-          <div>
-            <label for="valueUnit">Value Unit</label>
-            <select id="valueUnit" required>
-              <option value="percent">Percent (%)</option>
-              <option value="INR">INR</option>
-              <option value="CD">CD</option>
-              <option value="text">Text</option>
-            </select>
-          </div>
-        </div>
-
-        <div class="toolbar" style="margin-top:18px">
-          <button class="primary" id="saveBtn" type="submit">
-            Add Benefit
-          </button>
-          <button class="secondary hidden" id="cancelEditBtn" type="button">
-            Cancel Edit
-          </button>
-        </div>
-      </form>
-    </div>
-  </section>
-</main>
-
+        <p class="muted">Sign out affects the shared Supabase login session for this website origin.</p>
+      </div>
+    </section>
+  </main>
+</div>
 <footer>Classic Empire Ltd. · Administration</footer>
 
 <script>
@@ -317,275 +183,272 @@
   "use strict";
 
   const SUPABASE_URL = "https://wcyozectzscqwvtzetkc.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_N1VJZXd";
+  const SUPABASE_KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
+  const FUNCTION_NAME = "manage-card-benefits";
 
-  const statusEl = document.getElementById("status");
-  const appEl = document.getElementById("app");
-  const listEl = document.getElementById("benefitsList");
-  const form = document.getElementById("benefitForm");
-  const saveBtn = document.getElementById("saveBtn");
-
-  const db = window.supabase.createClient(
-    SUPABASE_URL,
-    SUPABASE_KEY,
-    {
-      auth: {
-        persistSession: true,
-        autoRefreshToken: true,
-        detectSessionInUrl: true
-      }
+  const $ = id => document.getElementById(id);
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+    auth: {
+      persistSession: true,
+      autoRefreshToken: true,
+      detectSessionInUrl: true
     }
-  );
+  });
 
-  function message(text, type = "") {
-    statusEl.textContent = text;
-    statusEl.className = "notice" + (type ? " " + type : "");
+  let editingId = null;
+  let benefits = [];
+
+  function message(id, text, kind = "") {
+    const el = $(id);
+    el.textContent = text;
+    el.className = "status" + (kind ? " " + kind : "");
   }
 
-  function escapeHtml(value) {
-    return String(value ?? "").replace(/[&<>"']/g, char => ({
-      "&": "&amp;",
-      "<": "&lt;",
-      ">": "&gt;",
-      '"': "&quot;",
-      "'": "&#39;"
-    })[char]);
+  function errorText(error) {
+    if (!error) return "Unknown error";
+    const context = error.context;
+    if (context && typeof context.json === "function") {
+      return "HTTP " + (context.status || "?") +
+        ". Check the Edge Function logs for the server error.";
+    }
+    return error.message || String(error);
   }
 
-  function showFormMessage(text, type = "") {
-    statusEl.textContent = text;
-    statusEl.className = "notice" + (type ? " " + type : "");
+  function showPage(page) {
+    document.querySelectorAll("main > section").forEach(section => {
+      section.classList.toggle("hidden", section.id !== page);
+    });
+    document.querySelectorAll("nav button[data-page]").forEach(button => {
+      button.classList.toggle("active", button.dataset.page === page);
+    });
   }
 
-  async function callManager(payload) {
-    const { data, error } = await db.functions.invoke(
-      "manage-card-benefits",
-      { body: payload }
-    );
+  document.querySelectorAll("nav button[data-page]").forEach(button => {
+    button.addEventListener("click", () => showPage(button.dataset.page));
+  });
+
+  document.querySelectorAll("[data-goto]").forEach(button => {
+    button.addEventListener("click", () => showPage(button.dataset.goto));
+  });
+
+  $("mainSite").addEventListener("click", () => {
+    location.href = new URL("./index.html", location.href).href;
+  });
+
+  async function checkSession() {
+    message("sessionBanner", "Checking your login session…");
+    message("accountInfo", "Checking your login session…");
+
+    const { data, error } = await db.auth.getSession();
+
+    if (error || !data.session) {
+      message("sessionBanner", "No active session. Sign in on the main website first.", "error");
+      message("accountInfo", "No active session. Open the main website and sign in.", "error");
+      return false;
+    }
+
+    const user = data.session.user;
+    message("sessionBanner", "Signed in. Verifying President access through the secured function.");
+    message("accountInfo", "A Supabase session exists for user ID: " + user.id +
+      ". President authorization is verified by the server function.");
+    return true;
+  }
+
+  async function callFunction(payload) {
+    const { data, error } = await db.functions.invoke(FUNCTION_NAME, {
+      body: payload
+    });
 
     if (error) {
-      let detail = error.message || "Function request failed.";
-      if (data && data.error) detail = data.error;
-      throw new Error(detail);
+      throw new Error(errorText(error));
     }
 
-    if (data && data.error) {
-      throw new Error(data.error);
+    if (!data || data.success !== true) {
+      throw new Error(data?.error || "The function returned an unexpected response.");
     }
 
     return data;
   }
 
-  function getBenefitRows(data) {
-    if (Array.isArray(data)) return data;
-    if (Array.isArray(data?.benefits)) return data.benefits;
-    if (Array.isArray(data?.data)) return data.data;
-    return [];
+  async function loadBenefits() {
+    $("refreshBenefits").disabled = true;
+    message("benefitMessage", "Checking session and loading benefits…");
+
+    try {
+      const hasSession = await checkSession();
+      if (!hasSession) throw new Error("Sign in on the main website first.");
+
+      const result = await callFunction({ action: "list" });
+      benefits = Array.isArray(result.benefits) ? result.benefits : [];
+      renderBenefits();
+      message("benefitMessage", "Loaded " + benefits.length + " benefit(s).", "success");
+    } catch (error) {
+      message("benefitMessage", "Could not load benefits: " + error.message, "error");
+      $("benefitList").replaceChildren();
+      const p = document.createElement("p");
+      p.className = "muted";
+      p.textContent = "The request failed. Check the Edge Function invocation logs for its HTTP status and error.";
+      $("benefitList").appendChild(p);
+    } finally {
+      $("refreshBenefits").disabled = false;
+    }
   }
 
-  function renderBenefits(rows) {
-    listEl.replaceChildren();
+  function renderBenefits() {
+    const list = $("benefitList");
+    list.replaceChildren();
 
-    if (!rows.length) {
-      listEl.innerHTML =
-        '<p class="muted">No benefits returned. Check the function response.</p>';
+    if (!benefits.length) {
+      const p = document.createElement("p");
+      p.className = "muted";
+      p.textContent = "No benefits found.";
+      list.appendChild(p);
       return;
     }
 
-    rows.forEach(item => {
-      const card = document.createElement("article");
-      card.className = "benefit";
+    for (const benefit of benefits) {
+      const item = document.createElement("div");
+      item.className = "rowitem";
 
-      const active = item.active === true;
-      const value = item.value_unit === "percent"
-        ? `${item.benefit_value ?? 0}%`
-        : item.value_unit === "text"
-          ? String(item.benefit_value ?? "")
-          : `${item.value_unit ?? ""} ${item.benefit_value ?? 0}`;
+      const top = document.createElement("div");
+      top.className = "rowtop";
 
-      card.innerHTML = `
-        <h3>${escapeHtml(item.benefit_name || "Untitled Benefit")}</h3>
-        <span class="tag">${escapeHtml(item.card_code || "")}</span>
-        <span class="tag">${escapeHtml(item.benefit_type || "other")}</span>
-        <span class="tag ${active ? "active" : "inactive"}">
-          ${active ? "Active" : "Inactive"}
-        </span>
-        <p>${escapeHtml(item.benefit_description || "No description")}</p>
-        <p><strong>Value:</strong> ${escapeHtml(value)}</p>
-        <div class="benefit-actions">
-          <button type="button" class="secondary small edit-btn">Edit</button>
-          ${active ? '<button type="button" class="danger small deactivate-btn">Deactivate</button>' : ""}
-        </div>
-      `;
+      const title = document.createElement("strong");
+      title.textContent = benefit.benefit_name || "Unnamed benefit";
 
-      card.querySelector(".edit-btn").addEventListener("click", () => {
-        document.getElementById("benefitId").value = item.id || "";
-        document.getElementById("cardCode").value = item.card_code || "SILVER";
-        document.getElementById("benefitName").value = item.benefit_name || "";
-        document.getElementById("benefitDescription").value =
-          item.benefit_description || "";
-        document.getElementById("benefitType").value =
-          item.benefit_type || "other";
-        document.getElementById("benefitValue").value =
-          item.benefit_value ?? 0;
-        document.getElementById("valueUnit").value =
-          item.value_unit || "percent";
+      const badge = document.createElement("span");
+      badge.className = "pill";
+      badge.textContent = (benefit.card_code || "CARD") + " · " +
+        (benefit.active ? "Active" : "Inactive");
 
-        document.getElementById("formHeading").textContent = "Edit Benefit";
-        saveBtn.textContent = "Save Changes";
-        document.getElementById("cancelEditBtn").classList.remove("hidden");
-        document.getElementById("editorPanel").scrollIntoView({
-          behavior: "smooth",
-          block: "start"
-        });
-      });
+      top.append(title, badge);
+      item.appendChild(top);
 
-      const deactivateBtn = card.querySelector(".deactivate-btn");
-      if (deactivateBtn) {
-        deactivateBtn.addEventListener("click", async () => {
-          if (!item.id) {
-            message("This benefit has no ID. It cannot be deactivated.", "error");
-            return;
-          }
+      const detail = document.createElement("p");
+      detail.className = "muted";
+      detail.textContent = (benefit.benefit_description || "No description") +
+        " · Type: " + (benefit.benefit_type || "—") +
+        " · Value: " + (benefit.benefit_value ?? "—") + " " +
+        (benefit.value_unit || "");
+      item.appendChild(detail);
 
-          if (!confirm(`Deactivate "${item.benefit_name}"?`)) return;
+      const actions = document.createElement("div");
+      actions.className = "actions";
 
-          deactivateBtn.disabled = true;
+      const edit = document.createElement("button");
+      edit.className = "secondary";
+      edit.textContent = "Edit";
+      edit.addEventListener("click", () => beginEdit(benefit));
 
-          try {
-            await callManager({
-              action: "deactivate",
-              id: item.id
-            });
-            message("Deactivation request completed. Refreshing benefits...");
-            await loadBenefits();
-          } catch (err) {
-            message("Could not deactivate benefit: " + err.message, "error");
-            deactivateBtn.disabled = false;
-          }
-        });
-      }
+      const toggle = document.createElement("button");
+      toggle.className = benefit.active ? "danger" : "secondary";
+      toggle.textContent = benefit.active ? "Deactivate" : "Activate";
+      toggle.addEventListener("click", () => toggleBenefit(benefit));
 
-      listEl.appendChild(card);
-    });
+      actions.append(edit, toggle);
+      item.appendChild(actions);
+      list.appendChild(item);
+    }
   }
 
-  async function loadBenefits() {
-    listEl.innerHTML = '<p class="muted">Loading benefits...</p>';
-
-    try {
-      const data = await callManager({ action: "list" });
-      renderBenefits(getBenefitRows(data));
-      message("Benefits loaded.", "success");
-    } catch (err) {
-      listEl.replaceChildren();
-      message(
-        "Could not load benefits.\n" + err.message +
-        "\n\nConfirm that you are signed in as the active President and that the Edge Function is deployed.",
-        "error"
-      );
-    }
+  function beginEdit(benefit) {
+    editingId = benefit.id;
+    $("formTitle").textContent = "Edit Benefit";
+    $("saveBenefit").textContent = "Save Changes";
+    $("cancelEdit").classList.remove("hidden");
+    $("card").value = benefit.card_code || "SILVER";
+    $("type").value = benefit.benefit_type || "discount";
+    $("name").value = benefit.benefit_name || "";
+    $("description").value = benefit.benefit_description || "";
+    $("value").value = benefit.benefit_value ?? 0;
+    $("unit").value = benefit.value_unit || "percent";
+    $("formPanel").scrollIntoView({ behavior: "smooth", block: "start" });
   }
 
   function resetForm() {
-    form.reset();
-    document.getElementById("benefitId").value = "";
-    document.getElementById("benefitValue").value = "0";
-    document.getElementById("formHeading").textContent = "Add a New Benefit";
-    saveBtn.textContent = "Add Benefit";
-    document.getElementById("cancelEditBtn").classList.add("hidden");
+    editingId = null;
+    $("benefitForm").reset();
+    $("value").value = 0;
+    $("formTitle").textContent = "Add a New Benefit";
+    $("saveBenefit").textContent = "Add Benefit";
+    $("cancelEdit").classList.add("hidden");
   }
 
-  form.addEventListener("submit", async event => {
+  $("cancelEdit").addEventListener("click", resetForm);
+
+  $("benefitForm").addEventListener("submit", async event => {
     event.preventDefault();
-
-    const id = document.getElementById("benefitId").value.trim();
-    const value = Number(document.getElementById("benefitValue").value);
-
-    if (!Number.isFinite(value) || value < 0) {
-      message("Enter a valid non-negative benefit value.", "error");
-      return;
-    }
+    const button = $("saveBenefit");
+    button.disabled = true;
 
     const payload = {
-      action: id ? "update" : "create",
-      card_code: document.getElementById("cardCode").value,
-      benefit_name: document.getElementById("benefitName").value.trim(),
-      benefit_description:
-        document.getElementById("benefitDescription").value.trim(),
-      benefit_type: document.getElementById("benefitType").value,
-      benefit_value: value,
-      value_unit: document.getElementById("valueUnit").value
+      card_code: $("card").value,
+      benefit_type: $("type").value,
+      benefit_name: $("name").value.trim(),
+      benefit_description: $("description").value.trim(),
+      benefit_value: Number($("value").value),
+      value_unit: $("unit").value
     };
 
-    if (!payload.benefit_name) {
-      message("Benefit Name is required.", "error");
-      return;
-    }
-
-    if (id) payload.id = id;
-
-    saveBtn.disabled = true;
-    saveBtn.textContent = "Saving...";
-
     try {
-      await callManager(payload);
+      if (editingId) {
+        await callFunction({ action: "update", id: editingId, ...payload });
+      } else {
+        await callFunction({ action: "create", ...payload });
+      }
+
+      message("benefitMessage", editingId ? "Benefit updated." : "Benefit created.", "success");
       resetForm();
-      message("Save request completed. Refreshing benefits...");
       await loadBenefits();
-    } catch (err) {
-      message(
-        "Could not save benefit: " + err.message +
-        "\nCheck the Edge Function's expected action and field names.",
-        "error"
-      );
+    } catch (error) {
+      message("benefitMessage", "Save failed: " + error.message, "error");
     } finally {
-      saveBtn.disabled = false;
-      saveBtn.textContent =
-        document.getElementById("benefitId").value
-          ? "Save Changes"
-          : "Add Benefit";
+      button.disabled = false;
     }
   });
 
-  document.getElementById("refreshBtn").addEventListener("click", loadBenefits);
-  document.getElementById("cancelEditBtn").addEventListener("click", resetForm);
+  async function toggleBenefit(benefit) {
+    const activating = !benefit.active;
+    if (!confirm((activating ? "Activate" : "Deactivate") +
+      " this benefit?")) return;
 
-  async function start() {
     try {
-      const { data, error } = await db.auth.getSession();
-
-      if (error) throw error;
-
-      if (!data?.session) {
-        message(
-          "No active login session found in this browser.\n" +
-          "Open the main website, sign in as President, then return to this page.",
-          "error"
-        );
-        return;
+      if (activating) {
+        await callFunction({ action: "update", id: benefit.id, active: true });
+      } else {
+        await callFunction({ action: "deactivate", id: benefit.id });
       }
-
-      const { data: userData, error: userError } = await db.auth.getUser();
-
-      if (userError || !userData?.user) {
-        message(
-          "Your session could not be verified. Sign in again on the main website.",
-          "error"
-        );
-        return;
-      }
-
-      appEl.classList.remove("hidden");
-      message("Login session found. Checking President permissions...");
 
       await loadBenefits();
-    } catch (err) {
-      message("Startup error: " + err.message, "error");
+    } catch (error) {
+      message("benefitMessage", "Could not change benefit status: " + error.message, "error");
     }
   }
 
-  start();
+  $("refreshBenefits").addEventListener("click", loadBenefits);
+  $("refreshTop").addEventListener("click", async () => {
+    await checkSession();
+    if (!$("benefits").classList.contains("hidden")) await loadBenefits();
+  });
+  $("recheck").addEventListener("click", checkSession);
+
+  $("signOut").addEventListener("click", async () => {
+    if (!confirm("Sign out of the shared website session?")) return;
+    const { error } = await db.auth.signOut();
+    if (error) {
+      message("accountInfo", "Sign out failed: " + error.message, "error");
+    } else {
+      message("accountInfo", "Signed out. Return to the main website to sign in again.", "success");
+      message("sessionBanner", "Signed out.", "error");
+    }
+  });
+
+  db.auth.onAuthStateChange(() => {
+    checkSession();
+  });
+
+  checkSession();
+  loadBenefits();
 })();
 </script>
 </body>
