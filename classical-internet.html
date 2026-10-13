@@ -144,6 +144,7 @@
       margin: 12px 0;
       background: #202020;
       overflow-wrap: anywhere;
+      line-height: 1.5;
     }
 
     .status.error { color: var(--red); }
@@ -166,6 +167,19 @@
 
     th { color: var(--gold); }
 
+    .badge {
+      display: inline-block;
+      padding: 4px 8px;
+      border-radius: 6px;
+      background: #303030;
+      font-size: 12px;
+      text-transform: capitalize;
+    }
+
+    .badge.active { color: var(--green); }
+    .badge.expired { color: var(--red); }
+    .badge.inactive { color: var(--muted); }
+
     footer {
       text-align: center;
       color: var(--muted);
@@ -182,31 +196,31 @@
 <header>
   <div class="brand">CLASSIC EMPIRE LTD.</div>
   <h1>Classical Internet</h1>
-  <div class="subtitle">SIM Recharge · Data · Internet Plans</div>
+  <div class="subtitle">Internet Plans · Subscription Management</div>
 </header>
 
 <main>
-  <div class="panel">
+  <section class="panel">
     <a class="button" href="./index.html">← Main Website</a>
     <p class="muted">
-      Choose a plan, review its price and submit a purchase request.
-      Actual recharge requires a supported service provider.
+      Choose a plan, submit a purchase request, and check your subscription.
+      Online payment and automatic activation are not yet connected.
     </p>
-  </div>
+  </section>
 
   <section class="panel" id="loginPanel">
     <h2>Member Login</h2>
     <p class="muted">
-      Sign in using an existing Supabase Auth email account.
-      Your website's separate account-number login is not automatically connected here.
+      Sign in using your existing Supabase Auth email and password.
+      The separate account-number login is not connected to this page.
     </p>
 
     <form id="loginForm">
       <input id="email" type="email" placeholder="Email address"
-             autocomplete="username" required>
+        autocomplete="username" required>
       <input id="password" type="password" placeholder="Password"
-             autocomplete="current-password" required>
-      <button type="submit">Sign In</button>
+        autocomplete="current-password" required>
+      <button type="submit" id="signInBtn">Sign In</button>
     </form>
 
     <button type="button" class="secondary" id="logoutBtn" hidden>
@@ -214,17 +228,35 @@
     </button>
 
     <div id="authMessage" class="status" role="status">
-      Sign in to view plans and purchase history.
+      Sign in to view plans and your subscription.
     </div>
   </section>
 
   <section class="panel">
     <h2>Available Plans</h2>
-    <p class="muted">All prices below are in Indian Rupees (INR).</p>
+    <p class="muted">All prices are in Indian Rupees (INR).</p>
     <div id="plans" class="grid">
       <p class="muted">Loading plans…</p>
     </div>
     <div id="planMessage" class="status" role="status" hidden></div>
+  </section>
+
+  <section class="panel" id="subscriptionPanel">
+    <h2>My Subscription Status</h2>
+    <p class="muted">
+      Check the subscription records linked to your signed-in account.
+      An active record is considered valid only until its expiry time.
+    </p>
+
+    <div id="subscriptionStatus" class="status" role="status">
+      Sign in to view your subscription.
+    </div>
+
+    <div id="subscriptions"></div>
+
+    <button type="button" class="secondary" id="refreshStatus" hidden>
+      Refresh Status
+    </button>
   </section>
 
   <section class="panel" id="historyPanel">
@@ -232,17 +264,23 @@
     <div id="history" class="muted">
       Sign in to view your purchase requests.
     </div>
+
     <button type="button" class="secondary" id="refreshHistory" hidden>
       Refresh History
     </button>
   </section>
 
   <section class="panel">
-    <h2>Service Information</h2>
+    <h2>Payment and Service Information</h2>
     <p class="muted">
-      Submitting a request does not mean that payment or recharge is complete.
-      Payment must be verified, and a real telecom provider must confirm
-      activation before the service can be shown as active.
+      Submitting a purchase request does not charge money or activate a
+      subscription. Automatic activation will be enabled only after a
+      real payment gateway, secure payment verification, and server-side
+      subscription processing have been implemented.
+    </p>
+    <p class="muted">
+      This subscription controls only supported Classic Empire digital
+      services. It does not control a mobile carrier's SIM or data service.
     </p>
     <p class="muted">
       Head Office: Chakla Ghat, Kishanganj, Bihar, India
@@ -256,22 +294,32 @@
 (() => {
   "use strict";
 
-  const SUPABASE_URL = "https://wcyozectzscqwvtzetkc.supabase.co";
-  const SUPABASE_KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
+  const SUPABASE_URL =
+    "https://wcyozectzscqwvtzetkc.supabase.co";
 
-  const $ = (id) => document.getElementById(id);
+  const SUPABASE_KEY =
+    "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
+
+  const $ = id => document.getElementById(id);
 
   const plansEl = $("plans");
   const historyEl = $("history");
+  const subscriptionsEl = $("subscriptions");
   const authMessage = $("authMessage");
   const planMessage = $("planMessage");
-  const loginPanel = $("loginPanel");
+  const subscriptionMessage = $("subscriptionStatus");
+  const loginForm = $("loginForm");
   const logoutBtn = $("logoutBtn");
   const refreshHistory = $("refreshHistory");
+  const refreshStatus = $("refreshStatus");
+  const signInBtn = $("signInBtn");
 
   let db = null;
   let currentUser = null;
   let plans = [];
+  let loadingPlans = false;
+  let loadingHistory = false;
+  let loadingSubscriptions = false;
 
   function message(el, text, type = "") {
     el.textContent = text;
@@ -287,25 +335,92 @@
     }).format(Number(value));
   }
 
+  function formatDate(value) {
+    if (!value) return "—";
+
+    const date = new Date(value);
+
+    if (Number.isNaN(date.getTime())) return "—";
+
+    return date.toLocaleString("en-IN", {
+      dateStyle: "medium",
+      timeStyle: "short"
+    });
+  }
+
   function safeCell(value) {
     const td = document.createElement("td");
     td.textContent = String(value ?? "");
     return td;
   }
 
+  function makeTable(headers, rows) {
+    const wrap = document.createElement("div");
+    wrap.className = "table-wrap";
+
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const headRow = document.createElement("tr");
+
+    headers.forEach(label => {
+      const th = document.createElement("th");
+      th.textContent = label;
+      headRow.append(th);
+    });
+
+    thead.append(headRow);
+
+    const tbody = document.createElement("tbody");
+
+    rows.forEach(row => {
+      const tr = document.createElement("tr");
+      row.forEach(cell => tr.append(cell));
+      tbody.append(tr);
+    });
+
+    table.append(thead, tbody);
+    wrap.append(table);
+
+    return wrap;
+  }
+
+  function makeBadge(text, className) {
+    const badge = document.createElement("span");
+    badge.className = "badge " + className;
+    badge.textContent = text;
+    return badge;
+  }
+
   function showSignedIn(user) {
     currentUser = user || null;
-    loginPanel.querySelector("form").hidden = Boolean(user);
+
+    loginForm.hidden = Boolean(user);
     logoutBtn.hidden = !user;
     refreshHistory.hidden = !user;
+    refreshStatus.hidden = !user;
 
     if (user) {
-      message(authMessage, "Signed in: " + user.email, "success");
-      loadHistory();
+      message(
+        authMessage,
+        "Signed in: " + (user.email || "member"),
+        "success"
+      );
     } else {
-      message(authMessage, "Please sign in to submit a purchase request.");
-      historyEl.textContent = "Sign in to view your purchase requests.";
+      message(
+        authMessage,
+        "Sign in to submit a purchase request and view your subscription."
+      );
+
+      historyEl.textContent = "Sign in to view purchase history.";
+      subscriptionsEl.replaceChildren();
+
+      message(
+        subscriptionMessage,
+        "Sign in to view your subscription."
+      );
     }
+
+    renderPlans();
   }
 
   function renderPlans() {
@@ -346,21 +461,28 @@
   }
 
   async function loadPlans() {
+    if (!db || loadingPlans) return;
+
+    loadingPlans = true;
     plansEl.textContent = "Loading plans…";
 
-    const { data, error } = await db
-      .from("classical_internet_plans")
-      .select("id,plan_code,plan_name,validity_days,price_inr")
-      .eq("active", true)
-      .order("validity_days", { ascending: true });
+    try {
+      const { data, error } = await db
+        .from("classical_internet_plans")
+        .select("id,plan_code,plan_name,validity_days,price_inr")
+        .eq("active", true)
+        .order("validity_days", { ascending: true });
 
-    if (error) {
-      plansEl.textContent = "Could not load plans. " + error.message;
-      return;
+      if (error) throw error;
+
+      plans = data || [];
+      renderPlans();
+    } catch (error) {
+      plansEl.textContent =
+        "Could not load plans: " + (error.message || "Unknown error");
+    } finally {
+      loadingPlans = false;
     }
-
-    plans = data || [];
-    renderPlans();
   }
 
   async function requestPurchase(plan, button) {
@@ -372,7 +494,7 @@
     const confirmed = window.confirm(
       "Submit a purchase request for " + plan.plan_name +
       " at " + formatINR(plan.price_inr) + "?\n\n" +
-      "This will not charge you or activate a real SIM."
+      "This is only a request. It will not charge money or activate a service."
     );
 
     if (!confirmed) return;
@@ -380,154 +502,278 @@
     button.disabled = true;
     message(planMessage, "Submitting purchase request…");
 
-    const { error } = await db
-      .from("classical_internet_purchases")
-      .insert({
-        user_id: currentUser.id,
-        plan_id: plan.id,
-        purchase_status: "pending",
-        payment_status: "pending"
-      });
+    try {
+      const { error } = await db
+        .from("classical_internet_purchases")
+        .insert({
+          user_id: currentUser.id,
+          plan_id: plan.id,
+          purchase_status: "pending",
+          payment_status: "pending"
+        });
 
-    button.disabled = false;
+      if (error) throw error;
 
-    if (error) {
       message(
         planMessage,
-        "Request failed: " + error.message,
+        "Purchase request submitted. Payment and activation are still pending.",
+        "success"
+      );
+
+      await loadHistory();
+    } catch (error) {
+      message(
+        planMessage,
+        "Request failed: " + (error.message || "Unknown error"),
         "error"
       );
-      return;
+    } finally {
+      button.disabled = false;
     }
-
-    message(
-      planMessage,
-      "Purchase request submitted. Payment and activation are still pending.",
-      "success"
-    );
-
-    await loadHistory();
   }
 
   async function loadHistory() {
-    if (!currentUser) return;
+    if (!db || !currentUser || loadingHistory) return;
 
+    loadingHistory = true;
+    refreshHistory.disabled = true;
     historyEl.textContent = "Loading purchase history…";
 
-    const { data, error } = await db
-      .from("classical_internet_purchases")
-      .select(
-        "id,purchase_status,payment_status,created_at," +
-        "classical_internet_plans(plan_name,price_inr,validity_days)"
-      )
-      .eq("user_id", currentUser.id)
-      .order("created_at", { ascending: false });
+    try {
+      const { data, error } = await db
+        .from("classical_internet_purchases")
+        .select(
+          "id,purchase_status,payment_status,created_at," +
+          "classical_internet_plans(plan_name,price_inr,validity_days)"
+        )
+        .eq("user_id", currentUser.id)
+        .order("created_at", { ascending: false });
 
-    if (error) {
-      historyEl.textContent = "Could not load history: " + error.message;
-      return;
+      if (error) throw error;
+
+      if (!data || data.length === 0) {
+        historyEl.textContent = "No purchase requests yet.";
+        return;
+      }
+
+      const rows = data.map(item => {
+        const plan = item.classical_internet_plans;
+
+        return [
+          safeCell(plan?.plan_name || "Plan"),
+          safeCell(plan ? formatINR(plan.price_inr) : "—"),
+          safeCell(item.purchase_status),
+          safeCell(item.payment_status),
+          safeCell(formatDate(item.created_at))
+        ];
+      });
+
+      historyEl.replaceChildren(
+        makeTable(
+          ["Plan", "Price", "Purchase Status", "Payment Status", "Date"],
+          rows
+        )
+      );
+    } catch (error) {
+      historyEl.textContent =
+        "Could not load history: " + (error.message || "Unknown error");
+    } finally {
+      loadingHistory = false;
+      refreshHistory.disabled = !currentUser;
     }
+  }
 
-    if (!data || data.length === 0) {
-      historyEl.textContent = "No purchase requests yet.";
-      return;
-    }
+  async function loadSubscriptions() {
+    if (!db || !currentUser || loadingSubscriptions) return;
 
-    const wrap = document.createElement("div");
-    wrap.className = "table-wrap";
+    loadingSubscriptions = true;
+    refreshStatus.disabled = true;
+    subscriptionsEl.replaceChildren();
 
-    const table = document.createElement("table");
-    const thead = document.createElement("thead");
-    const header = document.createElement("tr");
+    message(subscriptionMessage, "Loading subscription status…");
 
-    [
-      "Plan",
-      "Price",
-      "Purchase Status",
-      "Payment Status",
-      "Date"
-    ].forEach(text => {
-      const th = document.createElement("th");
-      th.textContent = text;
-      header.append(th);
-    });
+    try {
+      // RLS should restrict this query to the signed-in user's records.
+      const { data, error } = await db
+        .from("classical_internet_subscriptions")
+        .select(
+          "id,status,starts_at,expires_at,created_at," +
+          "classical_internet_plans(plan_name,validity_days,price_inr)"
+        )
+        .eq("user_id", currentUser.id)
+        .order("created_at", { ascending: false });
 
-    thead.append(header);
+      if (error) throw error;
 
-    const tbody = document.createElement("tbody");
+      if (!data || data.length === 0) {
+        message(
+          subscriptionMessage,
+          "No subscription found. A purchase request alone does not activate a subscription."
+        );
+        return;
+      }
 
-    for (const item of data) {
-      const plan = item.classical_internet_plans;
-      const tr = document.createElement("tr");
+      const now = Date.now();
+      let activeCount = 0;
 
-      tr.append(
-        safeCell(plan?.plan_name || "Plan"),
-        safeCell(plan ? formatINR(plan.price_inr) : "—"),
-        safeCell(item.purchase_status),
-        safeCell(item.payment_status),
-        safeCell(new Date(item.created_at).toLocaleString("en-IN"))
+      const rows = data.map(item => {
+        const expiry = item.expires_at
+          ? new Date(item.expires_at).getTime()
+          : NaN;
+
+        let label = item.status || "inactive";
+        let cssClass = "inactive";
+
+        if (label === "active" && Number.isFinite(expiry) && expiry > now) {
+          label = "Active";
+          cssClass = "active";
+          activeCount++;
+        } else if (
+          label === "active" &&
+          Number.isFinite(expiry) &&
+          expiry <= now
+        ) {
+          label = "Expired";
+          cssClass = "expired";
+        } else if (label === "expired") {
+          label = "Expired";
+          cssClass = "expired";
+        } else if (label === "cancelled") {
+          label = "Cancelled";
+          cssClass = "inactive";
+        } else {
+          label = "Inactive";
+          cssClass = "inactive";
+        }
+
+        const badge = makeBadge(label, cssClass);
+
+        return [
+          safeCell(item.classical_internet_plans?.plan_name || "Plan"),
+          (() => {
+            const td = document.createElement("td");
+            td.append(badge);
+            return td;
+          })(),
+          safeCell(formatDate(item.starts_at)),
+          safeCell(formatDate(item.expires_at))
+        ];
+      });
+
+      message(
+        subscriptionMessage,
+        activeCount > 0
+          ? "You have " + activeCount + " currently valid subscription(s)."
+          : "No currently valid active subscription. Payment verification and activation are not yet connected.",
+        activeCount > 0 ? "success" : ""
       );
 
-      tbody.append(tr);
+      subscriptionsEl.replaceChildren(
+        makeTable(
+          ["Plan", "Status", "Starts At", "Expires At"],
+          rows
+        )
+      );
+    } catch (error) {
+      message(
+        subscriptionMessage,
+        "Could not load subscription status: " +
+          (error.message || "Unknown error"),
+        "error"
+      );
+    } finally {
+      loadingSubscriptions = false;
+      refreshStatus.disabled = !currentUser;
     }
-
-    table.append(thead, tbody);
-    wrap.append(table);
-    historyEl.replaceChildren(wrap);
   }
 
   async function init() {
     if (!window.supabase) {
-      plansEl.textContent = "Supabase library failed to load. Check your internet connection.";
+      plansEl.textContent =
+        "Supabase library failed to load. Check your internet connection.";
       return;
     }
 
-    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+    db = window.supabase.createClient(
+      SUPABASE_URL,
+      SUPABASE_KEY
+    );
 
-    $("loginForm").addEventListener("submit", async (event) => {
+    loginForm.addEventListener("submit", async event => {
       event.preventDefault();
+      signInBtn.disabled = true;
 
-      const email = $("email").value.trim();
-      const password = $("password").value;
+      try {
+        const email = $("email").value.trim();
+        const password = $("password").value;
 
-      const { data, error } = await db.auth.signInWithPassword({
-        email,
-        password
-      });
+        const { data, error } = await db.auth.signInWithPassword({
+          email,
+          password
+        });
 
-      if (error) {
-        message(authMessage, "Sign in failed: " + error.message, "error");
-        return;
+        if (error) throw error;
+
+        showSignedIn(data.user);
+        await Promise.all([loadHistory(), loadSubscriptions()]);
+      } catch (error) {
+        message(
+          authMessage,
+          "Sign in failed: " + (error.message || "Unknown error"),
+          "error"
+        );
+      } finally {
+        signInBtn.disabled = false;
       }
-
-      showSignedIn(data.user);
-      renderPlans();
     });
 
     logoutBtn.addEventListener("click", async () => {
-      const { error } = await db.auth.signOut();
+      logoutBtn.disabled = true;
 
-      if (error) {
-        message(authMessage, "Sign out failed: " + error.message, "error");
-        return;
+      try {
+        const { error } = await db.auth.signOut();
+        if (error) throw error;
+
+        showSignedIn(null);
+      } catch (error) {
+        message(
+          authMessage,
+          "Sign out failed: " + (error.message || "Unknown error"),
+          "error"
+        );
+      } finally {
+        logoutBtn.disabled = false;
       }
-
-      showSignedIn(null);
-      renderPlans();
     });
 
     refreshHistory.addEventListener("click", loadHistory);
+    refreshStatus.addEventListener("click", loadSubscriptions);
 
-    const { data } = await db.auth.getSession();
-    showSignedIn(data.session?.user || null);
+    const { data, error } = await db.auth.getSession();
+
+    if (error) {
+      message(authMessage, "Could not check session: " + error.message, "error");
+    }
+
+    showSignedIn(data?.session?.user || null);
 
     db.auth.onAuthStateChange((_event, session) => {
       showSignedIn(session?.user || null);
-      renderPlans();
+
+      if (session?.user) {
+        // Defer database work until after the auth callback completes.
+        setTimeout(() => {
+          loadHistory();
+          loadSubscriptions();
+        }, 0);
+      }
     });
 
     await loadPlans();
-    renderPlans();
+
+    if (currentUser) {
+      await Promise.all([loadHistory(), loadSubscriptions()]);
+    }
   }
 
   init();
