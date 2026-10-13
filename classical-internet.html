@@ -1,0 +1,537 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <meta name="theme-color" content="#080808">
+  <title>Classical Internet | Classic Empire Ltd.</title>
+
+  <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+
+  <style>
+    :root {
+      --bg: #080808;
+      --panel: #151515;
+      --gold: #ffd700;
+      --muted: #aaa;
+      --line: #3b3420;
+      --green: #52d68b;
+      --red: #ff7777;
+    }
+
+    * { box-sizing: border-box; }
+
+    body {
+      margin: 0;
+      background: var(--bg);
+      color: #f7f7f7;
+      font-family: Arial, sans-serif;
+    }
+
+    header {
+      padding: 22px 16px;
+      text-align: center;
+      border-bottom: 1px solid var(--line);
+      background: #101010;
+    }
+
+    .brand {
+      color: var(--gold);
+      font-size: 13px;
+      letter-spacing: 2px;
+      font-weight: bold;
+    }
+
+    h1 {
+      color: var(--gold);
+      margin: 12px 0 6px;
+      font-size: clamp(25px, 5vw, 38px);
+    }
+
+    .subtitle, .muted { color: var(--muted); }
+
+    main {
+      width: min(1050px, 94%);
+      margin: 24px auto 50px;
+    }
+
+    .panel {
+      background: var(--panel);
+      border: 1px solid var(--line);
+      border-radius: 14px;
+      padding: 18px;
+      margin-bottom: 18px;
+    }
+
+    h2 {
+      margin-top: 0;
+      color: var(--gold);
+      font-size: 20px;
+    }
+
+    input {
+      width: 100%;
+      padding: 12px;
+      margin: 6px 0;
+      border-radius: 8px;
+      border: 1px solid #444;
+      background: #090909;
+      color: white;
+      font-size: 15px;
+    }
+
+    button, .button {
+      display: inline-block;
+      border: 1px solid var(--gold);
+      border-radius: 8px;
+      padding: 11px 15px;
+      margin: 5px 5px 5px 0;
+      background: var(--gold);
+      color: #111;
+      font-weight: bold;
+      cursor: pointer;
+      text-decoration: none;
+      font-size: 14px;
+    }
+
+    button.secondary {
+      color: var(--gold);
+      background: transparent;
+    }
+
+    button:disabled {
+      opacity: .5;
+      cursor: not-allowed;
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      gap: 14px;
+    }
+
+    .plan {
+      background: #101010;
+      border: 1px solid var(--line);
+      border-radius: 12px;
+      padding: 17px;
+      display: flex;
+      flex-direction: column;
+      align-items: flex-start;
+    }
+
+    .plan h3 { margin: 0 0 8px; }
+
+    .price {
+      color: var(--gold);
+      font-size: 27px;
+      font-weight: bold;
+      margin: 12px 0;
+    }
+
+    .plan p {
+      color: var(--muted);
+      font-size: 14px;
+      line-height: 1.6;
+    }
+
+    .plan button { margin-top: auto; }
+
+    .status {
+      padding: 12px;
+      border-radius: 8px;
+      margin: 12px 0;
+      background: #202020;
+      overflow-wrap: anywhere;
+    }
+
+    .status.error { color: var(--red); }
+    .status.success { color: var(--green); }
+
+    .table-wrap { overflow-x: auto; }
+
+    table {
+      width: 100%;
+      border-collapse: collapse;
+      min-width: 490px;
+    }
+
+    th, td {
+      text-align: left;
+      padding: 12px 8px;
+      border-bottom: 1px solid #333;
+      font-size: 14px;
+    }
+
+    th { color: var(--gold); }
+
+    footer {
+      text-align: center;
+      color: var(--muted);
+      padding: 22px;
+      border-top: 1px solid var(--line);
+      font-size: 13px;
+    }
+
+    [hidden] { display: none !important; }
+  </style>
+</head>
+
+<body>
+<header>
+  <div class="brand">CLASSIC EMPIRE LTD.</div>
+  <h1>Classical Internet</h1>
+  <div class="subtitle">SIM Recharge · Data · Internet Plans</div>
+</header>
+
+<main>
+  <div class="panel">
+    <a class="button" href="./index.html">← Main Website</a>
+    <p class="muted">
+      Choose a plan, review its price and submit a purchase request.
+      Actual recharge requires a supported service provider.
+    </p>
+  </div>
+
+  <section class="panel" id="loginPanel">
+    <h2>Member Login</h2>
+    <p class="muted">
+      Sign in using an existing Supabase Auth email account.
+      Your website's separate account-number login is not automatically connected here.
+    </p>
+
+    <form id="loginForm">
+      <input id="email" type="email" placeholder="Email address"
+             autocomplete="username" required>
+      <input id="password" type="password" placeholder="Password"
+             autocomplete="current-password" required>
+      <button type="submit">Sign In</button>
+    </form>
+
+    <button type="button" class="secondary" id="logoutBtn" hidden>
+      Sign Out
+    </button>
+
+    <div id="authMessage" class="status" role="status">
+      Sign in to view plans and purchase history.
+    </div>
+  </section>
+
+  <section class="panel">
+    <h2>Available Plans</h2>
+    <p class="muted">All prices below are in Indian Rupees (INR).</p>
+    <div id="plans" class="grid">
+      <p class="muted">Loading plans…</p>
+    </div>
+    <div id="planMessage" class="status" role="status" hidden></div>
+  </section>
+
+  <section class="panel" id="historyPanel">
+    <h2>My Purchase History</h2>
+    <div id="history" class="muted">
+      Sign in to view your purchase requests.
+    </div>
+    <button type="button" class="secondary" id="refreshHistory" hidden>
+      Refresh History
+    </button>
+  </section>
+
+  <section class="panel">
+    <h2>Service Information</h2>
+    <p class="muted">
+      Submitting a request does not mean that payment or recharge is complete.
+      Payment must be verified, and a real telecom provider must confirm
+      activation before the service can be shown as active.
+    </p>
+    <p class="muted">
+      Head Office: Chakla Ghat, Kishanganj, Bihar, India
+    </p>
+  </section>
+</main>
+
+<footer>Classic Empire Ltd. · Classical Internet</footer>
+
+<script>
+(() => {
+  "use strict";
+
+  const SUPABASE_URL = "https://wcyozectzscqwvtzetkc.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
+
+  const $ = (id) => document.getElementById(id);
+
+  const plansEl = $("plans");
+  const historyEl = $("history");
+  const authMessage = $("authMessage");
+  const planMessage = $("planMessage");
+  const loginPanel = $("loginPanel");
+  const logoutBtn = $("logoutBtn");
+  const refreshHistory = $("refreshHistory");
+
+  let db = null;
+  let currentUser = null;
+  let plans = [];
+
+  function message(el, text, type = "") {
+    el.textContent = text;
+    el.className = "status" + (type ? " " + type : "");
+    el.hidden = false;
+  }
+
+  function formatINR(value) {
+    return new Intl.NumberFormat("en-IN", {
+      style: "currency",
+      currency: "INR",
+      maximumFractionDigits: 2
+    }).format(Number(value));
+  }
+
+  function safeCell(value) {
+    const td = document.createElement("td");
+    td.textContent = String(value ?? "");
+    return td;
+  }
+
+  function showSignedIn(user) {
+    currentUser = user || null;
+    loginPanel.querySelector("form").hidden = Boolean(user);
+    logoutBtn.hidden = !user;
+    refreshHistory.hidden = !user;
+
+    if (user) {
+      message(authMessage, "Signed in: " + user.email, "success");
+      loadHistory();
+    } else {
+      message(authMessage, "Please sign in to submit a purchase request.");
+      historyEl.textContent = "Sign in to view your purchase requests.";
+    }
+  }
+
+  function renderPlans() {
+    plansEl.replaceChildren();
+
+    if (!plans.length) {
+      plansEl.textContent = "No active plans are currently available.";
+      return;
+    }
+
+    for (const plan of plans) {
+      const card = document.createElement("article");
+      card.className = "plan";
+
+      const title = document.createElement("h3");
+      title.textContent = plan.plan_name;
+
+      const price = document.createElement("div");
+      price.className = "price";
+      price.textContent = formatINR(plan.price_inr);
+
+      const validity = document.createElement("p");
+      validity.textContent = "Validity: " + plan.validity_days + " days";
+
+      const note = document.createElement("p");
+      note.textContent = "Plan code: " + plan.plan_code;
+
+      const buy = document.createElement("button");
+      buy.type = "button";
+      buy.textContent = "Request Purchase";
+      buy.disabled = !currentUser;
+
+      buy.addEventListener("click", () => requestPurchase(plan, buy));
+
+      card.append(title, price, validity, note, buy);
+      plansEl.append(card);
+    }
+  }
+
+  async function loadPlans() {
+    plansEl.textContent = "Loading plans…";
+
+    const { data, error } = await db
+      .from("classical_internet_plans")
+      .select("id,plan_code,plan_name,validity_days,price_inr")
+      .eq("active", true)
+      .order("validity_days", { ascending: true });
+
+    if (error) {
+      plansEl.textContent = "Could not load plans. " + error.message;
+      return;
+    }
+
+    plans = data || [];
+    renderPlans();
+  }
+
+  async function requestPurchase(plan, button) {
+    if (!currentUser) {
+      message(planMessage, "Please sign in first.", "error");
+      return;
+    }
+
+    const confirmed = window.confirm(
+      "Submit a purchase request for " + plan.plan_name +
+      " at " + formatINR(plan.price_inr) + "?\n\n" +
+      "This will not charge you or activate a real SIM."
+    );
+
+    if (!confirmed) return;
+
+    button.disabled = true;
+    message(planMessage, "Submitting purchase request…");
+
+    const { error } = await db
+      .from("classical_internet_purchases")
+      .insert({
+        user_id: currentUser.id,
+        plan_id: plan.id,
+        purchase_status: "pending",
+        payment_status: "pending"
+      });
+
+    button.disabled = false;
+
+    if (error) {
+      message(
+        planMessage,
+        "Request failed: " + error.message,
+        "error"
+      );
+      return;
+    }
+
+    message(
+      planMessage,
+      "Purchase request submitted. Payment and activation are still pending.",
+      "success"
+    );
+
+    await loadHistory();
+  }
+
+  async function loadHistory() {
+    if (!currentUser) return;
+
+    historyEl.textContent = "Loading purchase history…";
+
+    const { data, error } = await db
+      .from("classical_internet_purchases")
+      .select(
+        "id,purchase_status,payment_status,created_at," +
+        "classical_internet_plans(plan_name,price_inr,validity_days)"
+      )
+      .eq("user_id", currentUser.id)
+      .order("created_at", { ascending: false });
+
+    if (error) {
+      historyEl.textContent = "Could not load history: " + error.message;
+      return;
+    }
+
+    if (!data || data.length === 0) {
+      historyEl.textContent = "No purchase requests yet.";
+      return;
+    }
+
+    const wrap = document.createElement("div");
+    wrap.className = "table-wrap";
+
+    const table = document.createElement("table");
+    const thead = document.createElement("thead");
+    const header = document.createElement("tr");
+
+    [
+      "Plan",
+      "Price",
+      "Purchase Status",
+      "Payment Status",
+      "Date"
+    ].forEach(text => {
+      const th = document.createElement("th");
+      th.textContent = text;
+      header.append(th);
+    });
+
+    thead.append(header);
+
+    const tbody = document.createElement("tbody");
+
+    for (const item of data) {
+      const plan = item.classical_internet_plans;
+      const tr = document.createElement("tr");
+
+      tr.append(
+        safeCell(plan?.plan_name || "Plan"),
+        safeCell(plan ? formatINR(plan.price_inr) : "—"),
+        safeCell(item.purchase_status),
+        safeCell(item.payment_status),
+        safeCell(new Date(item.created_at).toLocaleString("en-IN"))
+      );
+
+      tbody.append(tr);
+    }
+
+    table.append(thead, tbody);
+    wrap.append(table);
+    historyEl.replaceChildren(wrap);
+  }
+
+  async function init() {
+    if (!window.supabase) {
+      plansEl.textContent = "Supabase library failed to load. Check your internet connection.";
+      return;
+    }
+
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+    $("loginForm").addEventListener("submit", async (event) => {
+      event.preventDefault();
+
+      const email = $("email").value.trim();
+      const password = $("password").value;
+
+      const { data, error } = await db.auth.signInWithPassword({
+        email,
+        password
+      });
+
+      if (error) {
+        message(authMessage, "Sign in failed: " + error.message, "error");
+        return;
+      }
+
+      showSignedIn(data.user);
+      renderPlans();
+    });
+
+    logoutBtn.addEventListener("click", async () => {
+      const { error } = await db.auth.signOut();
+
+      if (error) {
+        message(authMessage, "Sign out failed: " + error.message, "error");
+        return;
+      }
+
+      showSignedIn(null);
+      renderPlans();
+    });
+
+    refreshHistory.addEventListener("click", loadHistory);
+
+    const { data } = await db.auth.getSession();
+    showSignedIn(data.session?.user || null);
+
+    db.auth.onAuthStateChange((_event, session) => {
+      showSignedIn(session?.user || null);
+      renderPlans();
+    });
+
+    await loadPlans();
+    renderPlans();
+  }
+
+  init();
+})();
+</script>
+</body>
+</html>
