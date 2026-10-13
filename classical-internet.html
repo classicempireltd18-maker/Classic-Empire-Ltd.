@@ -6,285 +6,97 @@
   <meta name="viewport" content="width=device-width, initial-scale=1">
   <meta name="theme-color" content="#080808">
   <title>Classical Internet | Classic Empire Ltd.</title>
-
   <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-
   <style>
     :root {
-      --bg: #080808;
-      --panel: #151515;
-      --gold: #ffd700;
-      --muted: #aaa;
-      --line: #3b3420;
-      --green: #52d68b;
-      --red: #ff7777;
+      --bg:#080808;--panel:#151515;--gold:#ffd700;
+      --muted:#aaa;--line:#3b3420;--green:#52d68b;--red:#ff7777;
     }
-
-    * { box-sizing: border-box; }
-
-    body {
-      margin: 0;
-      background: var(--bg);
-      color: #f7f7f7;
-      font-family: Arial, sans-serif;
-    }
-
-    header {
-      padding: 22px 16px;
-      text-align: center;
-      border-bottom: 1px solid var(--line);
-      background: #101010;
-    }
-
-    .brand {
-      color: var(--gold);
-      font-size: 13px;
-      letter-spacing: 2px;
-      font-weight: bold;
-    }
-
-    h1 {
-      color: var(--gold);
-      margin: 12px 0 6px;
-      font-size: clamp(25px, 5vw, 38px);
-    }
-
-    .subtitle, .muted { color: var(--muted); }
-
-    main {
-      width: min(1050px, 94%);
-      margin: 24px auto 50px;
-    }
-
-    .panel {
-      background: var(--panel);
-      border: 1px solid var(--line);
-      border-radius: 14px;
-      padding: 18px;
-      margin-bottom: 18px;
-    }
-
-    h2 {
-      margin-top: 0;
-      color: var(--gold);
-      font-size: 20px;
-    }
-
-    input {
-      width: 100%;
-      padding: 12px;
-      margin: 6px 0;
-      border-radius: 8px;
-      border: 1px solid #444;
-      background: #090909;
-      color: white;
-      font-size: 15px;
-    }
-
-    button, .button {
-      display: inline-block;
-      border: 1px solid var(--gold);
-      border-radius: 8px;
-      padding: 11px 15px;
-      margin: 5px 5px 5px 0;
-      background: var(--gold);
-      color: #111;
-      font-weight: bold;
-      cursor: pointer;
-      text-decoration: none;
-      font-size: 14px;
-    }
-
-    button.secondary {
-      color: var(--gold);
-      background: transparent;
-    }
-
-    button:disabled {
-      opacity: .5;
-      cursor: not-allowed;
-    }
-
-    .grid {
-      display: grid;
-      grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
-      gap: 14px;
-    }
-
-    .plan {
-      background: #101010;
-      border: 1px solid var(--line);
-      border-radius: 12px;
-      padding: 17px;
-      display: flex;
-      flex-direction: column;
-      align-items: flex-start;
-    }
-
-    .plan h3 { margin: 0 0 8px; }
-
-    .price {
-      color: var(--gold);
-      font-size: 27px;
-      font-weight: bold;
-      margin: 12px 0;
-    }
-
-    .plan p {
-      color: var(--muted);
-      font-size: 14px;
-      line-height: 1.6;
-    }
-
-    .plan button { margin-top: auto; }
-
-    .status {
-      padding: 12px;
-      border-radius: 8px;
-      margin: 12px 0;
-      background: #202020;
-      overflow-wrap: anywhere;
-      line-height: 1.5;
-    }
-
-    .status.error { color: var(--red); }
-    .status.success { color: var(--green); }
-
-    .table-wrap { overflow-x: auto; }
-
-    table {
-      width: 100%;
-      border-collapse: collapse;
-      min-width: 490px;
-    }
-
-    th, td {
-      text-align: left;
-      padding: 12px 8px;
-      border-bottom: 1px solid #333;
-      font-size: 14px;
-    }
-
-    th { color: var(--gold); }
-
-    .badge {
-      display: inline-block;
-      padding: 4px 8px;
-      border-radius: 6px;
-      background: #303030;
-      font-size: 12px;
-      text-transform: capitalize;
-    }
-
-    .badge.active { color: var(--green); }
-    .badge.expired { color: var(--red); }
-    .badge.inactive { color: var(--muted); }
-
-    footer {
-      text-align: center;
-      color: var(--muted);
-      padding: 22px;
-      border-top: 1px solid var(--line);
-      font-size: 13px;
-    }
-
-    [hidden] { display: none !important; }
+    *{box-sizing:border-box}
+    body{margin:0;background:var(--bg);color:#f7f7f7;font-family:Arial,sans-serif}
+    header{padding:22px 16px;text-align:center;border-bottom:1px solid var(--line);background:#101010}
+    .brand{color:var(--gold);font-size:13px;letter-spacing:2px;font-weight:bold}
+    h1{color:var(--gold);margin:12px 0 6px;font-size:clamp(25px,5vw,38px)}
+    h2{margin-top:0;color:var(--gold);font-size:20px}
+    .subtitle,.muted{color:var(--muted)}
+    main{width:min(1050px,94%);margin:24px auto 50px}
+    .panel{background:var(--panel);border:1px solid var(--line);border-radius:14px;padding:18px;margin-bottom:18px}
+    input{width:100%;padding:12px;margin:6px 0;border-radius:8px;border:1px solid #444;background:#090909;color:white;font-size:15px}
+    button,.button{display:inline-block;border:1px solid var(--gold);border-radius:8px;padding:11px 15px;margin:5px 5px 5px 0;background:var(--gold);color:#111;font-weight:bold;cursor:pointer;text-decoration:none;font-size:14px}
+    button.secondary{color:var(--gold);background:transparent}
+    button:disabled{opacity:.5;cursor:not-allowed}
+    .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}
+    .plan{background:#101010;border:1px solid var(--line);border-radius:12px;padding:17px;display:flex;flex-direction:column;align-items:flex-start}
+    .plan h3{margin:0 0 8px}
+    .price{color:var(--gold);font-size:27px;font-weight:bold;margin:12px 0}
+    .plan p{color:var(--muted);font-size:14px;line-height:1.6}
+    .plan button{margin-top:auto}
+    .status{padding:12px;border-radius:8px;margin:12px 0;background:#202020;overflow-wrap:anywhere;line-height:1.5}
+    .status.error{color:var(--red)}.status.success{color:var(--green)}
+    .table-wrap{overflow-x:auto}
+    table{width:100%;border-collapse:collapse;min-width:620px}
+    th,td{text-align:left;padding:12px 8px;border-bottom:1px solid #333;font-size:14px}
+    th{color:var(--gold)}
+    .badge{display:inline-block;padding:4px 8px;border-radius:6px;background:#303030;font-size:12px;text-transform:capitalize}
+    .badge.active{color:var(--green)}.badge.expired{color:var(--red)}.badge.inactive{color:var(--muted)}
+    footer{text-align:center;color:var(--muted);padding:22px;border-top:1px solid var(--line);font-size:13px}
+    [hidden]{display:none!important}
   </style>
 </head>
-
 <body>
 <header>
   <div class="brand">CLASSIC EMPIRE LTD.</div>
   <h1>Classical Internet</h1>
-  <div class="subtitle">Internet Plans · Subscription Management</div>
+  <div class="subtitle">Virtual INR Plans · Subscription Management</div>
 </header>
 
 <main>
   <section class="panel">
     <a class="button" href="./index.html">← Main Website</a>
     <p class="muted">
-      Choose a plan, submit a purchase request, and check your subscription.
-      Online payment and automatic activation are not yet connected.
+      Purchase plans using your Classic Empire virtual INR wallet.
+      These are fictional in-app balances, not real money or mobile-carrier data plans.
     </p>
   </section>
 
   <section class="panel" id="loginPanel">
     <h2>Member Login</h2>
-    <p class="muted">
-      Sign in using your existing Supabase Auth email and password.
-      The separate account-number login is not connected to this page.
-    </p>
-
+    <p class="muted">Sign in with your existing Supabase Auth email and password.</p>
     <form id="loginForm">
-      <input id="email" type="email" placeholder="Email address"
-        autocomplete="username" required>
-      <input id="password" type="password" placeholder="Password"
-        autocomplete="current-password" required>
+      <input id="email" type="email" placeholder="Email address" autocomplete="username" required>
+      <input id="password" type="password" placeholder="Password" autocomplete="current-password" required>
       <button type="submit" id="signInBtn">Sign In</button>
     </form>
-
-    <button type="button" class="secondary" id="logoutBtn" hidden>
-      Sign Out
-    </button>
-
-    <div id="authMessage" class="status" role="status">
-      Sign in to view plans and your subscription.
-    </div>
+    <button type="button" class="secondary" id="logoutBtn" hidden>Sign Out</button>
+    <div id="authMessage" class="status" role="status">Sign in to continue.</div>
   </section>
 
   <section class="panel">
     <h2>Available Plans</h2>
-    <p class="muted">All prices are in Indian Rupees (INR).</p>
-    <div id="plans" class="grid">
-      <p class="muted">Loading plans…</p>
-    </div>
+    <p class="muted">Prices are deducted from your virtual INR wallet only.</p>
+    <div id="walletBalance" class="status" hidden></div>
+    <div id="plans" class="grid"><p class="muted">Loading plans…</p></div>
     <div id="planMessage" class="status" role="status" hidden></div>
   </section>
 
-  <section class="panel" id="subscriptionPanel">
+  <section class="panel">
     <h2>My Subscription Status</h2>
-    <p class="muted">
-      Check the subscription records linked to your signed-in account.
-      An active record is considered valid only until its expiry time.
-    </p>
-
-    <div id="subscriptionStatus" class="status" role="status">
-      Sign in to view your subscription.
-    </div>
-
+    <div id="subscriptionStatus" class="status" role="status">Sign in to view your subscription.</div>
     <div id="subscriptions"></div>
-
-    <button type="button" class="secondary" id="refreshStatus" hidden>
-      Refresh Status
-    </button>
-  </section>
-
-  <section class="panel" id="historyPanel">
-    <h2>My Purchase History</h2>
-    <div id="history" class="muted">
-      Sign in to view your purchase requests.
-    </div>
-
-    <button type="button" class="secondary" id="refreshHistory" hidden>
-      Refresh History
-    </button>
+    <button type="button" class="secondary" id="refreshStatus" hidden>Refresh Status</button>
   </section>
 
   <section class="panel">
-    <h2>Payment and Service Information</h2>
-    <p class="muted">
-      Submitting a purchase request does not charge money or activate a
-      subscription. Automatic activation will be enabled only after a
-      real payment gateway, secure payment verification, and server-side
-      subscription processing have been implemented.
-    </p>
-    <p class="muted">
-      This subscription controls only supported Classic Empire digital
-      services. It does not control a mobile carrier's SIM or data service.
-    </p>
-    <p class="muted">
-      Head Office: Chakla Ghat, Kishanganj, Bihar, India
-    </p>
+    <h2>My Purchase History</h2>
+    <div id="history" class="muted">Sign in to view purchase history.</div>
+    <button type="button" class="secondary" id="refreshHistory" hidden>Refresh History</button>
+  </section>
+
+  <section class="panel">
+    <h2>How Virtual Purchases Work</h2>
+    <p class="muted">The database checks your signed-in identity, pending purchase request, active plan and wallet balance. A successful purchase records a completed virtual-wallet transaction and creates a subscription with an expiry date.</p>
+    <p class="muted">If your balance is insufficient, the purchase will fail without deducting funds. A pending request alone does not activate a subscription.</p>
+    <p class="muted">Head Office: Chakla Ghat, Kishanganj, Bihar, India</p>
   </section>
 </main>
 
@@ -294,12 +106,8 @@
 (() => {
   "use strict";
 
-  const SUPABASE_URL =
-    "https://wcyozectzscqwvtzetkc.supabase.co";
-
-  const SUPABASE_KEY =
-    "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
-
+  const SUPABASE_URL = "https://wcyozectzscqwvtzetkc.supabase.co";
+  const SUPABASE_KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
   const $ = id => document.getElementById(id);
 
   const plansEl = $("plans");
@@ -308,6 +116,7 @@
   const authMessage = $("authMessage");
   const planMessage = $("planMessage");
   const subscriptionMessage = $("subscriptionStatus");
+  const walletBalanceEl = $("walletBalance");
   const loginForm = $("loginForm");
   const logoutBtn = $("logoutBtn");
   const refreshHistory = $("refreshHistory");
@@ -317,9 +126,7 @@
   let db = null;
   let currentUser = null;
   let plans = [];
-  let loadingPlans = false;
-  let loadingHistory = false;
-  let loadingSubscriptions = false;
+  let busy = false;
 
   function message(el, text, type = "") {
     el.textContent = text;
@@ -337,90 +144,92 @@
 
   function formatDate(value) {
     if (!value) return "—";
-
-    const date = new Date(value);
-
-    if (Number.isNaN(date.getTime())) return "—";
-
-    return date.toLocaleString("en-IN", {
-      dateStyle: "medium",
-      timeStyle: "short"
+    const d = new Date(value);
+    return Number.isNaN(d.getTime()) ? "—" : d.toLocaleString("en-IN", {
+      dateStyle: "medium", timeStyle: "short"
     });
   }
 
-  function safeCell(value) {
+  function cell(value) {
     const td = document.createElement("td");
     td.textContent = String(value ?? "");
     return td;
   }
 
-  function makeTable(headers, rows) {
+  function table(headers, rows) {
     const wrap = document.createElement("div");
     wrap.className = "table-wrap";
-
-    const table = document.createElement("table");
+    const t = document.createElement("table");
     const thead = document.createElement("thead");
-    const headRow = document.createElement("tr");
+    const hr = document.createElement("tr");
 
-    headers.forEach(label => {
+    headers.forEach(h => {
       const th = document.createElement("th");
-      th.textContent = label;
-      headRow.append(th);
+      th.textContent = h;
+      hr.append(th);
     });
 
-    thead.append(headRow);
-
+    thead.append(hr);
     const tbody = document.createElement("tbody");
 
     rows.forEach(row => {
       const tr = document.createElement("tr");
-      row.forEach(cell => tr.append(cell));
+      row.forEach(td => tr.append(td));
       tbody.append(tr);
     });
 
-    table.append(thead, tbody);
-    wrap.append(table);
-
+    t.append(thead, tbody);
+    wrap.append(t);
     return wrap;
   }
 
-  function makeBadge(text, className) {
-    const badge = document.createElement("span");
-    badge.className = "badge " + className;
-    badge.textContent = text;
-    return badge;
+  function badge(text, cls) {
+    const b = document.createElement("span");
+    b.className = "badge " + cls;
+    b.textContent = text;
+    return b;
   }
 
-  function showSignedIn(user) {
+  function setSignedIn(user) {
     currentUser = user || null;
-
-    loginForm.hidden = Boolean(user);
+    loginForm.hidden = !!user;
     logoutBtn.hidden = !user;
     refreshHistory.hidden = !user;
     refreshStatus.hidden = !user;
 
     if (user) {
-      message(
-        authMessage,
-        "Signed in: " + (user.email || "member"),
-        "success"
-      );
+      message(authMessage, "Signed in: " + (user.email || "member"), "success");
     } else {
-      message(
-        authMessage,
-        "Sign in to submit a purchase request and view your subscription."
-      );
-
+      message(authMessage, "Sign in to purchase plans and view your account.");
       historyEl.textContent = "Sign in to view purchase history.";
       subscriptionsEl.replaceChildren();
-
-      message(
-        subscriptionMessage,
-        "Sign in to view your subscription."
-      );
+      walletBalanceEl.hidden = true;
+      message(subscriptionMessage, "Sign in to view your subscription.");
     }
 
     renderPlans();
+  }
+
+  async function loadWalletBalance() {
+    if (!db || !currentUser) return;
+
+    const { data, error } = await db
+      .from("wallet_accounts")
+      .select("balance_inr")
+      .eq("user_id", currentUser.id)
+      .maybeSingle();
+
+    if (error) {
+      message(walletBalanceEl, "Wallet balance unavailable: " + error.message, "error");
+      return;
+    }
+
+    if (!data) {
+      message(walletBalanceEl, "No virtual INR wallet found for this account.", "error");
+      return;
+    }
+
+    message(walletBalanceEl, "Available virtual INR balance: " + formatINR(data.balance_inr), "success");
   }
 
   function renderPlans() {
@@ -431,7 +240,7 @@
       return;
     }
 
-    for (const plan of plans) {
+    plans.forEach(plan => {
       const card = document.createElement("article");
       card.className = "plan";
 
@@ -446,96 +255,110 @@
       validity.textContent = "Validity: " + plan.validity_days + " days";
 
       const note = document.createElement("p");
-      note.textContent = "Plan code: " + plan.plan_code;
+      note.textContent = "Paid using virtual INR wallet.";
 
       const buy = document.createElement("button");
       buy.type = "button";
-      buy.textContent = "Request Purchase";
-      buy.disabled = !currentUser;
-
-      buy.addEventListener("click", () => requestPurchase(plan, buy));
+      buy.textContent = "Buy Plan";
+      buy.disabled = !currentUser || busy;
+      buy.addEventListener("click", () => buyPlan(plan, buy));
 
       card.append(title, price, validity, note, buy);
       plansEl.append(card);
-    }
+    });
   }
 
   async function loadPlans() {
-    if (!db || loadingPlans) return;
+    const { data, error } = await db
+      .from("classical_internet_plans")
+      .select("id,plan_code,plan_name,validity_days,price_inr")
+      .eq("active", true)
+      .order("validity_days", { ascending: true });
 
-    loadingPlans = true;
-    plansEl.textContent = "Loading plans…";
-
-    try {
-      const { data, error } = await db
-        .from("classical_internet_plans")
-        .select("id,plan_code,plan_name,validity_days,price_inr")
-        .eq("active", true)
-        .order("validity_days", { ascending: true });
-
-      if (error) throw error;
-
-      plans = data || [];
-      renderPlans();
-    } catch (error) {
-      plansEl.textContent =
-        "Could not load plans: " + (error.message || "Unknown error");
-    } finally {
-      loadingPlans = false;
-    }
+    if (error) throw error;
+    plans = data || [];
+    renderPlans();
   }
 
-  async function requestPurchase(plan, button) {
-    if (!currentUser) {
+  async function buyPlan(plan, button) {
+    if (!currentUser || busy) {
       message(planMessage, "Please sign in first.", "error");
       return;
     }
 
+    const amount = Number(plan.price_inr);
     const confirmed = window.confirm(
-      "Submit a purchase request for " + plan.plan_name +
-      " at " + formatINR(plan.price_inr) + "?\n\n" +
-      "This is only a request. It will not charge money or activate a service."
+      "Buy " + plan.plan_name + " for " + formatINR(amount) +
+      " from your virtual INR wallet?\n\nNo real money will be charged."
     );
-
     if (!confirmed) return;
 
+    busy = true;
     button.disabled = true;
-    message(planMessage, "Submitting purchase request…");
+    renderPlans();
+    message(planMessage, "Creating purchase request…");
+
+    let purchaseId = null;
 
     try {
-      const { error } = await db
+      // Create the request first. The server function processes this exact request.
+      const { data: request, error: requestError } = await db
         .from("classical_internet_purchases")
         .insert({
           user_id: currentUser.id,
           plan_id: plan.id,
           purchase_status: "pending",
-          payment_status: "pending"
-        });
+          payment_status: "pending",
+          payment_method: "virtual_wallet",
+          virtual_amount: amount
+        })
+        .select("id")
+        .single();
 
-      if (error) throw error;
+      if (requestError) throw requestError;
+      purchaseId = request.id;
+
+      message(planMessage, "Processing virtual wallet purchase…");
+
+      const { data: result, error: rpcError } = await db.rpc(
+        "buy_classical_internet_plan",
+        {
+          p_plan_code: plan.plan_code,
+          p_purchase_id: purchaseId
+        }
+      );
+
+      if (rpcError) throw rpcError;
+      if (!result || result.success !== true) {
+        throw new Error(result?.message || "The purchase was not confirmed.");
+      }
 
       message(
         planMessage,
-        "Purchase request submitted. Payment and activation are still pending.",
+        "Purchase successful! " + result.plan + " activated. Virtual amount: " +
+          formatINR(result.virtual_amount) + ". Expires: " + formatDate(result.expires_at),
         "success"
       );
 
-      await loadHistory();
+      await Promise.all([loadWalletBalance(), loadHistory(), loadSubscriptions()]);
     } catch (error) {
+      const detail = error?.message || "Unknown error";
       message(
         planMessage,
-        "Request failed: " + (error.message || "Unknown error"),
+        "Purchase was not confirmed: " + detail +
+        (purchaseId ? " Check Purchase History before retrying." : ""),
         "error"
       );
+      await Promise.allSettled([loadWalletBalance(), loadHistory(), loadSubscriptions()]);
     } finally {
-      button.disabled = false;
+      busy = false;
+      renderPlans();
     }
   }
 
   async function loadHistory() {
-    if (!db || !currentUser || loadingHistory) return;
+    if (!db || !currentUser) return;
 
-    loadingHistory = true;
     refreshHistory.disabled = true;
     historyEl.textContent = "Loading purchase history…";
 
@@ -543,73 +366,65 @@
       const { data, error } = await db
         .from("classical_internet_purchases")
         .select(
-          "id,purchase_status,payment_status,created_at," +
-          "classical_internet_plans(plan_name,price_inr,validity_days)"
+          "id,purchase_status,payment_status,payment_method,virtual_amount,created_at," +
+          "classical_internet_plans(plan_name,price_inr)"
         )
         .eq("user_id", currentUser.id)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
 
-      if (!data || data.length === 0) {
+      if (!data?.length) {
         historyEl.textContent = "No purchase requests yet.";
         return;
       }
 
       const rows = data.map(item => {
         const plan = item.classical_internet_plans;
-
         return [
-          safeCell(plan?.plan_name || "Plan"),
-          safeCell(plan ? formatINR(plan.price_inr) : "—"),
-          safeCell(item.purchase_status),
-          safeCell(item.payment_status),
-          safeCell(formatDate(item.created_at))
+          cell(plan?.plan_name || "Plan"),
+          cell(formatINR(item.virtual_amount ?? plan?.price_inr ?? 0)),
+          cell(item.purchase_status),
+          cell(item.payment_status === "virtual_paid"
+            ? "Virtual wallet paid"
+            : item.payment_status),
+          cell(item.payment_method || "—"),
+          cell(formatDate(item.created_at))
         ];
       });
 
-      historyEl.replaceChildren(
-        makeTable(
-          ["Plan", "Price", "Purchase Status", "Payment Status", "Date"],
-          rows
-        )
-      );
+      historyEl.replaceChildren(table(
+        ["Plan", "Virtual Amount", "Purchase Status", "Payment Status", "Method", "Date"],
+        rows
+      ));
     } catch (error) {
-      historyEl.textContent =
-        "Could not load history: " + (error.message || "Unknown error");
+      historyEl.textContent = "Could not load history: " + (error.message || "Unknown error");
     } finally {
-      loadingHistory = false;
       refreshHistory.disabled = !currentUser;
     }
   }
 
   async function loadSubscriptions() {
-    if (!db || !currentUser || loadingSubscriptions) return;
+    if (!db || !currentUser) return;
 
-    loadingSubscriptions = true;
     refreshStatus.disabled = true;
     subscriptionsEl.replaceChildren();
-
     message(subscriptionMessage, "Loading subscription status…");
 
     try {
-      // RLS should restrict this query to the signed-in user's records.
       const { data, error } = await db
         .from("classical_internet_subscriptions")
         .select(
           "id,status,starts_at,expires_at,created_at," +
-          "classical_internet_plans(plan_name,validity_days,price_inr)"
+          "classical_internet_plans(plan_name,validity_days)"
         )
         .eq("user_id", currentUser.id)
         .order("created_at", { ascending: false });
 
       if (error) throw error;
 
-      if (!data || data.length === 0) {
-        message(
-          subscriptionMessage,
-          "No subscription found. A purchase request alone does not activate a subscription."
-        );
+      if (!data?.length) {
+        message(subscriptionMessage, "No subscription found. A pending request does not activate a subscription.");
         return;
       }
 
@@ -617,111 +432,81 @@
       let activeCount = 0;
 
       const rows = data.map(item => {
-        const expiry = item.expires_at
-          ? new Date(item.expires_at).getTime()
-          : NaN;
-
         let label = item.status || "inactive";
-        let cssClass = "inactive";
+        let css = "inactive";
+        const expiry = item.expires_at ? new Date(item.expires_at).getTime() : NaN;
 
         if (label === "active" && Number.isFinite(expiry) && expiry > now) {
           label = "Active";
-          cssClass = "active";
+          css = "active";
           activeCount++;
-        } else if (
-          label === "active" &&
-          Number.isFinite(expiry) &&
-          expiry <= now
-        ) {
+        } else if (label === "active" || label === "expired") {
           label = "Expired";
-          cssClass = "expired";
-        } else if (label === "expired") {
-          label = "Expired";
-          cssClass = "expired";
+          css = "expired";
         } else if (label === "cancelled") {
           label = "Cancelled";
-          cssClass = "inactive";
         } else {
           label = "Inactive";
-          cssClass = "inactive";
         }
 
-        const badge = makeBadge(label, cssClass);
+        const statusCell = document.createElement("td");
+        statusCell.append(badge(label, css));
 
         return [
-          safeCell(item.classical_internet_plans?.plan_name || "Plan"),
-          (() => {
-            const td = document.createElement("td");
-            td.append(badge);
-            return td;
-          })(),
-          safeCell(formatDate(item.starts_at)),
-          safeCell(formatDate(item.expires_at))
+          cell(item.classical_internet_plans?.plan_name || "Plan"),
+          statusCell,
+          cell(formatDate(item.starts_at)),
+          cell(formatDate(item.expires_at))
         ];
       });
 
       message(
         subscriptionMessage,
-        activeCount > 0
+        activeCount
           ? "You have " + activeCount + " currently valid subscription(s)."
-          : "No currently valid active subscription. Payment verification and activation are not yet connected.",
-        activeCount > 0 ? "success" : ""
+          : "No currently valid active subscription.",
+        activeCount ? "success" : ""
       );
 
-      subscriptionsEl.replaceChildren(
-        makeTable(
-          ["Plan", "Status", "Starts At", "Expires At"],
-          rows
-        )
-      );
+      subscriptionsEl.replaceChildren(table(
+        ["Plan", "Status", "Starts At", "Expires At"],
+        rows
+      ));
     } catch (error) {
-      message(
-        subscriptionMessage,
-        "Could not load subscription status: " +
-          (error.message || "Unknown error"),
-        "error"
-      );
+      message(subscriptionMessage, "Could not load subscriptions: " + (error.message || "Unknown error"), "error");
     } finally {
-      loadingSubscriptions = false;
       refreshStatus.disabled = !currentUser;
     }
   }
 
+  async function refreshAccount() {
+    if (!currentUser) return;
+    await Promise.allSettled([loadWalletBalance(), loadHistory(), loadSubscriptions()]);
+  }
+
   async function init() {
     if (!window.supabase) {
-      plansEl.textContent =
-        "Supabase library failed to load. Check your internet connection.";
+      plansEl.textContent = "Supabase library failed to load. Check your internet connection.";
       return;
     }
 
-    db = window.supabase.createClient(
-      SUPABASE_URL,
-      SUPABASE_KEY
-    );
+    db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
     loginForm.addEventListener("submit", async event => {
       event.preventDefault();
       signInBtn.disabled = true;
 
       try {
-        const email = $("email").value.trim();
-        const password = $("password").value;
-
         const { data, error } = await db.auth.signInWithPassword({
-          email,
-          password
+          email: $("email").value.trim(),
+          password: $("password").value
         });
-
         if (error) throw error;
 
-        showSignedIn(data.user);
-        await Promise.all([loadHistory(), loadSubscriptions()]);
+        setSignedIn(data.user);
+        await refreshAccount();
       } catch (error) {
-        message(
-          authMessage,
-          "Sign in failed: " + (error.message || "Unknown error"),
-          "error"
-        );
+        message(authMessage, "Sign in failed: " + (error.message || "Unknown error"), "error");
       } finally {
         signInBtn.disabled = false;
       }
@@ -729,18 +514,12 @@
 
     logoutBtn.addEventListener("click", async () => {
       logoutBtn.disabled = true;
-
       try {
         const { error } = await db.auth.signOut();
         if (error) throw error;
-
-        showSignedIn(null);
+        setSignedIn(null);
       } catch (error) {
-        message(
-          authMessage,
-          "Sign out failed: " + (error.message || "Unknown error"),
-          "error"
-        );
+        message(authMessage, "Sign out failed: " + (error.message || "Unknown error"), "error");
       } finally {
         logoutBtn.disabled = false;
       }
@@ -750,30 +529,25 @@
     refreshStatus.addEventListener("click", loadSubscriptions);
 
     const { data, error } = await db.auth.getSession();
+    if (error) message(authMessage, "Session check failed: " + error.message, "error");
 
-    if (error) {
-      message(authMessage, "Could not check session: " + error.message, "error");
-    }
-
-    showSignedIn(data?.session?.user || null);
+    setSignedIn(data?.session?.user || null);
 
     db.auth.onAuthStateChange((_event, session) => {
-      showSignedIn(session?.user || null);
-
+      setSignedIn(session?.user || null);
       if (session?.user) {
-        // Defer database work until after the auth callback completes.
-        setTimeout(() => {
-          loadHistory();
-          loadSubscriptions();
-        }, 0);
+        // Avoid database calls inside the auth callback itself.
+        Promise.resolve().then(refreshAccount);
       }
     });
 
-    await loadPlans();
-
-    if (currentUser) {
-      await Promise.all([loadHistory(), loadSubscriptions()]);
+    try {
+      await loadPlans();
+    } catch (error) {
+      plansEl.textContent = "Could not load plans: " + (error.message || "Unknown error");
     }
+
+    if (currentUser) await refreshAccount();
   }
 
   init();
