@@ -1,0 +1,657 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#ffffff">
+<title>Classic Empire Ltd. | Device Store</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --gold:#d4af37;
+  --gold2:#ffd700;
+  --bg:#fff;
+  --panel:#f8f9fb;
+  --text:#171717;
+  --muted:#686868;
+  --border:#e6e6e6;
+  --green:#178447;
+  --red:#c62828;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Arial,Helvetica,sans-serif;
+}
+header{
+  padding:17px 20px;background:#fff;
+  border-bottom:2px solid var(--gold);
+  display:flex;align-items:center;justify-content:space-between;
+  gap:12px;flex-wrap:wrap;
+}
+.brand{font-size:20px;font-weight:800}
+.brand span{color:#a88314}
+header small{display:block;color:var(--muted);margin-top:4px}
+button,select{
+  font:inherit;
+}
+button{
+  cursor:pointer;border:1px solid var(--gold);
+  border-radius:9px;padding:11px 15px;
+  background:#fff;color:var(--text);font-weight:700;
+}
+button.primary{
+  background:var(--gold);border-color:var(--gold);
+}
+button:disabled{opacity:.5;cursor:not-allowed}
+nav{
+  display:flex;gap:9px;flex-wrap:wrap;
+  padding:12px 18px;background:#fff;
+  border-bottom:1px solid var(--border);
+}
+nav a{color:#252525;text-decoration:none;font-size:14px}
+main{max-width:1150px;margin:auto;padding:20px 16px 45px}
+h1{font-size:28px;margin:8px 0}
+h2{font-size:20px;margin:0 0 14px}
+.subtitle{color:var(--muted);line-height:1.6}
+.notice{
+  background:#fff9e8;border:1px solid #ead59a;
+  padding:13px;border-radius:10px;line-height:1.5;
+  margin:15px 0;
+}
+.wallets{
+  display:grid;grid-template-columns:repeat(2,minmax(0,1fr));
+  gap:12px;margin:18px 0;
+}
+.wallet,.panel{
+  border:1px solid var(--border);border-radius:12px;
+  padding:16px;background:var(--panel);
+}
+.wallet strong{display:block;color:#80610b;margin-bottom:8px}
+.balance{font-size:23px;font-weight:800;overflow-wrap:anywhere}
+.section-head{
+  display:flex;justify-content:space-between;
+  gap:10px;align-items:center;flex-wrap:wrap;
+  margin:26px 0 14px;
+}
+.grid{
+  display:grid;grid-template-columns:repeat(3,minmax(0,1fr));
+  gap:15px;
+}
+.device{
+  border:1px solid var(--border);border-radius:13px;
+  overflow:hidden;background:#fff;min-width:0;
+}
+.device img{
+  width:100%;height:185px;object-fit:contain;
+  background:#f4f4f4;display:block;
+}
+.device-content{padding:15px}
+.device h3{margin:0 0 9px;font-size:18px;overflow-wrap:anywhere}
+.meta{font-size:13px;color:var(--muted);line-height:1.8}
+.price{font-size:22px;font-weight:800;margin:12px 0 5px}
+.device button{width:100%;margin-top:12px}
+.field{margin:12px 0}
+label{display:block;font-weight:700;font-size:14px;margin-bottom:7px}
+select,input{
+  width:100%;padding:12px;border:1px solid #d4d4d4;
+  border-radius:8px;background:#fff;color:var(--text);
+}
+.status{padding:12px;border-radius:8px;margin:12px 0;display:none;line-height:1.5}
+.status.ok{display:block;background:#eaf8ef;color:#176b36}
+.status.err{display:block;background:#fff0f0;color:#a51f1f}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;background:#fff}
+th,td{text-align:left;padding:12px;border-bottom:1px solid var(--border);font-size:13px}
+th{background:#f5f1e5}
+.empty{padding:20px;text-align:center;color:var(--muted)}
+footer{
+  border-top:1px solid var(--border);padding:20px;
+  text-align:center;color:var(--muted);font-size:13px;
+}
+@media(max-width:800px){.grid{grid-template-columns:repeat(2,minmax(0,1fr))}}
+@media(max-width:520px){
+  .grid{grid-template-columns:1fr}
+  .wallets{grid-template-columns:1fr}
+  header{align-items:flex-start}
+  h1{font-size:24px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">CLASSIC <span>EMPIRE LTD.</span>
+    <small>Device Store · Member Services</small>
+  </div>
+  <button onclick="location.href='./index.html'">← Main Website</button>
+</header>
+
+<nav>
+  <a href="#store">Device Store</a>
+  <a href="#wallet">My Wallet</a>
+  <a href="#purchases">Purchase History</a>
+  <a href="#mydevices">My Devices</a>
+</nav>
+
+<main>
+  <h1>Device Store</h1>
+  <p class="subtitle">
+    Browse available devices and purchase using your internal
+    Classic Empire CD or INR Wallet.
+  </p>
+
+  <div class="notice">
+    <strong>Internal system only:</strong> CD and INR balances displayed
+    here are virtual records, not real bank funds. Only purchase through
+    this page if your member account is active.
+  </div>
+
+  <div id="status" class="status"></div>
+
+  <section class="panel">
+    <strong>Account status:</strong>
+    <span id="accountStatus">Checking login...</span>
+    <div style="margin-top:12px;display:flex;gap:10px;flex-wrap:wrap">
+      <button class="primary" id="loginBtn" onclick="login()">Member Login</button>
+      <button id="refreshBtn" onclick="refreshAll()">Refresh Store</button>
+      <button id="logoutBtn" onclick="logout()" hidden>Sign Out</button>
+    </div>
+  </section>
+
+  <section id="wallet">
+    <div class="section-head"><h2>My Wallet</h2></div>
+    <div class="wallets">
+      <div class="wallet">
+        <strong>Classic Dinar (CD)</strong>
+        <div class="balance" id="cdBalance">—</div>
+      </div>
+      <div class="wallet">
+        <strong>INR Wallet</strong>
+        <div class="balance" id="inrBalance">—</div>
+      </div>
+    </div>
+    <p class="subtitle">
+      The price is converted to your selected Wallet currency using the
+      rate configured in the purchase function.
+    </p>
+  </section>
+
+  <section id="store">
+    <div class="section-head">
+      <h2>Available Devices</h2>
+      <span id="deviceCount" class="subtitle">Loading...</span>
+    </div>
+    <div id="deviceGrid" class="grid">
+      <div class="panel">Loading devices...</div>
+    </div>
+  </section>
+
+  <section id="purchases">
+    <div class="section-head"><h2>Purchase History</h2></div>
+    <div class="panel table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Purchase Code</th>
+            <th>Device</th>
+            <th>Amount</th>
+            <th>Payment</th>
+            <th>Assignment</th>
+            <th>Date</th>
+          </tr>
+        </thead>
+        <tbody id="purchaseRows">
+          <tr><td colspan="6" class="empty">Log in to view purchases.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+
+  <section id="mydevices">
+    <div class="section-head"><h2>My Devices</h2></div>
+    <div class="panel table-wrap">
+      <table>
+        <thead>
+          <tr>
+            <th>Device</th>
+            <th>Serial Number</th>
+            <th>IMEI</th>
+            <th>Assigned</th>
+            <th>Expiry</th>
+            <th>Status</th>
+          </tr>
+        </thead>
+        <tbody id="myDeviceRows">
+          <tr><td colspan="6" class="empty">Log in to view assigned devices.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Classic Empire Ltd. · Internal Virtual Wallet System
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://wcyozectzscqwvtzetkc.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd';
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+let currentUser = null;
+let memberProfile = null;
+let devices = [];
+
+function money(value, currency='INR') {
+  const number = Number(value || 0);
+  return new Intl.NumberFormat('en-IN', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }).format(number) + ' ' + currency;
+}
+
+function showStatus(message, type='ok') {
+  const el = document.getElementById('status');
+  el.textContent = message;
+  el.className = 'status ' + type;
+}
+
+function clearStatus() {
+  const el = document.getElementById('status');
+  el.textContent = '';
+  el.className = 'status';
+}
+
+function safeText(value) {
+  return String(value ?? '');
+}
+
+function escapeHTML(value) {
+  return safeText(value).replace(/[&<>"']/g, ch => ({
+    '&':'&amp;',
+    '<':'&lt;',
+    '>':'&gt;',
+    '"':'&quot;',
+    "'":'&#39;'
+  })[ch]);
+}
+
+function validImage(url) {
+  try {
+    const parsed = new URL(url);
+    return parsed.protocol === 'https:' ? parsed.href : '';
+  } catch {
+    return '';
+  }
+}
+
+async function checkSession() {
+  const {data, error} = await db.auth.getSession();
+  if (error) throw error;
+
+  currentUser = data.session?.user || null;
+  memberProfile = null;
+
+  if (currentUser) {
+    const result = await db
+      .from('member_profiles')
+      .select('user_id,account_number,full_name,status')
+      .eq('user_id', currentUser.id)
+      .eq('status', 'active')
+      .maybeSingle();
+
+    if (result.error) throw result.error;
+    memberProfile = result.data;
+  }
+
+  updateLoginUI();
+}
+
+function updateLoginUI() {
+  const active = Boolean(currentUser && memberProfile);
+  document.getElementById('accountStatus').textContent =
+    active
+      ? 'Signed in · ' + (memberProfile.full_name || memberProfile.account_number)
+      : currentUser
+        ? 'No active member profile found.'
+        : 'Not signed in';
+
+  document.getElementById('loginBtn').hidden = Boolean(currentUser);
+  document.getElementById('logoutBtn').hidden = !currentUser;
+}
+
+async function login() {
+  const email = prompt('Enter your registered login email:');
+  if (!email) return;
+
+  const password = prompt('Enter your password:');
+  if (!password) return;
+
+  clearStatus();
+
+  const {error} = await db.auth.signInWithPassword({
+    email: email.trim(),
+    password
+  });
+
+  if (error) {
+    showStatus('Login failed: ' + error.message, 'err');
+    return;
+  }
+
+  await refreshAll();
+}
+
+async function logout() {
+  const {error} = await db.auth.signOut();
+  if (error) {
+    showStatus(error.message, 'err');
+    return;
+  }
+  currentUser = null;
+  memberProfile = null;
+  updateLoginUI();
+  await refreshAll();
+  showStatus('Signed out.');
+}
+
+async function loadWallet() {
+  document.getElementById('cdBalance').textContent = '—';
+  document.getElementById('inrBalance').textContent = '—';
+
+  if (!currentUser || !memberProfile) return;
+
+  const {data, error} = await db
+    .from('wallet_accounts')
+    .select('balance_cd,balance_inr')
+    .eq('user_id', currentUser.id)
+    .maybeSingle();
+
+  if (error) throw error;
+
+  if (!data) {
+    document.getElementById('cdBalance').textContent = 'Wallet not found';
+    document.getElementById('inrBalance').textContent = 'Wallet not found';
+    return;
+  }
+
+  document.getElementById('cdBalance').textContent =
+    money(data.balance_cd, 'CD');
+  document.getElementById('inrBalance').textContent =
+    money(data.balance_inr, 'INR');
+}
+
+async function loadDevices() {
+  const grid = document.getElementById('deviceGrid');
+  grid.innerHTML = '<div class="panel">Loading devices...</div>';
+
+  const {data, error} = await db
+    .from('expansion_devices')
+    .select('id,device_code,device_type,brand,model,description,price,currency,validity_days,stock_quantity,active,image_url')
+    .eq('active', true)
+    .gt('stock_quantity', 0)
+    .order('created_at', {ascending: false});
+
+  if (error) throw error;
+
+  devices = data || [];
+  document.getElementById('deviceCount').textContent =
+    devices.length + ' available';
+
+  if (!devices.length) {
+    grid.innerHTML =
+      '<div class="panel">No devices are currently available. Please check again later.</div>';
+    return;
+  }
+
+  grid.innerHTML = devices.map(device => {
+    const image = validImage(device.image_url);
+    const title = [device.brand, device.model]
+      .filter(Boolean).join(' ') || device.device_code;
+
+    return `
+      <article class="device">
+        ${
+          image
+          ? `<img src="${escapeHTML(image)}" alt="${escapeHTML(title)}" loading="lazy">`
+          : `<div style="height:185px;display:grid;place-items:center;background:#f4f4f4;color:#777">No image available</div>`
+        }
+        <div class="device-content">
+          <h3>${escapeHTML(title)}</h3>
+          <div class="meta">
+            Code: ${escapeHTML(device.device_code)}<br>
+            Type: ${escapeHTML(device.device_type)}<br>
+            Stock: ${Number(device.stock_quantity)}<br>
+            Validity: ${Number(device.validity_days)} days
+          </div>
+          <div class="price">
+            ${money(device.price, device.currency)}
+          </div>
+          <div class="meta">
+            ${escapeHTML(device.description || 'Classic Empire Ltd. device')}
+          </div>
+          <button class="primary" onclick="buyDevice('${device.id}')">
+            Buy Device
+          </button>
+        </div>
+      </article>
+    `;
+  }).join('');
+}
+
+async function buyDevice(deviceId) {
+  clearStatus();
+
+  if (!currentUser || !memberProfile) {
+    showStatus('Please log in with an active member account first.', 'err');
+    return;
+  }
+
+  const device = devices.find(item => item.id === deviceId);
+  if (!device) {
+    showStatus('Device not found. Refresh the store.', 'err');
+    return;
+  }
+
+  const currency = prompt(
+    'Choose Wallet currency by entering CD or INR.\n' +
+    'Device: ' + (device.brand || '') + ' ' + (device.model || device.device_code) +
+    '\nListed price: ' + money(device.price, device.currency) +
+    '\n\nEnter CD or INR:'
+  );
+
+  if (!currency) return;
+
+  const chosenCurrency = currency.trim().toUpperCase();
+
+  if (!['CD', 'INR'].includes(chosenCurrency)) {
+    showStatus('Enter CD or INR.', 'err');
+    return;
+  }
+
+  const listedPrice = Number(device.price);
+  let estimatedAmount = listedPrice;
+
+  if (device.currency !== chosenCurrency) {
+    estimatedAmount = chosenCurrency === 'CD'
+      ? listedPrice / 93600
+      : listedPrice * 93600;
+  }
+
+  const confirmed = confirm(
+    'Confirm device purchase?\n\n' +
+    'Device: ' + (device.brand || '') + ' ' + (device.model || device.device_code) +
+    '\nPayment Wallet: ' + chosenCurrency +
+    '\nEstimated amount: ' + money(estimatedAmount, chosenCurrency) +
+    '\n\nThe server will calculate the final amount and check your balance.'
+  );
+
+  if (!confirmed) return;
+
+  if (!window.crypto || !window.crypto.randomUUID) {
+    showStatus('Secure purchase key unavailable. Open this page over HTTPS and try again.', 'err');
+    return;
+  }
+
+  const buttons = document.querySelectorAll('.device button');
+  buttons.forEach(button => button.disabled = true);
+
+  try {
+    const {data, error} = await db.rpc('purchase_expansion_device', {
+      p_device_id: deviceId,
+      p_currency: chosenCurrency,
+      p_idempotency_key: window.crypto.randomUUID()
+    });
+
+    if (error) throw error;
+
+    if (!data || data.success !== true) {
+      throw new Error(data?.message || 'Purchase was not confirmed.');
+    }
+
+    showStatus(
+      'Purchase successful! Code: ' + data.purchase_code +
+      '. Assignment ID: ' + data.assignment_id +
+      '. Validity: ' + data.validity_days +
+      ' days. Expiry: ' + data.expiry_date
+    );
+
+    await refreshAll();
+  } catch (error) {
+    showStatus(
+      'Purchase failed: ' + (error.message || 'Unknown error') +
+      '. Check your balance and try again.',
+      'err'
+    );
+  } finally {
+    buttons.forEach(button => button.disabled = false);
+  }
+}
+
+async function loadPurchases() {
+  const tbody = document.getElementById('purchaseRows');
+
+  if (!currentUser || !memberProfile) {
+    tbody.innerHTML =
+      '<tr><td colspan="6" class="empty">Log in to view purchases.</td></tr>';
+    return;
+  }
+
+  const {data, error} = await db
+    .from('expansion_device_purchases')
+    .select('id,purchase_code,device_id,currency,final_amount,payment_status,assignment_id,purchased_at,created_at')
+    .eq('member_user_id', currentUser.id)
+    .order('created_at', {ascending: false})
+    .limit(50);
+
+  if (error) throw error;
+
+  if (!data?.length) {
+    tbody.innerHTML =
+      '<tr><td colspan="6" class="empty">No purchases yet.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = data.map(purchase => {
+    const device = devices.find(item => item.id === purchase.device_id);
+    const deviceName = device
+      ? [device.brand, device.model].filter(Boolean).join(' ') || device.device_code
+      : 'Device';
+
+    return `
+      <tr>
+        <td>${escapeHTML(purchase.purchase_code)}</td>
+        <td>${escapeHTML(deviceName)}</td>
+        <td>${money(purchase.final_amount, purchase.currency)}</td>
+        <td>${escapeHTML(purchase.payment_status)}</td>
+        <td>${purchase.assignment_id ? 'Assigned' : 'Pending'}</td>
+        <td>${purchase.purchased_at
+          ? escapeHTML(new Date(purchase.purchased_at).toLocaleString('en-IN'))
+          : escapeHTML(new Date(purchase.created_at).toLocaleString('en-IN'))}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function loadMyDevices() {
+  const tbody = document.getElementById('myDeviceRows');
+
+  if (!currentUser || !memberProfile) {
+    tbody.innerHTML =
+      '<tr><td colspan="6" class="empty">Log in to view assigned devices.</td></tr>';
+    return;
+  }
+
+  const {data, error} = await db
+    .from('expansion_device_assignments')
+    .select('id,device_id,account_number,serial_number,imei,assigned_date,expiry_date,status')
+    .eq('account_number', memberProfile.account_number)
+    .order('created_at', {ascending: false})
+    .limit(100);
+
+  if (error) throw error;
+
+  if (!data?.length) {
+    tbody.innerHTML =
+      '<tr><td colspan="6" class="empty">No assigned devices found.</td></tr>';
+    return;
+  }
+
+  tbody.innerHTML = data.map(item => {
+    const device = devices.find(d => d.id === item.device_id);
+    const name = device
+      ? [device.brand, device.model].filter(Boolean).join(' ') || device.device_code
+      : 'Device';
+
+    return `
+      <tr>
+        <td>${escapeHTML(name)}</td>
+        <td>${escapeHTML(item.serial_number || 'Not recorded')}</td>
+        <td>${escapeHTML(item.imei || 'Not recorded')}</td>
+        <td>${escapeHTML(item.assigned_date || '—')}</td>
+        <td>${escapeHTML(item.expiry_date || '—')}</td>
+        <td>${escapeHTML(item.status || '—')}</td>
+      </tr>
+    `;
+  }).join('');
+}
+
+async function refreshAll() {
+  clearStatus();
+
+  try {
+    await checkSession();
+    await loadDevices();
+
+    if (currentUser && memberProfile) {
+      await loadWallet();
+      await loadPurchases();
+      await loadMyDevices();
+    } else {
+      document.getElementById('cdBalance').textContent = '—';
+      document.getElementById('inrBalance').textContent = '—';
+      await loadPurchases();
+      await loadMyDevices();
+    }
+  } catch (error) {
+    showStatus(
+      'Could not load store data: ' + (error.message || 'Unknown error'),
+      'err'
+    );
+  }
+}
+
+db.auth.onAuthStateChange(() => {
+  setTimeout(() => refreshAll(), 0);
+});
+
+refreshAll();
+</script>
+</body>
+</html>
