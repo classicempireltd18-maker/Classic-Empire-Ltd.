@@ -1,0 +1,443 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>Classic Empire Ltd. | Transfer Money</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{
+  --bg:#080808;
+  --panel:#141414;
+  --gold:#ffd700;
+  --gold2:#d4af37;
+  --text:#f5f5f5;
+  --muted:#aaa;
+  --border:#343434;
+  --green:#42d392;
+  --red:#ff6b6b;
+}
+*{box-sizing:border-box}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Arial,sans-serif;line-height:1.5
+}
+header{
+  background:#101010;border-bottom:1px solid var(--gold2);
+  padding:18px 16px;text-align:center
+}
+.logo{font-size:23px;font-weight:bold;color:var(--gold)}
+header p{margin:5px 0 0;color:var(--muted);font-size:13px}
+nav{
+  display:flex;flex-wrap:wrap;justify-content:center;gap:8px;
+  padding:12px;background:#0d0d0d;border-bottom:1px solid var(--border)
+}
+nav a{
+  color:var(--gold);text-decoration:none;padding:7px 10px;
+  border:1px solid var(--border);border-radius:7px;font-size:13px
+}
+main{width:min(900px,94%);margin:24px auto 45px}
+.card{
+  background:var(--panel);border:1px solid var(--border);
+  border-radius:13px;padding:20px;margin-bottom:18px
+}
+h1{font-size:25px;margin:0 0 8px;color:var(--gold)}
+h2{font-size:18px;color:var(--gold);margin:0 0 15px}
+.muted{color:var(--muted);font-size:13px}
+.rate{
+  border:1px solid var(--gold2);border-radius:10px;
+  padding:16px;text-align:center;margin-top:15px
+}
+.rate strong{color:var(--gold);font-size:21px}
+label{display:block;margin:13px 0 6px;font-size:14px}
+input,select,textarea{
+  width:100%;padding:12px;border:1px solid #454545;
+  background:#090909;color:white;border-radius:8px;font-size:15px
+}
+button{
+  background:var(--gold);color:#080808;border:0;border-radius:8px;
+  padding:12px 16px;font-weight:bold;font-size:15px;cursor:pointer
+}
+button:disabled{opacity:.5;cursor:not-allowed}
+.full{width:100%;margin-top:17px}
+.status{margin-top:14px;padding:12px;border-radius:8px;display:none;
+  overflow-wrap:anywhere}
+.status.ok{display:block;background:#123322;color:#a7f3c9}
+.status.err{display:block;background:#3b1717;color:#ffc2c2}
+.preview{margin-top:14px;padding:13px;background:#0a0a0a;
+  border:1px solid var(--border);border-radius:8px}
+.preview strong{color:var(--gold)}
+.table-wrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:600px}
+th,td{text-align:left;padding:11px;border-bottom:1px solid var(--border);
+  font-size:13px}
+th{color:var(--gold)}
+.pill{color:var(--green)}
+footer{text-align:center;color:var(--muted);padding:25px;font-size:12px}
+.hidden{display:none!important}
+@media(max-width:500px){
+  .card{padding:15px}h1{font-size:22px}
+}
+</style>
+</head>
+<body>
+<header>
+  <div class="logo">CLASSIC EMPIRE LTD.</div>
+  <p>Secure Internal Wallet Transfer</p>
+</header>
+
+<nav>
+  <a href="./index.html">Home</a>
+  <a href="./members.html">Members</a>
+  <a href="./member-account.html">Member Account</a>
+  <a href="./device-store.html">Device Store</a>
+  <a href="./transfer-money.html">Transfer Money</a>
+</nav>
+
+<main>
+  <section class="card">
+    <h1>Transfer Money</h1>
+    <p class="muted">
+      Transfer internal wallet balances between active Classic Empire Ltd.
+      members. These are virtual system balances, not real bank funds.
+    </p>
+    <div id="sessionStatus" class="status"></div>
+    <div class="rate">
+      <div class="muted">Fixed internal conversion rate</div>
+      <strong>1 CD = ₹93,600 INR</strong>
+    </div>
+  </section>
+
+  <section class="card">
+    <h2>New Transfer</h2>
+    <form id="transferForm">
+      <label for="recipient">Recipient Account Number</label>
+      <input id="recipient" name="recipient" placeholder="e.g. CE000002"
+        autocomplete="off" required maxlength="40">
+
+      <label for="sendCurrency">You Send</label>
+      <select id="sendCurrency" name="sendCurrency" required>
+        <option value="CD">CD — Classic Dinar</option>
+        <option value="INR">INR — Indian Rupee</option>
+      </select>
+
+      <label for="amount">Amount to Send</label>
+      <input id="amount" name="amount" type="number" min="0.01"
+        step="0.01" placeholder="Enter amount" required>
+
+      <label for="receiveCurrency">Recipient Receives</label>
+      <select id="receiveCurrency" name="receiveCurrency" required>
+        <option value="INR">INR — Indian Rupee</option>
+        <option value="CD">CD — Classic Dinar</option>
+      </select>
+
+      <div class="preview">
+        <div>Estimated recipient amount</div>
+        <strong id="convertedAmount">₹0.00 INR</strong>
+        <div class="muted" id="conversionDetails">
+          Conversion updates automatically.
+        </div>
+      </div>
+
+      <label for="description">Description (optional)</label>
+      <textarea id="description" name="description" rows="2"
+        maxlength="250" placeholder="Transfer description"></textarea>
+
+      <button id="submitButton" class="full" type="submit">
+        Transfer Money
+      </button>
+      <div id="formStatus" class="status" role="status"></div>
+    </form>
+  </section>
+
+  <section class="card">
+    <h2>My Transfer History</h2>
+    <p class="muted">Your latest wallet transactions.</p>
+    <button id="refreshHistory" type="button">Refresh History</button>
+    <div id="historyStatus" class="status"></div>
+    <div class="table-wrap" style="margin-top:14px">
+      <table>
+        <thead>
+          <tr>
+            <th>Date</th><th>Type</th><th>Amount</th>
+            <th>Status</th><th>Description</th>
+          </tr>
+        </thead>
+        <tbody id="historyBody">
+          <tr><td colspan="5">Sign in to view your history.</td></tr>
+        </tbody>
+      </table>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Classic Empire Ltd. · Chakla Ghat, Kishanganj, Bihar, India
+</footer>
+
+<script>
+'use strict';
+
+/* Existing Classic Empire Ltd. Supabase project */
+const SUPABASE_URL = 'https://wcyozectzscqwvtzetkc.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd';
+
+const db = window.supabase.createClient(
+  SUPABASE_URL,
+  SUPABASE_KEY
+);
+
+const RATE = 93600;
+const $ = id => document.getElementById(id);
+
+function money(value, currency) {
+  const number = Number(value);
+  if (!Number.isFinite(number)) return '—';
+  if (currency === 'CD') {
+    return number.toLocaleString('en-IN', {
+      minimumFractionDigits: 2,
+      maximumFractionDigits: 2
+    }) + ' CD';
+  }
+  return '₹' + number.toLocaleString('en-IN', {
+    minimumFractionDigits: 2,
+    maximumFractionDigits: 2
+  }) + ' INR';
+}
+
+function showStatus(id, message, type) {
+  const el = $(id);
+  el.textContent = message;
+  el.className = 'status ' + type;
+}
+
+function clearStatus(id) {
+  const el = $(id);
+  el.textContent = '';
+  el.className = 'status';
+}
+
+function calculateConversion() {
+  const sendCurrency = $('sendCurrency').value;
+  const receiveCurrency = $('receiveCurrency').value;
+  const amount = Number($('amount').value);
+
+  if (!Number.isFinite(amount) || amount <= 0) {
+    $('convertedAmount').textContent =
+      receiveCurrency === 'CD' ? '0.00 CD' : '₹0.00 INR';
+    $('conversionDetails').textContent =
+      'Enter an amount to calculate the conversion.';
+    return;
+  }
+
+  let result;
+  if (sendCurrency === receiveCurrency) {
+    result = amount;
+  } else if (sendCurrency === 'CD') {
+    result = amount * RATE;
+  } else {
+    result = amount / RATE;
+  }
+
+  result = Math.round((result + Number.EPSILON) * 100) / 100;
+
+  $('convertedAmount').textContent = money(result, receiveCurrency);
+  $('conversionDetails').textContent =
+    money(amount, sendCurrency) + ' → ' +
+    money(result, receiveCurrency) +
+    ' · Rate: 1 CD = ₹93,600 INR';
+}
+
+$('sendCurrency').addEventListener('change', calculateConversion);
+$('receiveCurrency').addEventListener('change', calculateConversion);
+$('amount').addEventListener('input', calculateConversion);
+
+async function getSession() {
+  const { data, error } = await db.auth.getSession();
+  if (error) throw error;
+  return data.session;
+}
+
+async function loadHistory() {
+  clearStatus('historyStatus');
+  $('historyBody').innerHTML =
+    '<tr><td colspan="5">Loading history…</td></tr>';
+
+  try {
+    const session = await getSession();
+    if (!session) {
+      $('historyBody').innerHTML =
+        '<tr><td colspan="5">Please sign in first.</td></tr>';
+      return;
+    }
+
+    const { data, error } = await db
+      .from('wallet_transactions')
+      .select(
+        'transaction_code, transaction_type, currency, amount, status, description, created_at'
+      )
+      .eq('user_id', session.user.id)
+      .order('created_at', { ascending: false })
+      .limit(50);
+
+    if (error) throw error;
+
+    $('historyBody').replaceChildren();
+
+    if (!data || data.length === 0) {
+      $('historyBody').innerHTML =
+        '<tr><td colspan="5">No transactions found.</td></tr>';
+      return;
+    }
+
+    for (const tx of data) {
+      const tr = document.createElement('tr');
+      const values = [
+        tx.created_at
+          ? new Date(tx.created_at).toLocaleString('en-IN')
+          : '—',
+        tx.transaction_type || '—',
+        money(tx.amount, tx.currency),
+        tx.status || '—',
+        tx.description || tx.transaction_code || '—'
+      ];
+
+      values.forEach((value, index) => {
+        const td = document.createElement('td');
+        td.textContent = value;
+        if (index === 3 && String(value).toLowerCase() === 'completed') {
+          td.className = 'pill';
+        }
+        tr.appendChild(td);
+      });
+
+      $('historyBody').appendChild(tr);
+    }
+  } catch (error) {
+    $('historyBody').innerHTML =
+      '<tr><td colspan="5">Could not load history.</td></tr>';
+    showStatus('historyStatus', error.message, 'err');
+  }
+}
+
+async function updateSessionStatus() {
+  try {
+    const session = await getSession();
+    if (session) {
+      showStatus(
+        'sessionStatus',
+        'Signed in. You can transfer to another active member.',
+        'ok'
+      );
+    } else {
+      showStatus(
+        'sessionStatus',
+        'Please sign in through your existing member login before transferring.',
+        'err'
+      );
+    }
+  } catch (error) {
+    showStatus('sessionStatus', error.message, 'err');
+  }
+}
+
+$('transferForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  clearStatus('formStatus');
+
+  const recipient = $('recipient').value.trim();
+  const sendCurrency = $('sendCurrency').value;
+  const receiveCurrency = $('receiveCurrency').value;
+  const amount = Number($('amount').value);
+  const description = $('description').value.trim();
+
+  if (!recipient) {
+    showStatus('formStatus', 'Enter recipient account number.', 'err');
+    return;
+  }
+
+  if (!Number.isFinite(amount) || amount <= 0 ||
+      Math.round(amount * 100) !== amount * 100) {
+    showStatus(
+      'formStatus',
+      'Enter a positive amount with at most 2 decimal places.',
+      'err'
+    );
+    return;
+  }
+
+  const session = await getSession().catch(() => null);
+  if (!session) {
+    showStatus(
+      'formStatus',
+      'Please sign in through the existing member login first.',
+      'err'
+    );
+    return;
+  }
+
+  const button = $('submitButton');
+  button.disabled = true;
+  button.textContent = 'Processing…';
+
+  try {
+    /*
+      The database function performs the actual conversion,
+      balance checks, wallet updates and transaction logging.
+    */
+    const { data, error } = await db.rpc(
+      'transfer_wallet_converted',
+      {
+        p_recipient_account_number: recipient,
+        p_sender_currency: sendCurrency,
+        p_amount: amount,
+        p_recipient_currency: receiveCurrency,
+        p_description: description
+      }
+    );
+
+    if (error) throw error;
+    if (!data || data.success !== true) {
+      throw new Error('The transfer was not confirmed by the server.');
+    }
+
+    showStatus(
+      'formStatus',
+      'Transfer successful! Sent ' +
+        money(data.sender_amount, data.sender_currency) +
+        '; recipient received ' +
+        money(data.recipient_amount, data.recipient_currency) +
+        '. Reference: ' + (data.status || 'completed') + '.',
+      'ok'
+    );
+
+    $('amount').value = '';
+    $('description').value = '';
+    calculateConversion();
+    await loadHistory();
+  } catch (error) {
+    showStatus(
+      'formStatus',
+      error.message || 'Transfer failed. Please try again.',
+      'err'
+    );
+  } finally {
+    button.disabled = false;
+    button.textContent = 'Transfer Money';
+  }
+});
+
+$('refreshHistory').addEventListener('click', loadHistory);
+
+db.auth.onAuthStateChange(() => {
+  updateSessionStatus();
+  loadHistory();
+});
+
+updateSessionStatus();
+loadHistory();
+calculateConversion();
+</script>
+</body>
+</html>
