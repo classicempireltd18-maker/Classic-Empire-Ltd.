@@ -5,458 +5,553 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <meta name="theme-color" content="#080808">
-<title>Classic Empire Ltd. | Expansion System</title>
+<title>Classic Empire Ltd. | Expansion Management</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root {
-  --bg:#080808;
-  --panel:#141414;
-  --gold:#ffd700;
-  --gold2:#d4af37;
-  --text:#f5f5f5;
-  --muted:#aaa;
-  --line:#343434;
-  --red:#ff6969;
-  --green:#7de3a1;
-}
-* {box-sizing:border-box}
-body {
-  margin:0;
-  background:var(--bg);
-  color:var(--text);
-  font-family:Arial,sans-serif;
-}
-header {
-  padding:18px;
-  border-bottom:1px solid var(--gold2);
-  background:#101010;
-  display:flex;
-  align-items:center;
-  justify-content:space-between;
-  gap:12px;
-  flex-wrap:wrap;
-}
-.brand {display:flex;align-items:center;gap:12px}
-.logo {
-  width:48px;height:48px;border:2px solid var(--gold);
-  color:var(--gold);display:grid;place-items:center;
-  font-size:22px;font-weight:bold;border-radius:12px;
-}
-h1 {font-size:19px;margin:0;color:var(--gold)}
-.subtitle {font-size:12px;color:var(--muted);margin-top:5px}
-button,input,select,textarea {font:inherit}
-button {
-  background:var(--gold);color:#080808;border:0;
-  padding:11px 15px;border-radius:7px;font-weight:bold;
-  cursor:pointer;
-}
-button:disabled {opacity:.45;cursor:not-allowed}
-button.secondary {
-  background:#242424;color:var(--text);
-  border:1px solid var(--line);
-}
-main {max-width:1150px;margin:auto;padding:18px}
-.notice {
-  padding:13px;border:1px solid var(--line);
-  border-radius:9px;color:var(--muted);font-size:13px;
-  line-height:1.6;margin-bottom:16px;
-}
-.notice strong {color:var(--gold)}
-.grid {
-  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
-  gap:14px;margin-bottom:18px;
-}
-.card {
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:12px;padding:17px;margin-bottom:15px;
-}
-.card h2 {font-size:17px;color:var(--gold);margin:0 0 13px}
-.card h3 {font-size:14px;margin:0 0 8px}
-.muted {color:var(--muted);font-size:13px;line-height:1.6}
-.tabs {
-  display:flex;gap:8px;overflow-x:auto;
-  margin:18px 0;padding-bottom:5px;
-}
-.tabs button {white-space:nowrap}
-.tabs button.active {background:var(--gold2)}
-label {display:block;font-size:13px;color:#ddd;margin:12px 0 6px}
-input,select,textarea {
-  width:100%;padding:12px;background:#090909;
-  border:1px solid #444;color:white;border-radius:7px;
-}
-textarea {min-height:75px;resize:vertical}
-.row {display:grid;grid-template-columns:1fr 1fr;gap:12px}
-.stat {font-size:25px;color:var(--gold);font-weight:bold;margin:9px 0}
-.status {font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
-.good {color:var(--green)}
-.bad {color:var(--red)}
-.section {display:none}
-.section.active {display:block}
-hr {border:0;border-top:1px solid var(--line);margin:16px 0}
-footer {
-  text-align:center;color:var(--muted);font-size:12px;
-  padding:25px;border-top:1px solid var(--line);
-}
-@media(max-width:520px) {
-  main {padding:12px}
-  .row {grid-template-columns:1fr}
-  header {padding:13px}
-}
+:root{--bg:#080808;--panel:#141414;--gold:#ffd700;--muted:#aaa;--line:#353535;--danger:#ff7373;--green:#75e0a0}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#f5f5f5;font:15px Arial,sans-serif}
+header{padding:20px;background:#101010;border-bottom:1px solid var(--gold)}
+header h1{color:var(--gold);margin:0 0 8px;font-size:23px}
+header p{margin:0;color:#ccc;line-height:1.5}
+main{max-width:1100px;margin:auto;padding:16px}
+.panel{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:16px;margin-bottom:16px}
+h2{color:var(--gold);font-size:19px;margin-top:0}
+h3{font-size:16px;color:#f0d76b}
+label{display:block;font-size:13px;color:#ddd;margin:12px 0 6px}
+input,select,textarea{width:100%;padding:11px;border-radius:7px;border:1px solid #555;background:#090909;color:white;font:inherit}
+textarea{min-height:75px;resize:vertical}
+button{background:var(--gold);color:#111;border:0;border-radius:7px;padding:11px 15px;font-weight:bold;cursor:pointer;margin:8px 5px 0 0}
+button.secondary{background:#303030;color:#fff;border:1px solid #555}
+button.danger{background:#5a2424;color:#fff}
+button:disabled{opacity:.5;cursor:not-allowed}
+.tabs{display:flex;gap:8px;overflow-x:auto;margin:15px 0}
+.tabs button{white-space:nowrap;flex-shrink:0}
+.tabs button.active{outline:2px solid white}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:12px}
+.muted{color:var(--muted);line-height:1.5}
+.status{padding:10px;border-radius:7px;background:#242424;margin:10px 0;overflow-wrap:anywhere}
+.error{color:var(--danger)}
+.success{color:var(--green)}
+.hidden{display:none!important}
+.tablewrap{overflow-x:auto}
+table{border-collapse:collapse;width:100%;font-size:13px}
+th,td{text-align:left;border-bottom:1px solid var(--line);padding:10px;vertical-align:top}
+th{color:var(--gold)}
+footer{text-align:center;padding:22px;color:#bbb;border-top:1px solid var(--line)}
+small{color:#aaa}
 </style>
 </head>
 <body>
-
 <header>
-  <div class="brand">
-    <div class="logo">CE</div>
-    <div>
-      <h1>Classic Empire Ltd.</h1>
-      <div class="subtitle">Expansion & Payment Management</div>
-    </div>
-  </div>
-  <button id="loginBtn" onclick="signIn()">Member Login</button>
+  <h1>Classic Empire Ltd.</h1>
+  <p>Expansion &amp; Payment Management</p>
+  <p>Device management, assignments, travel bookings and internal payments.</p>
 </header>
 
 <main>
-  <div class="notice">
-    <strong>Expansion System</strong><br>
-    Device management, travel bookings, office expenses and internal
-    INR Wallet payments. This page uses your existing Supabase project.
-    Internal balances are system records, not real bank funds.
+  <div class="panel">
+    <h2>Account &amp; Session</h2>
+    <div id="sessionStatus" class="status">Checking session...</div>
+    <div id="loginBox" class="hidden">
+      <label>Email</label>
+      <input id="loginEmail" type="email" autocomplete="username">
+      <label>Password</label>
+      <input id="loginPassword" type="password" autocomplete="current-password">
+      <button id="loginBtn">Member Login</button>
+    </div>
+    <button id="refreshBtn" class="secondary">Refresh Session</button>
+    <button id="logoutBtn" class="secondary hidden">Sign Out</button>
   </div>
 
-  <div class="grid">
-    <div class="card">
-      <h3>Device Management</h3>
-      <div class="muted">Devices, assignments, serial numbers and expiry tracking.</div>
-    </div>
-    <div class="card">
-      <h3>Travel & Tickets</h3>
-      <div class="muted">Train, bus, flight, taxi and hotel bookings.</div>
-    </div>
-    <div class="card">
-      <h3>Expenses & Purchases</h3>
-      <div class="muted">Office supplies, equipment, maintenance and receipts.</div>
-    </div>
-    <div class="card">
-      <h3>Payments</h3>
-      <div class="muted">INR Wallet, eligible membership discounts and payment records.</div>
-    </div>
-  </div>
-
-  <div class="card">
-    <h2>Account & Session</h2>
-    <div id="accountStatus" class="status">Checking connection...</div>
+  <div id="app" class="hidden">
     <div class="tabs">
-      <button class="secondary" onclick="refreshSession()">Refresh Session</button>
-      <button class="secondary" onclick="signOut()">Sign Out</button>
+      <button class="active" data-tab="devicesTab">Devices</button>
+      <button data-tab="walletTab">Wallet Payment</button>
+      <button data-tab="travelTab">Travel</button>
+      <button data-tab="expensesTab">Expenses</button>
+      <button data-tab="presidentTab">President Panel</button>
     </div>
-  </div>
 
-  <div class="tabs">
-    <button class="active" data-tab="payment" onclick="showTab('payment',this)">Wallet Payment</button>
-    <button class="secondary" data-tab="devices" onclick="showTab('devices',this)">Devices</button>
-    <button class="secondary" data-tab="travel" onclick="showTab('travel',this)">Travel</button>
-    <button class="secondary" data-tab="expenses" onclick="showTab('expenses',this)">Expenses</button>
-    <button class="secondary" data-tab="admin" onclick="showTab('admin',this)">President Panel</button>
-  </div>
-
-  <section id="payment" class="section active">
-    <div class="card">
-      <h2>Pay from INR Wallet</h2>
-      <p class="muted">
-        Use the ID and exact INR amount of an existing payable purchase.
-        Expense payments require President approval. Travel payments must
-        have a pending booking status.
-      </p>
-
-      <label>Purchase Type</label>
-      <select id="purchaseType">
-        <option value="expense">Expense</option>
-        <option value="travel">Travel Booking</option>
-      </select>
-
-      <label>Purchase ID (UUID)</label>
-      <input id="purchaseId" placeholder="Paste the existing purchase ID">
-
-      <label>Recorded Purchase Amount (INR)</label>
-      <input id="amount" type="number" min="0.01" step="0.01"
-             placeholder="Enter the exact recorded amount">
-
-      <label>Description (optional)</label>
-      <input id="description" maxlength="300"
-             placeholder="Purpose of payment">
-
-      <div class="notice">
-        Membership discounts, when eligible, are calculated by the
-        database function. The function uses the member's highest
-        eligible active card discount.
+    <section id="devicesTab" class="tabContent">
+      <div class="panel">
+        <h2>Device Management</h2>
+        <p class="muted">Add devices to inventory, track stock, and assign devices to members. These management actions require an active President account.</p>
+        <div id="deviceAccess" class="status">Checking President access...</div>
+        <div id="deviceAdmin" class="hidden">
+          <h3>Add Device to Inventory</h3>
+          <form id="addDeviceForm">
+            <div class="grid">
+              <div><label>Device Code *</label><input name="device_code" required maxlength="80" placeholder="e.g. DEV-IPHONE-001"></div>
+              <div><label>Device Type *</label>
+                <select name="device_type" required>
+                  <option>Mobile</option><option>Laptop</option><option>Desktop PC</option>
+                  <option>Tablet</option><option>Monitor</option><option>Printer</option>
+                  <option>Accessory</option><option>Other</option>
+                </select>
+              </div>
+              <div><label>Brand</label><input name="brand" maxlength="100" placeholder="Apple, Dell, etc."></div>
+              <div><label>Model</label><input name="model" maxlength="100" placeholder="Model name"></div>
+              <div><label>Price *</label><input name="price" type="number" min="0" step="0.01" required></div>
+              <div><label>Currency *</label><select name="currency"><option value="INR">INR</option><option value="CD">CD</option></select></div>
+              <div><label>Validity (days) *</label><input name="validity_days" type="number" min="1" step="1" value="30" required></div>
+              <div><label>Initial Stock *</label><input name="stock_quantity" type="number" min="0" step="1" value="1" required></div>
+            </div>
+            <label>Description</label><textarea name="description" maxlength="1000"></textarea>
+            <button type="submit">Add Device</button>
+          </form>
+        </div>
       </div>
 
-      <button id="payBtn" onclick="payWallet()">Pay with Wallet</button>
-      <div id="paymentStatus" class="status" style="margin-top:15px"></div>
-    </div>
+      <div class="panel">
+        <h2>Available Devices</h2>
+        <button id="reloadDevices" class="secondary">Refresh Devices</button>
+        <div id="deviceList" class="tablewrap muted">Sign in as President to view inventory.</div>
+      </div>
 
-    <div class="card">
-      <h2>External Card Payment</h2>
-      <p class="muted">
-        Debit/credit card gateway is not connected yet. Do not enter
-        card numbers or CVV here. Membership cards determine benefits;
-        they are not themselves a payment gateway.
-      </p>
-      <button disabled>External Card — Gateway Required</button>
-    </div>
-  </section>
+      <div id="assignmentPanel" class="panel hidden">
+        <h2>Assign Device to Member</h2>
+        <p class="muted">Enter the member details and the selected device's serial number/IMEI. Stock will decrease automatically after a successful assignment.</p>
+        <form id="assignDeviceForm">
+          <label>Device *</label>
+          <select name="device_id" id="assignmentDevice" required></select>
+          <div class="grid">
+            <div><label>Member Account Number *</label><input name="account_number" required maxlength="80" placeholder="e.g. CE000001"></div>
+            <div><label>Member Name *</label><input name="member_name" required maxlength="150"></div>
+            <div><label>Serial Number</label><input name="serial_number" maxlength="150"></div>
+            <div><label>IMEI (if applicable)</label><input name="imei" maxlength="50"></div>
+            <div><label>Validity (days) *</label><input name="validity_days" type="number" min="1" step="1" required value="30"></div>
+          </div>
+          <label>Notes</label><textarea name="notes" maxlength="1000"></textarea>
+          <button type="submit">Assign Device</button>
+        </form>
+      </div>
 
-  <section id="devices" class="section">
-    <div class="card">
-      <h2>Device Management</h2>
-      <p class="muted">
-        Intended features: inventory, device assignments, serial/IMEI,
-        assigned member, validity, expiry date and history.
-      </p>
-      <p class="muted">The device list will be connected after the member-access policies or secure read functions are configured.</p>
-    </div>
-  </section>
+      <div class="panel">
+        <h2>Device Assignments</h2>
+        <button id="reloadAssignments" class="secondary">Refresh Assignments</button>
+        <div id="assignmentList" class="tablewrap muted">President access required.</div>
+      </div>
+    </section>
 
-  <section id="travel" class="section">
-    <div class="card">
-      <h2>Travel & Tickets</h2>
-      <p class="muted">
-        Intended features: train, bus, flight, taxi and hotel records;
-        passenger details, origin, destination, booking reference,
-        departure/return dates, cancellation and refunds.
-      </p>
-      <p class="muted">Booking creation and member-readable booking lists need to be connected through authorized database functions.</p>
-    </div>
-  </section>
+    <section id="walletTab" class="tabContent hidden">
+      <div class="panel">
+        <h2>Pay from INR Wallet</h2>
+        <p class="muted">Use the UUID and exact INR amount of an existing payable purchase. Expense payments require President approval. Travel payments require a pending booking.</p>
+        <form id="paymentForm">
+          <label>Purchase Type</label>
+          <select id="purchaseType">
+            <option value="travel">Travel Booking</option>
+            <option value="expense">Approved Expense</option>
+          </select>
+          <label>Purchase ID (UUID)</label>
+          <input id="purchaseId" required placeholder="Paste existing purchase UUID">
+          <label>Recorded Purchase Amount (INR)</label>
+          <input id="purchaseAmount" type="number" min="0.01" step="0.01" required placeholder="Exact recorded amount">
+          <label>Description (optional)</label>
+          <input id="paymentDescription" maxlength="300" placeholder="Purpose of payment">
+          <p class="muted">Eligible membership discounts are calculated by the database function.</p>
+          <button id="payBtn" type="submit">Pay with Wallet</button>
+        </form>
+        <div id="paymentResult" class="status hidden"></div>
+        <hr style="border-color:#333;margin:22px 0">
+        <h3>External Card Payment</h3>
+        <p class="muted">The external card gateway is not connected. Do not enter card numbers or CVV. Membership cards provide benefits but are not a payment gateway.</p>
+        <button disabled>External Card — Gateway Required</button>
+      </div>
+    </section>
 
-  <section id="expenses" class="section">
-    <div class="card">
-      <h2>Expenses & Purchases</h2>
-      <p class="muted">
-        Intended features: office purchases, quantity, vendor, receipt,
-        approval status, payment status and audit history.
-      </p>
-      <p class="muted">Purchase creation and listing will be connected after secure member permissions are implemented.</p>
-    </div>
-  </section>
+    <section id="travelTab" class="tabContent hidden">
+      <div class="panel">
+        <h2>Travel &amp; Tickets</h2>
+        <p class="muted">Train, bus, flight, taxi and hotel bookings.</p>
+        <p>Travel database forms and booking list have not yet been connected to this page.</p>
+      </div>
+    </section>
 
-  <section id="admin" class="section">
-    <div class="card">
-      <h2>President Administration</h2>
-      <p class="muted">
-        Planned controls: projects, devices, assignments, expenses,
-        travel bookings, notices, reports and payment review.
-      </p>
-      <button class="secondary" onclick="checkPresident()">Check President Access</button>
-      <div id="adminStatus" class="status" style="margin-top:12px"></div>
-      <hr>
-      <p class="muted">
-        This section does not grant administrative access by itself.
-        Supabase RLS policies and database functions remain authoritative.
-      </p>
-    </div>
-  </section>
+    <section id="expensesTab" class="tabContent hidden">
+      <div class="panel">
+        <h2>Expenses &amp; Purchases</h2>
+        <p class="muted">Office supplies, equipment, maintenance, purchase details and receipts.</p>
+        <p>Expense database forms and records have not yet been connected to this page.</p>
+      </div>
+    </section>
+
+    <section id="presidentTab" class="tabContent hidden">
+      <div class="panel">
+        <h2>President Panel</h2>
+        <div id="presidentStatus" class="status">Checking account permissions...</div>
+        <p class="muted">Device changes are checked by secure database functions. Other administration modules are not included in this page update.</p>
+      </div>
+    </section>
+  </div>
 </main>
 
-<footer>
-  Classic Empire Ltd. · Head Office: Chakla Ghat, Kishanganj, Bihar, India
-</footer>
+<footer>Classic Empire Ltd. · Head Office: Chakla Ghat, Kishanganj, Bihar, India</footer>
 
 <script>
-const SUPABASE_URL = 'https://wcyozectzscqwvtzetkc.supabase.co';
-const SUPABASE_KEY = 'sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd';
+(() => {
+  'use strict';
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+  const SUPABASE_URL = 'https://wcyozectzscqwvtzetkc.supabase.co';
+  const SUPABASE_KEY = 'sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd';
+  const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
 
-function showTab(id, button) {
-  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
-  document.querySelectorAll('[data-tab]').forEach(b => {
-    b.classList.remove('active');
-    b.classList.add('secondary');
-  });
-  document.getElementById(id).classList.add('active');
-  button.classList.add('active');
-  button.classList.remove('secondary');
-}
+  const $ = id => document.getElementById(id);
+  let currentUser = null;
+  let isPresident = false;
+  let devicesCache = [];
 
-function setStatus(id, message, good=false) {
-  const el = document.getElementById(id);
-  el.textContent = message;
-  el.className = 'status ' + (good ? 'good' : 'bad');
-}
-
-async function refreshSession() {
-  const { data, error } = await db.auth.getSession();
-
-  if (error) {
-    setStatus('accountStatus', 'Session error: ' + error.message);
-    return;
+  function setMessage(id, message, kind = '') {
+    const el = $(id);
+    el.textContent = message;
+    el.className = 'status' + (kind ? ' ' + kind : '');
+    el.classList.remove('hidden');
   }
 
-  const user = data.session?.user;
-
-  if (!user) {
-    setStatus('accountStatus', 'Not signed in. Sign in using Member Login.');
-    document.getElementById('loginBtn').textContent = 'Member Login';
-    return;
+  function escapeHtml(value) {
+    return String(value ?? '').replace(/[&<>"']/g, ch => ({
+      '&':'&amp;', '<':'&lt;', '>':'&gt;', '"':'&quot;', "'":'&#39;'
+    }[ch]));
   }
 
-  setStatus(
-    'accountStatus',
-    'Signed in: ' + (user.email || user.id) +
-    '\nUser ID: ' + user.id,
-    true
-  );
-  document.getElementById('loginBtn').textContent = 'Signed In';
-}
-
-async function signIn() {
-  const email = prompt('Enter your registered email:');
-  if (!email) return;
-
-  const password = prompt('Enter your password:');
-  if (!password) return;
-
-  const { error } = await db.auth.signInWithPassword({ email, password });
-
-  if (error) {
-    setStatus('accountStatus', 'Login failed: ' + error.message);
-    return;
+  function showTab(tabId) {
+    document.querySelectorAll('.tabContent').forEach(el =>
+      el.classList.toggle('hidden', el.id !== tabId)
+    );
+    document.querySelectorAll('[data-tab]').forEach(btn =>
+      btn.classList.toggle('active', btn.dataset.tab === tabId)
+    );
   }
 
-  await refreshSession();
-}
-
-async function signOut() {
-  const { error } = await db.auth.signOut();
-
-  if (error) {
-    setStatus('accountStatus', 'Sign out failed: ' + error.message);
-    return;
-  }
-
-  setStatus('accountStatus', 'Signed out.', true);
-  setStatus('paymentStatus', 'Sign in to make a payment.', true);
-}
-
-function makeIdempotencyKey() {
-  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
-  return 'exp-' + Date.now() + '-' + Math.random().toString(36).slice(2);
-}
-
-async function payWallet() {
-  const btn = document.getElementById('payBtn');
-  const { data: sessionData, error: sessionError } = await db.auth.getSession();
-
-  if (sessionError || !sessionData.session) {
-    setStatus('paymentStatus', 'Please sign in first.');
-    return;
-  }
-
-  const type = document.getElementById('purchaseType').value;
-  const id = document.getElementById('purchaseId').value.trim();
-  const amount = Number(document.getElementById('amount').value);
-  const description = document.getElementById('description').value.trim();
-
-  if (!id) {
-    setStatus('paymentStatus', 'Enter the existing purchase UUID.');
-    return;
-  }
-
-  if (!Number.isFinite(amount) || amount <= 0 || Math.round(amount * 100) !== amount * 100) {
-    setStatus('paymentStatus', 'Enter a valid positive INR amount with at most 2 decimals.');
-    return;
-  }
-
-  const confirmed = confirm(
-    'Submit Wallet payment for INR ' + amount.toFixed(2) +
-    '?\nThe database will validate the purchase and calculate any eligible discount.'
+  document.querySelectorAll('[data-tab]').forEach(btn =>
+    btn.addEventListener('click', () => showTab(btn.dataset.tab))
   );
 
-  if (!confirmed) return;
-
-  btn.disabled = true;
-  setStatus('paymentStatus', 'Submitting payment securely...');
-
-  const args = {
-    p_expense_id: type === 'expense' ? id : null,
-    p_travel_booking_id: type === 'travel' ? id : null,
-    p_amount_inr: amount,
-    p_idempotency_key: makeIdempotencyKey(),
-    p_description: description
-  };
-
-  try {
-    const { data, error } = await db.rpc('pay_expansion_with_wallet', args);
+  async function checkPresident(user) {
+    const { data, error } = await db
+      .from('member_profiles')
+      .select('post,status')
+      .eq('user_id', user.id)
+      .maybeSingle();
 
     if (error) {
-      setStatus('paymentStatus', 'Payment failed: ' + error.message);
+      console.error('Profile check:', error);
+      return false;
+    }
+    return !!data &&
+      String(data.post || '').toLowerCase() === 'president' &&
+      String(data.status || '').toLowerCase() === 'active';
+  }
+
+  async function updateSession() {
+    const { data, error } = await db.auth.getSession();
+
+    if (error) {
+      setMessage('sessionStatus', 'Session error: ' + error.message, 'error');
       return;
     }
 
-    if (!data || data.success !== true) {
-      setStatus('paymentStatus', 'The server did not confirm payment success.');
+    currentUser = data.session?.user || null;
+    $('app').classList.toggle('hidden', !currentUser);
+    $('loginBox').classList.toggle('hidden', !!currentUser);
+    $('logoutBtn').classList.toggle('hidden', !currentUser);
+
+    if (!currentUser) {
+      isPresident = false;
+      setMessage('sessionStatus', 'Signed out. Please log in.');
+      $('deviceAdmin').classList.add('hidden');
+      $('assignmentPanel').classList.add('hidden');
+      $('deviceList').textContent = 'Sign in as President to view inventory.';
+      $('assignmentList').textContent = 'President access required.';
       return;
     }
 
-    setStatus(
-      'paymentStatus',
-      'Payment confirmed by database.\n' +
-      'Payment code: ' + (data.payment_code || 'Not returned') + '\n' +
-      'Status: ' + (data.status || 'unknown') + '\n' +
-      'Original amount: INR ' + Number(data.original_amount_inr ?? data.amount_inr ?? amount).toFixed(2) + '\n' +
-      'Discount: INR ' + Number(data.discount_amount_inr ?? 0).toFixed(2) + '\n' +
-      'Final amount: INR ' + Number(data.final_amount_inr ?? amount).toFixed(2) + '\n' +
-      'Card tier: ' + (data.card_tier || 'No eligible membership discount'),
-      true
-    );
-  } catch (err) {
-    setStatus('paymentStatus', 'Unexpected error: ' + (err.message || 'Please try again.'));
-  } finally {
+    setMessage('sessionStatus', 'Signed in: ' + currentUser.email +
+      ' | User ID: ' + currentUser.id, 'success');
+
+    isPresident = await checkPresident(currentUser);
+    const accessMessage = isPresident
+      ? 'President access verified.'
+      : 'President access required for device management.';
+
+    setMessage('deviceAccess', accessMessage, isPresident ? 'success' : 'error');
+    setMessage('presidentStatus', isPresident
+      ? 'Active President verified.'
+      : 'This account does not have active President permissions.',
+      isPresident ? 'success' : 'error');
+
+    $('deviceAdmin').classList.toggle('hidden', !isPresident);
+    $('assignmentPanel').classList.toggle('hidden', !isPresident);
+
+    if (isPresident) {
+      await loadDevices();
+      await loadAssignments();
+    } else {
+      $('deviceList').textContent = 'President access required.';
+      $('assignmentList').textContent = 'President access required.';
+    }
+  }
+
+  $('loginBtn').addEventListener('click', async () => {
+    const email = $('loginEmail').value.trim();
+    const password = $('loginPassword').value;
+    if (!email || !password) {
+      setMessage('sessionStatus', 'Enter email and password.', 'error');
+      return;
+    }
+
+    $('loginBtn').disabled = true;
+    const { error } = await db.auth.signInWithPassword({ email, password });
+    $('loginBtn').disabled = false;
+
+    if (error) {
+      setMessage('sessionStatus', 'Login failed: ' + error.message, 'error');
+      return;
+    }
+    $('loginPassword').value = '';
+    await updateSession();
+  });
+
+  $('refreshBtn').addEventListener('click', updateSession);
+
+  $('logoutBtn').addEventListener('click', async () => {
+    const { error } = await db.auth.signOut();
+    if (error) {
+      setMessage('sessionStatus', 'Sign out failed: ' + error.message, 'error');
+      return;
+    }
+    await updateSession();
+  });
+
+  async function loadDevices() {
+    if (!currentUser || !isPresident) return;
+
+    $('deviceList').textContent = 'Loading devices...';
+    const { data, error } = await db
+      .from('expansion_devices')
+      .select('id,device_code,device_type,brand,model,price,currency,validity_days,stock_quantity,active,description')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      $('deviceList').textContent = 'Could not load devices: ' + error.message;
+      return;
+    }
+
+    devicesCache = data || [];
+    if (!devicesCache.length) {
+      $('deviceList').textContent = 'No devices in inventory yet. Add the first device above.';
+      $('assignmentDevice').innerHTML = '<option value="">No devices available</option>';
+      return;
+    }
+
+    $('deviceList').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Device</th><th>Price</th><th>Stock</th><th>Validity</th><th>Status</th><th>UUID</th>
+        </tr></thead>
+        <tbody>${devicesCache.map(d => `
+          <tr>
+            <td><strong>${escapeHtml(d.device_code)}</strong><br>
+              ${escapeHtml(d.brand)} ${escapeHtml(d.model)}<br>
+              <small>${escapeHtml(d.device_type)}</small>
+            </td>
+            <td>${escapeHtml(d.price)} ${escapeHtml(d.currency)}</td>
+            <td>${escapeHtml(d.stock_quantity)}</td>
+            <td>${escapeHtml(d.validity_days)} days</td>
+            <td>${d.active ? 'Active' : 'Inactive'}</td>
+            <td><small>${escapeHtml(d.id)}</small></td>
+          </tr>`).join('')}
+        </tbody>
+      </table>`;
+
+    const available = devicesCache.filter(d => d.active && Number(d.stock_quantity) > 0);
+    $('assignmentDevice').innerHTML = available.length
+      ? available.map(d => `<option value="${escapeHtml(d.id)}">${escapeHtml(d.device_code)} — ${escapeHtml(d.brand)} ${escapeHtml(d.model)} (stock ${escapeHtml(d.stock_quantity)})</option>`).join('')
+      : '<option value="">No active devices in stock</option>';
+  }
+
+  $('addDeviceForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!isPresident) {
+      setMessage('deviceAccess', 'President access required.', 'error');
+      return;
+    }
+
+    const f = new FormData(event.currentTarget);
+    const price = Number(f.get('price'));
+    const validity = Number(f.get('validity_days'));
+    const stock = Number(f.get('stock_quantity'));
+
+    if (!Number.isFinite(price) || price < 0 ||
+        !Number.isInteger(validity) || validity <= 0 ||
+        !Number.isInteger(stock) || stock < 0) {
+      setMessage('deviceAccess', 'Check price, validity and stock values.', 'error');
+      return;
+    }
+
+    const args = {
+      p_device_code: String(f.get('device_code')).trim(),
+      p_device_type: String(f.get('device_type')),
+      p_brand: String(f.get('brand') || '').trim() || null,
+      p_model: String(f.get('model') || '').trim() || null,
+      p_description: String(f.get('description') || '').trim() || null,
+      p_price: price,
+      p_currency: String(f.get('currency')),
+      p_validity_days: validity,
+      p_stock_quantity: stock
+    };
+
+    const button = event.currentTarget.querySelector('button[type="submit"]');
+    button.disabled = true;
+    const { data, error } = await db.rpc('add_expansion_device', args);
+    button.disabled = false;
+
+    if (error) {
+      setMessage('deviceAccess', 'Device not added: ' + error.message, 'error');
+      return;
+    }
+
+    setMessage('deviceAccess', 'Device added successfully. Device ID: ' + data, 'success');
+    event.currentTarget.reset();
+    event.currentTarget.elements.validity_days.value = 30;
+    event.currentTarget.elements.stock_quantity.value = 1;
+    await loadDevices();
+  });
+
+  $('assignDeviceForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!isPresident) {
+      setMessage('deviceAccess', 'President access required.', 'error');
+      return;
+    }
+
+    const f = new FormData(event.currentTarget);
+    const deviceId = String(f.get('device_id') || '');
+    const validity = Number(f.get('validity_days'));
+
+    if (!deviceId || !Number.isInteger(validity) || validity <= 0) {
+      setMessage('deviceAccess', 'Select an in-stock device and valid expiry duration.', 'error');
+      return;
+    }
+
+    const args = {
+      p_device_id: deviceId,
+      p_account_number: String(f.get('account_number')).trim(),
+      p_member_name: String(f.get('member_name')).trim(),
+      p_serial_number: String(f.get('serial_number') || '').trim() || null,
+      p_imei: String(f.get('imei') || '').trim() || null,
+      p_validity_days: validity,
+      p_notes: String(f.get('notes') || '').trim()
+    };
+
+    const button = event.currentTarget.querySelector('button[type="submit"]');
+    button.disabled = true;
+    const { data, error } = await db.rpc('assign_expansion_device', args);
+    button.disabled = false;
+
+    if (error) {
+      setMessage('deviceAccess', 'Assignment failed: ' + error.message, 'error');
+      return;
+    }
+
+    setMessage('deviceAccess', 'Device assigned successfully. Assignment ID: ' + data, 'success');
+    event.currentTarget.reset();
+    event.currentTarget.elements.validity_days.value = 30;
+    await loadDevices();
+    await loadAssignments();
+  });
+
+  async function loadAssignments() {
+    if (!currentUser || !isPresident) return;
+
+    $('assignmentList').textContent = 'Loading assignments...';
+    const { data, error } = await db
+      .from('expansion_device_assignments')
+      .select('id,device_id,account_number,member_name,serial_number,imei,assigned_date,validity_days,expiry_date,status,notes,expansion_devices(device_code,device_type,brand,model)')
+      .order('created_at', { ascending: false });
+
+    if (error) {
+      $('assignmentList').textContent = 'Could not load assignments: ' + error.message;
+      return;
+    }
+
+    if (!data?.length) {
+      $('assignmentList').textContent = 'No device assignments recorded yet.';
+      return;
+    }
+
+    $('assignmentList').innerHTML = `
+      <table>
+        <thead><tr>
+          <th>Member</th><th>Device</th><th>Serial / IMEI</th>
+          <th>Assigned</th><th>Expiry</th><th>Status</th>
+        </tr></thead>
+        <tbody>${data.map(a => {
+          const d = a.expansion_devices || {};
+          return `<tr>
+            <td>${escapeHtml(a.member_name)}<br><small>${escapeHtml(a.account_number)}</small></td>
+            <td>${escapeHtml(d.device_code)}<br><small>${escapeHtml(d.brand)} ${escapeHtml(d.model)} (${escapeHtml(d.device_type)})</small></td>
+            <td>${escapeHtml(a.serial_number)}<br><small>${escapeHtml(a.imei)}</small></td>
+            <td>${escapeHtml(a.assigned_date)}<br><small>${escapeHtml(a.validity_days)} days</small></td>
+            <td>${escapeHtml(a.expiry_date)}</td>
+            <td>${escapeHtml(a.status)}</td>
+          </tr>`;
+        }).join('')}</tbody>
+      </table>`;
+  }
+
+  $('reloadDevices').addEventListener('click', loadDevices);
+  $('reloadAssignments').addEventListener('click', loadAssignments);
+
+  $('paymentForm').addEventListener('submit', async event => {
+    event.preventDefault();
+    if (!currentUser) {
+      setMessage('paymentResult', 'Please sign in first.', 'error');
+      return;
+    }
+
+    const type = $('purchaseType').value;
+    const id = $('purchaseId').value.trim();
+    const amount = Number($('purchaseAmount').value);
+    if (!id || !Number.isFinite(amount) || amount <= 0) {
+      setMessage('paymentResult', 'Enter a purchase UUID and a positive amount.', 'error');
+      return;
+    }
+
+    const btn = $('payBtn');
+    btn.disabled = true;
+    btn.textContent = 'Processing...';
+
+    const idempotencyKey = crypto.randomUUID();
+    const args = {
+      p_expense_id: type === 'expense' ? id : null,
+      p_travel_booking_id: type === 'travel' ? id : null,
+      p_amount_inr: amount,
+      p_idempotency_key: idempotencyKey,
+      p_description: $('paymentDescription').value.trim()
+    };
+
+    const { data, error } = await db.rpc('pay_expansion_with_wallet', args);
     btn.disabled = false;
-  }
-}
+    btn.textContent = 'Pay with Wallet';
 
-async function checkPresident() {
-  const { data, error } = await db.auth.getUser();
+    if (error) {
+      setMessage('paymentResult',
+        'Payment was not confirmed: ' + error.message +
+        '. Check the database payment record before trying again.', 'error');
+      return;
+    }
 
-  if (error || !data.user) {
-    setStatus('adminStatus', 'Please sign in first.');
-    return;
-  }
+    setMessage('paymentResult', JSON.stringify(data, null, 2), 'success');
+  });
 
-  const { data: profile, error: profileError } = await db
-    .from('member_profiles')
-    .select('account_number,full_name,post,status')
-    .eq('user_id', data.user.id)
-    .eq('status', 'active')
-    .maybeSingle();
+  db.auth.onAuthStateChange(() => {
+    setTimeout(() => updateSession(), 0);
+  });
 
-  if (profileError) {
-    setStatus('adminStatus', 'Could not verify profile: ' + profileError.message);
-    return;
-  }
-
-  if (!profile || profile.post !== 'President') {
-    setStatus('adminStatus', 'President access not confirmed. Administrative access remains blocked.');
-    return;
-  }
-
-  setStatus(
-    'adminStatus',
-    'Active President profile found: ' + profile.full_name +
-    ' (' + profile.account_number + ').\nThis is a profile check only; database policies enforce actual permissions.',
-    true
-  );
-}
-
-db.auth.onAuthStateChange(() => {
-  refreshSession();
-});
-
-refreshSession();
+  updateSession();
+})();
 </script>
 </body>
 </html>
