@@ -1,0 +1,462 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>Classic Empire Ltd. | Expansion System</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root {
+  --bg:#080808;
+  --panel:#141414;
+  --gold:#ffd700;
+  --gold2:#d4af37;
+  --text:#f5f5f5;
+  --muted:#aaa;
+  --line:#343434;
+  --red:#ff6969;
+  --green:#7de3a1;
+}
+* {box-sizing:border-box}
+body {
+  margin:0;
+  background:var(--bg);
+  color:var(--text);
+  font-family:Arial,sans-serif;
+}
+header {
+  padding:18px;
+  border-bottom:1px solid var(--gold2);
+  background:#101010;
+  display:flex;
+  align-items:center;
+  justify-content:space-between;
+  gap:12px;
+  flex-wrap:wrap;
+}
+.brand {display:flex;align-items:center;gap:12px}
+.logo {
+  width:48px;height:48px;border:2px solid var(--gold);
+  color:var(--gold);display:grid;place-items:center;
+  font-size:22px;font-weight:bold;border-radius:12px;
+}
+h1 {font-size:19px;margin:0;color:var(--gold)}
+.subtitle {font-size:12px;color:var(--muted);margin-top:5px}
+button,input,select,textarea {font:inherit}
+button {
+  background:var(--gold);color:#080808;border:0;
+  padding:11px 15px;border-radius:7px;font-weight:bold;
+  cursor:pointer;
+}
+button:disabled {opacity:.45;cursor:not-allowed}
+button.secondary {
+  background:#242424;color:var(--text);
+  border:1px solid var(--line);
+}
+main {max-width:1150px;margin:auto;padding:18px}
+.notice {
+  padding:13px;border:1px solid var(--line);
+  border-radius:9px;color:var(--muted);font-size:13px;
+  line-height:1.6;margin-bottom:16px;
+}
+.notice strong {color:var(--gold)}
+.grid {
+  display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));
+  gap:14px;margin-bottom:18px;
+}
+.card {
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;padding:17px;margin-bottom:15px;
+}
+.card h2 {font-size:17px;color:var(--gold);margin:0 0 13px}
+.card h3 {font-size:14px;margin:0 0 8px}
+.muted {color:var(--muted);font-size:13px;line-height:1.6}
+.tabs {
+  display:flex;gap:8px;overflow-x:auto;
+  margin:18px 0;padding-bottom:5px;
+}
+.tabs button {white-space:nowrap}
+.tabs button.active {background:var(--gold2)}
+label {display:block;font-size:13px;color:#ddd;margin:12px 0 6px}
+input,select,textarea {
+  width:100%;padding:12px;background:#090909;
+  border:1px solid #444;color:white;border-radius:7px;
+}
+textarea {min-height:75px;resize:vertical}
+.row {display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.stat {font-size:25px;color:var(--gold);font-weight:bold;margin:9px 0}
+.status {font-size:13px;white-space:pre-wrap;overflow-wrap:anywhere}
+.good {color:var(--green)}
+.bad {color:var(--red)}
+.section {display:none}
+.section.active {display:block}
+hr {border:0;border-top:1px solid var(--line);margin:16px 0}
+footer {
+  text-align:center;color:var(--muted);font-size:12px;
+  padding:25px;border-top:1px solid var(--line);
+}
+@media(max-width:520px) {
+  main {padding:12px}
+  .row {grid-template-columns:1fr}
+  header {padding:13px}
+}
+</style>
+</head>
+<body>
+
+<header>
+  <div class="brand">
+    <div class="logo">CE</div>
+    <div>
+      <h1>Classic Empire Ltd.</h1>
+      <div class="subtitle">Expansion & Payment Management</div>
+    </div>
+  </div>
+  <button id="loginBtn" onclick="signIn()">Member Login</button>
+</header>
+
+<main>
+  <div class="notice">
+    <strong>Expansion System</strong><br>
+    Device management, travel bookings, office expenses and internal
+    INR Wallet payments. This page uses your existing Supabase project.
+    Internal balances are system records, not real bank funds.
+  </div>
+
+  <div class="grid">
+    <div class="card">
+      <h3>Device Management</h3>
+      <div class="muted">Devices, assignments, serial numbers and expiry tracking.</div>
+    </div>
+    <div class="card">
+      <h3>Travel & Tickets</h3>
+      <div class="muted">Train, bus, flight, taxi and hotel bookings.</div>
+    </div>
+    <div class="card">
+      <h3>Expenses & Purchases</h3>
+      <div class="muted">Office supplies, equipment, maintenance and receipts.</div>
+    </div>
+    <div class="card">
+      <h3>Payments</h3>
+      <div class="muted">INR Wallet, eligible membership discounts and payment records.</div>
+    </div>
+  </div>
+
+  <div class="card">
+    <h2>Account & Session</h2>
+    <div id="accountStatus" class="status">Checking connection...</div>
+    <div class="tabs">
+      <button class="secondary" onclick="refreshSession()">Refresh Session</button>
+      <button class="secondary" onclick="signOut()">Sign Out</button>
+    </div>
+  </div>
+
+  <div class="tabs">
+    <button class="active" data-tab="payment" onclick="showTab('payment',this)">Wallet Payment</button>
+    <button class="secondary" data-tab="devices" onclick="showTab('devices',this)">Devices</button>
+    <button class="secondary" data-tab="travel" onclick="showTab('travel',this)">Travel</button>
+    <button class="secondary" data-tab="expenses" onclick="showTab('expenses',this)">Expenses</button>
+    <button class="secondary" data-tab="admin" onclick="showTab('admin',this)">President Panel</button>
+  </div>
+
+  <section id="payment" class="section active">
+    <div class="card">
+      <h2>Pay from INR Wallet</h2>
+      <p class="muted">
+        Use the ID and exact INR amount of an existing payable purchase.
+        Expense payments require President approval. Travel payments must
+        have a pending booking status.
+      </p>
+
+      <label>Purchase Type</label>
+      <select id="purchaseType">
+        <option value="expense">Expense</option>
+        <option value="travel">Travel Booking</option>
+      </select>
+
+      <label>Purchase ID (UUID)</label>
+      <input id="purchaseId" placeholder="Paste the existing purchase ID">
+
+      <label>Recorded Purchase Amount (INR)</label>
+      <input id="amount" type="number" min="0.01" step="0.01"
+             placeholder="Enter the exact recorded amount">
+
+      <label>Description (optional)</label>
+      <input id="description" maxlength="300"
+             placeholder="Purpose of payment">
+
+      <div class="notice">
+        Membership discounts, when eligible, are calculated by the
+        database function. The function uses the member's highest
+        eligible active card discount.
+      </div>
+
+      <button id="payBtn" onclick="payWallet()">Pay with Wallet</button>
+      <div id="paymentStatus" class="status" style="margin-top:15px"></div>
+    </div>
+
+    <div class="card">
+      <h2>External Card Payment</h2>
+      <p class="muted">
+        Debit/credit card gateway is not connected yet. Do not enter
+        card numbers or CVV here. Membership cards determine benefits;
+        they are not themselves a payment gateway.
+      </p>
+      <button disabled>External Card — Gateway Required</button>
+    </div>
+  </section>
+
+  <section id="devices" class="section">
+    <div class="card">
+      <h2>Device Management</h2>
+      <p class="muted">
+        Intended features: inventory, device assignments, serial/IMEI,
+        assigned member, validity, expiry date and history.
+      </p>
+      <p class="muted">The device list will be connected after the member-access policies or secure read functions are configured.</p>
+    </div>
+  </section>
+
+  <section id="travel" class="section">
+    <div class="card">
+      <h2>Travel & Tickets</h2>
+      <p class="muted">
+        Intended features: train, bus, flight, taxi and hotel records;
+        passenger details, origin, destination, booking reference,
+        departure/return dates, cancellation and refunds.
+      </p>
+      <p class="muted">Booking creation and member-readable booking lists need to be connected through authorized database functions.</p>
+    </div>
+  </section>
+
+  <section id="expenses" class="section">
+    <div class="card">
+      <h2>Expenses & Purchases</h2>
+      <p class="muted">
+        Intended features: office purchases, quantity, vendor, receipt,
+        approval status, payment status and audit history.
+      </p>
+      <p class="muted">Purchase creation and listing will be connected after secure member permissions are implemented.</p>
+    </div>
+  </section>
+
+  <section id="admin" class="section">
+    <div class="card">
+      <h2>President Administration</h2>
+      <p class="muted">
+        Planned controls: projects, devices, assignments, expenses,
+        travel bookings, notices, reports and payment review.
+      </p>
+      <button class="secondary" onclick="checkPresident()">Check President Access</button>
+      <div id="adminStatus" class="status" style="margin-top:12px"></div>
+      <hr>
+      <p class="muted">
+        This section does not grant administrative access by itself.
+        Supabase RLS policies and database functions remain authoritative.
+      </p>
+    </div>
+  </section>
+</main>
+
+<footer>
+  Classic Empire Ltd. · Head Office: Chakla Ghat, Kishanganj, Bihar, India
+</footer>
+
+<script>
+const SUPABASE_URL = 'https://wcyozectzscqwvtzetkc.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd';
+
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+
+function showTab(id, button) {
+  document.querySelectorAll('.section').forEach(s => s.classList.remove('active'));
+  document.querySelectorAll('[data-tab]').forEach(b => {
+    b.classList.remove('active');
+    b.classList.add('secondary');
+  });
+  document.getElementById(id).classList.add('active');
+  button.classList.add('active');
+  button.classList.remove('secondary');
+}
+
+function setStatus(id, message, good=false) {
+  const el = document.getElementById(id);
+  el.textContent = message;
+  el.className = 'status ' + (good ? 'good' : 'bad');
+}
+
+async function refreshSession() {
+  const { data, error } = await db.auth.getSession();
+
+  if (error) {
+    setStatus('accountStatus', 'Session error: ' + error.message);
+    return;
+  }
+
+  const user = data.session?.user;
+
+  if (!user) {
+    setStatus('accountStatus', 'Not signed in. Sign in using Member Login.');
+    document.getElementById('loginBtn').textContent = 'Member Login';
+    return;
+  }
+
+  setStatus(
+    'accountStatus',
+    'Signed in: ' + (user.email || user.id) +
+    '\nUser ID: ' + user.id,
+    true
+  );
+  document.getElementById('loginBtn').textContent = 'Signed In';
+}
+
+async function signIn() {
+  const email = prompt('Enter your registered email:');
+  if (!email) return;
+
+  const password = prompt('Enter your password:');
+  if (!password) return;
+
+  const { error } = await db.auth.signInWithPassword({ email, password });
+
+  if (error) {
+    setStatus('accountStatus', 'Login failed: ' + error.message);
+    return;
+  }
+
+  await refreshSession();
+}
+
+async function signOut() {
+  const { error } = await db.auth.signOut();
+
+  if (error) {
+    setStatus('accountStatus', 'Sign out failed: ' + error.message);
+    return;
+  }
+
+  setStatus('accountStatus', 'Signed out.', true);
+  setStatus('paymentStatus', 'Sign in to make a payment.', true);
+}
+
+function makeIdempotencyKey() {
+  if (window.crypto && crypto.randomUUID) return crypto.randomUUID();
+  return 'exp-' + Date.now() + '-' + Math.random().toString(36).slice(2);
+}
+
+async function payWallet() {
+  const btn = document.getElementById('payBtn');
+  const { data: sessionData, error: sessionError } = await db.auth.getSession();
+
+  if (sessionError || !sessionData.session) {
+    setStatus('paymentStatus', 'Please sign in first.');
+    return;
+  }
+
+  const type = document.getElementById('purchaseType').value;
+  const id = document.getElementById('purchaseId').value.trim();
+  const amount = Number(document.getElementById('amount').value);
+  const description = document.getElementById('description').value.trim();
+
+  if (!id) {
+    setStatus('paymentStatus', 'Enter the existing purchase UUID.');
+    return;
+  }
+
+  if (!Number.isFinite(amount) || amount <= 0 || Math.round(amount * 100) !== amount * 100) {
+    setStatus('paymentStatus', 'Enter a valid positive INR amount with at most 2 decimals.');
+    return;
+  }
+
+  const confirmed = confirm(
+    'Submit Wallet payment for INR ' + amount.toFixed(2) +
+    '?\nThe database will validate the purchase and calculate any eligible discount.'
+  );
+
+  if (!confirmed) return;
+
+  btn.disabled = true;
+  setStatus('paymentStatus', 'Submitting payment securely...');
+
+  const args = {
+    p_expense_id: type === 'expense' ? id : null,
+    p_travel_booking_id: type === 'travel' ? id : null,
+    p_amount_inr: amount,
+    p_idempotency_key: makeIdempotencyKey(),
+    p_description: description
+  };
+
+  try {
+    const { data, error } = await db.rpc('pay_expansion_with_wallet', args);
+
+    if (error) {
+      setStatus('paymentStatus', 'Payment failed: ' + error.message);
+      return;
+    }
+
+    if (!data || data.success !== true) {
+      setStatus('paymentStatus', 'The server did not confirm payment success.');
+      return;
+    }
+
+    setStatus(
+      'paymentStatus',
+      'Payment confirmed by database.\n' +
+      'Payment code: ' + (data.payment_code || 'Not returned') + '\n' +
+      'Status: ' + (data.status || 'unknown') + '\n' +
+      'Original amount: INR ' + Number(data.original_amount_inr ?? data.amount_inr ?? amount).toFixed(2) + '\n' +
+      'Discount: INR ' + Number(data.discount_amount_inr ?? 0).toFixed(2) + '\n' +
+      'Final amount: INR ' + Number(data.final_amount_inr ?? amount).toFixed(2) + '\n' +
+      'Card tier: ' + (data.card_tier || 'No eligible membership discount'),
+      true
+    );
+  } catch (err) {
+    setStatus('paymentStatus', 'Unexpected error: ' + (err.message || 'Please try again.'));
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function checkPresident() {
+  const { data, error } = await db.auth.getUser();
+
+  if (error || !data.user) {
+    setStatus('adminStatus', 'Please sign in first.');
+    return;
+  }
+
+  const { data: profile, error: profileError } = await db
+    .from('member_profiles')
+    .select('account_number,full_name,post,status')
+    .eq('user_id', data.user.id)
+    .eq('status', 'active')
+    .maybeSingle();
+
+  if (profileError) {
+    setStatus('adminStatus', 'Could not verify profile: ' + profileError.message);
+    return;
+  }
+
+  if (!profile || profile.post !== 'President') {
+    setStatus('adminStatus', 'President access not confirmed. Administrative access remains blocked.');
+    return;
+  }
+
+  setStatus(
+    'adminStatus',
+    'Active President profile found: ' + profile.full_name +
+    ' (' + profile.account_number + ').\nThis is a profile check only; database policies enforce actual permissions.',
+    true
+  );
+}
+
+db.auth.onAuthStateChange(() => {
+  refreshSession();
+});
+
+refreshSession();
+</script>
+</body>
+</html>
