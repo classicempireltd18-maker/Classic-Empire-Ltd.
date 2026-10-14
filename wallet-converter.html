@@ -1,0 +1,339 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="theme-color" content="#080808">
+<title>Classic Empire Ltd. | Wallet Converter</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<style>
+:root{--bg:#080808;--panel:#141414;--gold:#ffd700;--gold2:#d4af37;--text:#f5f5f5;--muted:#aaa;--border:#38301a;--green:#54df93;--red:#ff7777}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);font-family:Arial,sans-serif}
+header{text-align:center;padding:23px 14px;background:#101010;border-bottom:1px solid var(--border)}
+.brand{font-size:22px;font-weight:800;letter-spacing:1px;color:var(--gold)}
+header p{font-size:13px;color:var(--muted);margin-bottom:0}
+nav{display:flex;justify-content:center;flex-wrap:wrap;gap:9px;padding:13px;border-bottom:1px solid #292929}
+nav a{color:var(--gold);text-decoration:none;border:1px solid var(--border);padding:9px 11px;border-radius:8px;font-size:13px}
+main{max-width:850px;margin:25px auto;padding:0 14px 35px}
+.card{background:var(--panel);border:1px solid var(--border);border-radius:14px;padding:20px;margin-bottom:18px}
+h1{font-size:25px;color:var(--gold);margin:0 0 10px}
+h2{font-size:18px;color:var(--gold);margin:0 0 14px}
+.muted{color:var(--muted);font-size:13px;line-height:1.6}
+.rate{text-align:center;color:var(--gold);border:1px solid var(--gold2);border-radius:9px;padding:14px;margin:18px 0;font-weight:bold}
+label{display:block;margin:14px 0 7px;font-size:13px;color:#ddd}
+input,select{width:100%;padding:13px;border-radius:8px;border:1px solid #48402b;background:#090909;color:#fff;font-size:15px}
+button{width:100%;border:0;border-radius:9px;padding:14px;margin-top:14px;background:var(--gold);color:#111;font-size:15px;font-weight:bold;cursor:pointer}
+button:disabled{opacity:.55;cursor:not-allowed}
+.secondary{background:#222;color:var(--gold);border:1px solid var(--border)}
+.balances{display:grid;grid-template-columns:1fr 1fr;gap:12px}
+.balance{padding:15px;border:1px solid var(--border);border-radius:10px}
+.balance span{font-size:12px;color:var(--muted)}
+.balance strong{display:block;color:var(--gold);font-size:21px;margin-top:8px;overflow-wrap:anywhere}
+.preview{background:#0b0b0b;border:1px dashed var(--gold2);border-radius:9px;padding:14px;margin-top:14px}
+.preview strong{color:var(--gold)}
+.status{display:none;padding:12px;border-radius:8px;margin-top:14px;font-size:14px;line-height:1.5;overflow-wrap:anywhere}
+.status.show{display:block}
+.success{background:#10251a;color:var(--green)}
+.error{background:#2a1111;color:var(--red)}
+.table-wrap{overflow-x:auto}
+table{width:100%;min-width:560px;border-collapse:collapse;font-size:13px}
+th,td{padding:11px 9px;border-bottom:1px solid #333;text-align:left;vertical-align:top}
+th{color:var(--gold)}
+.hidden{display:none!important}
+footer{text-align:center;color:var(--muted);padding:20px;border-top:1px solid #292929;font-size:12px}
+@media(max-width:500px){.balances{grid-template-columns:1fr}.card{padding:16px}}
+</style>
+</head>
+<body>
+<header>
+  <div class="brand">CLASSIC EMPIRE LTD.</div>
+  <p>Secure Internal Wallet Converter</p>
+</header>
+
+<nav>
+  <a href="./index.html">Main Website</a>
+  <a href="./transfer-money.html">Transfer Money</a>
+  <a href="./device-store.html">Device Store</a>
+  <a href="./admin.html">Admin</a>
+</nav>
+
+<main>
+<section class="card">
+  <h1>Wallet Converter</h1>
+  <p class="muted">Convert your own virtual wallet balance between Classic Dinar (CD) and INR. These are internal app balances, not real bank funds.</p>
+  <div class="rate">Fixed Internal Rate: 1 CD = ₹93,600 INR</div>
+
+  <div id="sessionMessage" class="status show error">Checking login...</div>
+
+  <div id="app" class="hidden">
+    <p id="memberInfo" class="muted"></p>
+
+    <div class="balances">
+      <div class="balance">
+        <span>Classic Dinar (CD)</span>
+        <strong id="balanceCD">—</strong>
+      </div>
+      <div class="balance">
+        <span>INR Wallet</span>
+        <strong id="balanceINR">—</strong>
+      </div>
+    </div>
+
+    <button id="refreshBtn" class="secondary" type="button">Refresh Balance &amp; History</button>
+    <div id="message" class="status"></div>
+
+    <form id="convertForm">
+      <label for="fromCurrency">Convert From</label>
+      <select id="fromCurrency" required>
+        <option value="INR">INR Wallet (₹)</option>
+        <option value="CD">Classic Dinar (CD)</option>
+      </select>
+
+      <label for="amount">Amount to Convert</label>
+      <input id="amount" type="number" min="0.01" step="0.01" placeholder="Enter amount" required>
+
+      <label for="toCurrency">Convert To</label>
+      <input id="toCurrency" value="Classic Dinar (CD)" readonly>
+
+      <div class="preview">
+        <div class="muted">Estimated amount to receive</div>
+        <strong id="previewAmount">0.00 CD</strong>
+        <p id="previewNote" class="muted">Uses the fixed internal conversion rate.</p>
+      </div>
+
+      <button id="convertBtn" type="submit">Convert Wallet Balance</button>
+    </form>
+  </div>
+</section>
+
+<section class="card">
+  <h2>Conversion History</h2>
+  <p class="muted">Your conversion transactions recorded in the wallet ledger.</p>
+  <div id="historyMessage" class="muted">Sign in to view history.</div>
+  <div id="historyWrap" class="table-wrap hidden">
+    <table>
+      <thead>
+        <tr><th>Date</th><th>Code</th><th>Currency</th><th>Amount</th><th>Status</th><th>Description</th></tr>
+      </thead>
+      <tbody id="historyBody"></tbody>
+    </table>
+  </div>
+</section>
+</main>
+
+<footer>Classic Empire Ltd. · Chakla Ghat, Kishanganj, Bihar, India</footer>
+
+<script>
+(() => {
+'use strict';
+
+const SUPABASE_URL = 'https://wcyozectzscqwvtzetkc.supabase.co';
+const SUPABASE_KEY = 'sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd';
+const RATE = 93600;
+const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY);
+const $ = id => document.getElementById(id);
+
+const money = value => Number(value || 0).toLocaleString('en-IN', {
+  minimumFractionDigits: 2,
+  maximumFractionDigits: 2
+});
+
+function message(text, type) {
+  $('message').textContent = text;
+  $('message').className = 'status show ' + (type || 'error');
+}
+
+function clearMessage() {
+  $('message').textContent = '';
+  $('message').className = 'status';
+}
+
+function sessionMessage(text, type) {
+  $('sessionMessage').textContent = text;
+  $('sessionMessage').className = 'status show ' + (type || 'error');
+}
+
+function updatePreview() {
+  const from = $('fromCurrency').value;
+  const amount = Number($('amount').value || 0);
+  const to = from === 'CD' ? 'INR' : 'CD';
+
+  $('toCurrency').value = to === 'CD' ? 'Classic Dinar (CD)' : 'INR Wallet (₹)';
+
+  let converted = 0;
+  if (Number.isFinite(amount) && amount > 0) {
+    converted = from === 'CD'
+      ? amount * RATE
+      : Math.round((amount / RATE) * 100) / 100;
+  }
+
+  $('previewAmount').textContent = money(converted) + ' ' + to;
+  $('previewNote').textContent = from === 'CD'
+    ? 'CD × 93,600 = INR. Server validates the final conversion.'
+    : 'INR ÷ 93,600 = CD, rounded to 2 decimal places.';
+}
+
+async function loadHistory(userId) {
+  $('historyMessage').textContent = 'Loading history...';
+  $('historyWrap').classList.add('hidden');
+
+  const { data, error } = await db
+    .from('wallet_transactions')
+    .select('transaction_code,currency,amount,status,description,created_at,transaction_type')
+    .eq('user_id', userId)
+    .eq('transaction_type', 'currency_conversion')
+    .order('created_at', { ascending: false })
+    .limit(100);
+
+  if (error) {
+    $('historyMessage').textContent = 'History error: ' + error.message;
+    return;
+  }
+
+  $('historyBody').replaceChildren();
+  const rows = data || [];
+
+  if (!rows.length) {
+    $('historyMessage').textContent = 'No conversion records yet.';
+    return;
+  }
+
+  for (const item of rows) {
+    const tr = document.createElement('tr');
+    const values = [
+      item.created_at ? new Date(item.created_at).toLocaleString('en-IN') : '—',
+      item.transaction_code || '—',
+      item.currency || '—',
+      money(item.amount),
+      item.status || '—',
+      item.description || '—'
+    ];
+
+    for (const value of values) {
+      const td = document.createElement('td');
+      td.textContent = String(value);
+      tr.appendChild(td);
+    }
+    $('historyBody').appendChild(tr);
+  }
+
+  $('historyMessage').textContent = 'Showing ' + rows.length + ' conversion record(s).';
+  $('historyWrap').classList.remove('hidden');
+}
+
+async function loadWallet() {
+  clearMessage();
+
+  const { data: authData, error: authError } = await db.auth.getUser();
+  const user = authData && authData.user;
+
+  if (authError || !user) {
+    $('app').classList.add('hidden');
+    sessionMessage('Please sign in on the Classic Empire Ltd. website, then open this page again.');
+    $('historyMessage').textContent = 'Sign in to view history.';
+    return;
+  }
+
+  const { data: profile, error: profileError } = await db
+    .from('member_profiles')
+    .select('account_number,full_name,post,status')
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  if (profileError) {
+    sessionMessage('Profile error: ' + profileError.message);
+    return;
+  }
+
+  if (!profile || profile.status !== 'active') {
+    sessionMessage('An active member profile is required.');
+    return;
+  }
+
+  const { data: wallet, error: walletError } = await db
+    .from('wallet_accounts')
+    .select('balance_cd,balance_inr,updated_at')
+    .eq('user_id', user.id)
+    .maybeSingle();
+
+  if (walletError) {
+    sessionMessage('Wallet error: ' + walletError.message);
+    return;
+  }
+
+  $('memberInfo').textContent =
+    (profile.full_name || 'Member') + ' · ' +
+    (profile.account_number || '') + ' · ' +
+    (profile.post || '');
+
+  $('balanceCD').textContent = money(wallet ? wallet.balance_cd : 0) + ' CD';
+  $('balanceINR').textContent = '₹' + money(wallet ? wallet.balance_inr : 0);
+
+  $('app').classList.remove('hidden');
+  $('sessionMessage').className = 'status';
+  $('sessionMessage').textContent = '';
+
+  await loadHistory(user.id);
+}
+
+$('fromCurrency').addEventListener('change', updatePreview);
+$('amount').addEventListener('input', updatePreview);
+$('refreshBtn').addEventListener('click', loadWallet);
+
+$('convertForm').addEventListener('submit', async event => {
+  event.preventDefault();
+  clearMessage();
+
+  const from = $('fromCurrency').value;
+  const amount = Number($('amount').value);
+
+  if (!Number.isFinite(amount) || amount <= 0 ||
+      Math.round(amount * 100) !== amount * 100) {
+    message('Enter a positive amount with no more than 2 decimal places.');
+    return;
+  }
+
+  const btn = $('convertBtn');
+  btn.disabled = true;
+  btn.textContent = 'Processing...';
+
+  try {
+    const { data, error } = await db.rpc('convert_wallet_currency', {
+      p_from_currency: from,
+      p_amount: amount
+    });
+
+    if (error) throw error;
+
+    const result = Array.isArray(data) ? data[0] : data;
+    if (!result || result.success !== true) {
+      throw new Error('The server did not confirm the conversion.');
+    }
+
+    message(
+      'Conversion completed. ' + money(result.amount_deducted) + ' ' +
+      result.from_currency + ' deducted; ' +
+      money(result.amount_credited) + ' ' + result.to_currency +
+      ' credited. Rate: 1 CD = ₹93,600.',
+      'success'
+    );
+
+    $('amount').value = '';
+    updatePreview();
+    await loadWallet();
+
+  } catch (error) {
+    message(error && error.message ? error.message : 'Conversion failed. Please try again.');
+  } finally {
+    btn.disabled = false;
+    btn.textContent = 'Convert Wallet Balance';
+  }
+});
+
+updatePreview();
+loadWallet();
+})();
+</script>
+</body>
+</html>
