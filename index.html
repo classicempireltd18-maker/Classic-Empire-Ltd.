@@ -4,294 +4,348 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#080808">
-<title>Classic Empire Ltd.</title>
+<meta name="theme-color" content="#FFFFFF">
+<title>Classic Empire Ltd. | Official Website</title>
+<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#080808;--panel:#151515;--gold:#ffd700;--muted:#aaa;--line:#3b3420}
+:root{
+  --bg:#FFFFFF;
+  --panel:#F8F8F8;
+  --gold:#D4AF37;
+  --bright:#FFD700;
+  --text:#111111;
+  --muted:#666666;
+  --line:#E5D7A4;
+}
 *{box-sizing:border-box}
-body{margin:0;background:var(--bg);color:#fff;font-family:Arial,sans-serif}
-header{padding:15px;display:flex;align-items:center;gap:12px;background:#101010;border-bottom:1px solid var(--line)}
+body{
+  margin:0;background:var(--bg);color:var(--text);
+  font-family:Arial,sans-serif;
+}
+header{
+  display:flex;align-items:center;gap:14px;padding:15px;
+  background:#fff;border-bottom:2px solid var(--gold);
+  position:sticky;top:0;z-index:10;
+}
 .logo{width:55px;height:55px;object-fit:contain}
-.brand{color:var(--gold);font-size:19px;font-weight:bold}
+.brand{font-size:19px;font-weight:bold;color:#8B6B00}
 .small,.muted{font-size:13px;color:var(--muted)}
-nav{display:flex;flex-wrap:wrap;gap:7px;padding:12px;background:#101010}
-button{padding:11px 14px;border:0;border-radius:7px;background:var(--gold);color:#080808;font-weight:bold;cursor:pointer}
+nav{
+  display:flex;gap:8px;flex-wrap:wrap;padding:12px;
+  background:#fff;border-bottom:1px solid var(--line);
+}
+button{
+  padding:11px 14px;border:1px solid var(--gold);
+  border-radius:7px;background:var(--gold);color:#111;
+  font-weight:bold;cursor:pointer;
+}
+button:hover{background:var(--bright)}
 button:disabled{opacity:.5;cursor:wait}
-.secondary{background:#222;color:var(--gold);border:1px solid var(--line)}
-main{max-width:1000px;margin:auto;padding:15px}
-.panel,.hero,.stat{background:var(--panel);border:1px solid var(--line);border-radius:12px;padding:17px;margin-bottom:14px}
-.hero{text-align:center;padding:27px 14px}
-h1,h2,h3{color:var(--gold)}
+.secondary{background:#fff;color:#775B00}
+main{max-width:1100px;margin:auto;padding:16px}
+.panel,.hero,.stat{
+  background:var(--panel);border:1px solid var(--line);
+  border-radius:12px;padding:17px;margin-bottom:14px;
+}
+.hero{text-align:center;padding:30px 15px;background:#fff}
+h1,h2,h3{color:#8B6B00}
 p{line-height:1.5}
 .grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-label{display:block;margin:12px 0 6px}
-input,select,textarea{width:100%;padding:12px;border:1px solid #51472a;border-radius:7px;background:#080808;color:white}
-textarea{min-height:70px;resize:vertical}
+label{display:block;margin:12px 0 6px;font-weight:bold}
+input,select,textarea{
+  width:100%;padding:12px;border:1px solid #D8C477;
+  border-radius:7px;background:#fff;color:#111;font:inherit;
+}
+textarea{min-height:70px}
 .hidden{display:none!important}
-.notice{padding:12px;background:#222116;border-radius:7px;margin:12px 0;overflow-wrap:anywhere}
-.amount{font-size:24px;color:var(--gold);font-weight:bold}
+.notice{
+  padding:12px;background:#FFF8DB;border:1px solid var(--line);
+  border-radius:7px;margin:12px 0;overflow-wrap:anywhere;
+}
+.amount{font-size:23px;color:#8B6B00;font-weight:bold;overflow-wrap:anywhere}
 .tablewrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px}
+table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
 th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
-.card{border:1px solid #66551b;border-radius:12px;padding:15px;background:linear-gradient(135deg,#171717,#080808);margin:8px 0}
-.card h3{margin-top:0}
-.pill{display:inline-block;padding:4px 8px;border:1px solid #66551b;border-radius:20px;font-size:12px;color:var(--gold)}
+th{background:#FFF4C2}
+.card{border:1px solid var(--gold);border-radius:12px;padding:15px;background:#fff;margin:9px 0}
+.pill{display:inline-block;padding:4px 8px;border:1px solid var(--gold);border-radius:20px;font-size:12px;color:#775B00}
 footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
 hr{border:0;border-top:1px solid var(--line);margin:17px 0}
+.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
 </style>
 </head>
 <body>
 <header>
-<img class="logo" src="classic-empire-logo.png" alt="Classic Empire Ltd." onerror="this.style.display='none'">
-<div>
-<div class="brand">CLASSIC EMPIRE LTD.</div>
-<div class="small">Official Website</div>
-</div>
+  <img class="logo" src="classic-empire-logo.png"
+       alt="Classic Empire Ltd. logo"
+       onerror="this.style.display='none'">
+  <div>
+    <div class="brand">CLASSIC EMPIRE LTD.</div>
+    <div class="small">Official Website</div>
+  </div>
 </header>
 
 <nav>
-<button onclick="show('home')">Home</button>
-<button onclick="show('members')">Members</button>
-<button onclick="show('updates')">Empire Updates</button>
-<button onclick="show('currency')">Currency</button>
-<button onclick="show('salaries')">Salaries</button>
-<button onclick="show('login')">Member Login</button>
-<button onclick="show('register')">Registration</button>
-<button onclick="show('dashboard')">Member Account</button>
-<button onclick="show('cards')">Empire Cards</button>
-<button onclick="show('bills')">Card Bills</button>
-<button onclick="show('about')">About / Contact</button>
+  <button onclick="show('home')">Home</button>
+  <button onclick="show('members')">Members</button>
+  <button onclick="show('updates')">Empire Updates</button>
+  <button onclick="show('currency')">Currency</button>
+  <button onclick="show('salaries')">Salaries</button>
+  <button onclick="show('login')">Member Login</button>
+  <button onclick="show('register')">Registration</button>
+  <button onclick="show('dashboard')">Member Account</button>
+  <button onclick="show('cards')">Empire Cards</button>
+  <button onclick="show('bills')">Card Bills</button>
+  <button onclick="show('about')">About / Contact</button>
 </nav>
 
 <main>
 <section id="home">
-<div class="hero">
-<h1>Welcome to Classic Empire Ltd.</h1>
-<p>Member accounts, Empire Wallet and Classic Empire Card services.</p>
-<button onclick="show('login')">Member Login</button>
-<button class="secondary" onclick="show('register')">Create Account</button>
-</div>
-<div class="grid">
-<div class="stat"><h3>Member Accounts</h3><p class="muted">Authorized member access.</p></div>
-<div class="stat"><h3>Empire Wallet</h3><p class="muted">View your account balances.</p></div>
-<div class="stat"><h3>Empire Cards</h3><p class="muted">View cards, bills and payment history.</p></div>
-</div>
-<div class="panel">
-<h2>Important</h2>
-<p>Classic Dinar is an internal fictional project currency. It is not official legal tender.</p>
-</div>
+  <div class="hero">
+    <h1>Welcome to Classic Empire Ltd.</h1>
+    <p>Member accounts, Empire Wallet and Classic Empire Card services.</p>
+    <div class="actions" style="justify-content:center">
+      <button onclick="show('login')">Member Login</button>
+      <button class="secondary" onclick="show('register')">Create Account</button>
+    </div>
+  </div>
+  <div class="grid">
+    <div class="stat"><h3>Member Accounts</h3><p>Authorized member access.</p></div>
+    <div class="stat"><h3>Empire Wallet</h3><p>View your internal CD and INR balances.</p></div>
+    <div class="stat"><h3>Empire Cards</h3><p>View card requests, spending and bills.</p></div>
+  </div>
+  <div class="panel">
+    <h2>Important Notice</h2>
+    <p>Classic Dinar and balances shown here are fictional internal project records, not real money or legal tender.</p>
+  </div>
 </section>
 
 <section id="members" class="hidden">
-<div class="panel"><h2>Members</h2>
-<p>Private member information is available only to authorized members.</p>
-<button onclick="show('login')">Member Login</button>
-</div>
+  <div class="panel">
+    <h2>Members</h2>
+    <p>Private member information is available only to authorized members.</p>
+    <button onclick="show('login')">Member Login</button>
+  </div>
 </section>
 
 <section id="updates" class="hidden">
-<div class="panel"><h2>Empire Updates</h2>
-<div id="noticeList">Notice system will be connected after its API is verified.</div>
-</div>
+  <div class="panel">
+    <h2>Empire Updates</h2>
+    <div id="noticeList">Notice API has not been connected on this page.</div>
+  </div>
 </section>
 
 <section id="currency" class="hidden">
-<div class="panel"><h2>Currency</h2>
-<div class="grid">
-<div class="stat"><h3>Classic Dinar</h3><p>Code: CLD</p><p>Short code: CD</p><p>Symbol: د.ك</p></div>
-<div class="stat"><h3>Indian Rupee</h3><p>Code: INR</p><p>Symbol: ₹</p></div>
-</div>
-<p class="muted">Card purchases use CD. Card spending and weekly bills use INR.</p>
-</div>
+  <div class="panel">
+    <h2>Internal Project Currency</h2>
+    <div class="grid">
+      <div class="stat"><h3>Classic Dinar</h3><p>Code: CLD</p><p>Short code: CD</p><p>Symbol: د.ك</p></div>
+      <div class="stat"><h3>Indian Rupee</h3><p>Code: INR</p><p>Symbol: ₹</p></div>
+    </div>
+    <p class="muted">Card purchases use CD. Card spending and bills use INR, according to the configured card system.</p>
+  </div>
 </section>
 
 <section id="salaries" class="hidden">
-<div class="panel"><h2>Salaries</h2>
-<p>Salary information is managed by the authorized administration system.</p>
-<p class="muted">Live salary records are not connected to this page yet.</p>
-</div>
+  <div class="panel">
+    <h2>Salaries</h2>
+    <p>Salary information is managed by the authorized administration system.</p>
+    <p class="muted">Live salary records have not been connected to this public page.</p>
+  </div>
 </section>
 
 <section id="about" class="hidden">
-<div class="panel"><h2>About Classic Empire Ltd.</h2>
-<p>Member accounts and internal project services.</p>
-<p><b>Head Office:</b> Chakla Ghat, Kishanganj, Bihar, India</p>
-</div>
+  <div class="panel">
+    <h2>About Classic Empire Ltd.</h2>
+    <p>Member accounts and internal project services.</p>
+    <p><b>Head Office:</b> Chakla Ghat, Kishanganj, Bihar, India</p>
+  </div>
 </section>
 
 <section id="login" class="hidden">
-<div class="panel"><h2>Member Login</h2>
-<form id="loginForm">
-<label for="account">Account Number</label>
-<input id="account" autocomplete="username" placeholder="CE000001" required>
-<label for="password">Password</label>
-<input id="password" type="password" autocomplete="current-password" required>
-<button id="loginBtn" style="margin-top:15px">Login</button>
-</form>
-<div id="loginMessage" class="notice hidden" role="status"></div>
-</div>
+  <div class="panel">
+    <h2>Member Login</h2>
+    <form id="loginForm">
+      <label for="account">Account Number</label>
+      <input id="account" autocomplete="username" placeholder="CE000001" required>
+      <label for="password">Password</label>
+      <input id="password" type="password" autocomplete="current-password" required>
+      <button id="loginBtn" style="margin-top:15px">Login</button>
+    </form>
+    <div id="loginMessage" class="notice hidden" role="status"></div>
+  </div>
 </section>
 
 <section id="register" class="hidden">
-<div class="panel"><h2>Member Registration</h2>
-<p class="muted">Registration requests require administrator approval.</p>
-<form id="registerForm">
-<label for="regName">Full Name</label>
-<input id="regName" maxlength="100" required>
-<label for="regEmail">Email Address</label>
-<input id="regEmail" type="email" required>
-<label for="regPassword">Password</label>
-<input id="regPassword" type="password" minlength="8" autocomplete="new-password" required>
-<label for="regConfirm">Confirm Password</label>
-<input id="regConfirm" type="password" minlength="8" autocomplete="new-password" required>
-<label for="regPost">Requested Post</label>
-<select id="regPost" required>
-<option value="">Select post</option>
-<option>Other Employee</option>
-<option>President's Assistant</option>
-<option>DM</option>
-<option>DM's Assistant</option>
-<option>SDM</option><option>SP</option><option>DSP</option>
-</select>
-<button id="registerBtn" style="margin-top:15px">Submit Registration</button>
-</form>
-<div id="registerMessage" class="notice hidden" role="status"></div>
-</div>
+  <div class="panel">
+    <h2>Member Registration</h2>
+    <p class="muted">Registration requests require administrator approval.</p>
+    <form id="registerForm">
+      <label for="regName">Full Name</label>
+      <input id="regName" maxlength="100" required>
+      <label for="regEmail">Email Address</label>
+      <input id="regEmail" type="email" required>
+      <label for="regPassword">Password</label>
+      <input id="regPassword" type="password" minlength="8" autocomplete="new-password" required>
+      <label for="regConfirm">Confirm Password</label>
+      <input id="regConfirm" type="password" minlength="8" autocomplete="new-password" required>
+      <label for="regPost">Requested Post</label>
+      <select id="regPost" required>
+        <option value="">Select post</option>
+        <option>Other Employee</option>
+        <option>President's Assistant</option>
+        <option>DM</option>
+        <option>DM's Assistant</option>
+        <option>SDM</option><option>SP</option><option>DSP</option>
+      </select>
+      <button id="registerBtn" style="margin-top:15px">Submit Registration</button>
+    </form>
+    <div id="registerMessage" class="notice hidden" role="status"></div>
+  </div>
 </section>
 
 <section id="dashboard" class="hidden">
-<div class="panel"><h2>Member Account</h2>
-<div id="profile">Please log in to view your account.</div>
-<button class="secondary" onclick="loadWallet()">Refresh Wallet</button>
-<button class="secondary" onclick="loadTransactions()">Refresh History</button>
-<button onclick="logout()">Logout</button>
-</div>
+  <div class="panel">
+    <h2>Member Account</h2>
+    <div id="profile">Please log in to view your account.</div>
+    <div class="actions">
+      <button class="secondary" onclick="loadWallet()">Refresh Wallet</button>
+      <button class="secondary" onclick="loadTransactions()">Refresh History</button>
+      <button onclick="logout()">Logout</button>
+    </div>
+  </div>
 
-<div class="panel"><h2>Empire Wallet</h2>
-<div class="grid">
-<div class="stat"><p class="muted">Classic Dinar (CD)</p><div class="amount" id="balanceCD">—</div></div>
-<div class="stat"><p class="muted">Indian Rupees (INR)</p><div class="amount" id="balanceINR">—</div></div>
-</div>
-<div id="walletMessage" class="notice">Log in to load your wallet.</div>
-</div>
+  <div class="panel">
+    <h2>Empire Wallet</h2>
+    <div class="grid">
+      <div class="stat"><p class="muted">Classic Dinar (CD)</p><div class="amount" id="balanceCD">—</div></div>
+      <div class="stat"><p class="muted">Indian Rupees (INR)</p><div class="amount" id="balanceINR">—</div></div>
+    </div>
+    <div id="walletMessage" class="notice">Log in to load your wallet.</div>
+  </div>
 
-<div class="panel"><h2>Money Transfer</h2>
-<form id="transferForm">
-<label for="recipient">Recipient Account Number</label>
-<input id="recipient" required>
-<label for="currencySelect">Currency</label>
-<select id="currencySelect">
-<option value="CD">Classic Dinar (CD)</option>
-<option value="INR">Indian Rupees (INR)</option>
-</select>
-<label for="amount">Amount</label>
-<input id="amount" type="number" min="0.01" step="any" required>
-<label for="description">Description (optional)</label>
-<input id="description" maxlength="200">
-<button id="transferBtn" style="margin-top:15px">Transfer</button>
-</form>
-<div id="transferMessage" class="notice hidden" role="status"></div>
-</div>
+  <div class="panel">
+    <h2>Money Transfer</h2>
+    <form id="transferForm">
+      <label for="recipient">Recipient Account Number</label>
+      <input id="recipient" required>
+      <label for="currencySelect">Currency</label>
+      <select id="currencySelect">
+        <option value="CD">Classic Dinar (CD)</option>
+        <option value="INR">Indian Rupees (INR)</option>
+      </select>
+      <label for="amount">Amount</label>
+      <input id="amount" type="number" min="0.01" step="any" required>
+      <label for="description">Description (optional)</label>
+      <input id="description" maxlength="200">
+      <button id="transferBtn" style="margin-top:15px">Transfer</button>
+    </form>
+    <div id="transferMessage" class="notice hidden" role="status"></div>
+  </div>
 
-<div class="panel"><h2>Transaction History</h2>
-<div id="historyMessage" class="notice">No history loaded.</div>
-<div class="tablewrap"><table>
-<thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Currency</th><th>Status</th><th>Transfer ID</th></tr></thead>
-<tbody id="historyRows"></tbody>
-</table></div>
-</div>
+  <div class="panel">
+    <h2>Transaction History</h2>
+    <div id="historyMessage" class="notice">No history loaded.</div>
+    <div class="tablewrap"><table>
+      <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Currency</th><th>Status</th><th>Transaction ID</th></tr></thead>
+      <tbody id="historyRows"></tbody>
+    </table></div>
+  </div>
 </section>
 
 <section id="cards" class="hidden">
-<div class="panel">
-<h2>Classic Empire Ltd. Cards</h2>
-<p class="muted">Card purchase prices are payable only in CD. Spending and bills are recorded in INR. Card requests and activation are subject to the configured approval process.</p>
-<button onclick="loadCards()">Refresh Cards</button>
-<div id="cardMessage" class="notice">Log in to load your cards.</div>
-<div id="cardTypes" class="grid"></div>
-</div>
+  <div class="panel">
+    <h2>Classic Empire Ltd. Cards</h2>
+    <p class="muted">Card purchase prices use CD. Spending and bills use INR. Requests and activation depend on the configured approval process.</p>
+    <button onclick="loadCards()">Refresh Cards</button>
+    <div id="cardMessage" class="notice">Log in to load cards.</div>
+    <div id="cardTypes" class="grid"></div>
+  </div>
 
-<div class="panel"><h2>My Card Requests and Cards</h2>
-<button class="secondary" onclick="loadMyCards()">Refresh My Cards</button>
-<div id="myCards"></div>
-</div>
+  <div class="panel">
+    <h2>My Card Requests and Cards</h2>
+    <button class="secondary" onclick="loadMyCards()">Refresh My Cards</button>
+    <div id="myCards"></div>
+  </div>
 
-<div class="panel"><h2>Record Card Spending</h2>
-<p class="muted">Use this only to record an actual authorized card purchase. This form does not process a real-world payment.</p>
-<form id="spendForm">
-<label for="spendCard">Active Card</label>
-<select id="spendCard" required><option value="">Load your cards first</option></select>
-<label for="spendAmount">Purchase Amount (INR)</label>
-<input id="spendAmount" type="number" min="0.01" step="0.01" required>
-<label for="spendDescription">Description</label>
-<input id="spendDescription" maxlength="200" placeholder="Purchase description" required>
-<button id="spendBtn" style="margin-top:12px">Record Spending</button>
-</form>
-<div id="spendMessage" class="notice hidden" role="status"></div>
-</div>
+  <div class="panel">
+    <h2>Record Card Spending</h2>
+    <p class="muted">This records an internal project entry; it does not process a real-world card payment.</p>
+    <form id="spendForm">
+      <label for="spendCard">Active Card</label>
+      <select id="spendCard" required><option value="">Load your cards first</option></select>
+      <label for="spendAmount">Purchase Amount (INR)</label>
+      <input id="spendAmount" type="number" min="0.01" step="0.01" required>
+      <label for="spendDescription">Description</label>
+      <input id="spendDescription" maxlength="200" required>
+      <button id="spendBtn" style="margin-top:12px">Record Spending</button>
+    </form>
+    <div id="spendMessage" class="notice hidden" role="status"></div>
+  </div>
 
-<div class="panel"><h2>Spending History</h2>
-<button class="secondary" onclick="loadSpendingHistory()">Refresh Spending History</button>
-<div id="spendingHistory"></div>
-</div>
+  <div class="panel">
+    <h2>Spending History</h2>
+    <button class="secondary" onclick="loadSpendingHistory()">Refresh Spending History</button>
+    <div id="spendingHistory"></div>
+  </div>
 </section>
 
 <section id="bills" class="hidden">
-<div class="panel"><h2>My Weekly Card Bills</h2>
-<button onclick="loadBills()">Refresh Bills</button>
-<div id="billList"></div>
-</div>
+  <div class="panel">
+    <h2>My Weekly Card Bills</h2>
+    <button onclick="loadBills()">Refresh Bills</button>
+    <div id="billList"></div>
+  </div>
 
-<div class="panel"><h2>Submit Bill Payment</h2>
-<p class="muted">Submit payment details after arranging payment through the method approved by your organization. A President must verify the submission before it counts as paid.</p>
-<form id="billPaymentForm">
-<label for="billSelect">Bill</label>
-<select id="billSelect" required><option value="">Load your bills first</option></select>
-<label for="billPayAmount">Payment Amount (INR)</label>
-<input id="billPayAmount" type="number" min="0.01" step="0.01" required>
-<label for="paymentMethod">Payment Method</label>
-<select id="paymentMethod">
-<option value="manual">Manual</option>
-<option value="bank_transfer">Bank Transfer</option>
-<option value="upi">UPI</option>
-<option value="other">Other</option>
-</select>
-<label for="paymentReference">Reference / Note</label>
-<input id="paymentReference" maxlength="200">
-<button id="submitBillPaymentBtn" style="margin-top:12px">Submit Payment for Review</button>
-</form>
-<div id="billPaymentMessage" class="notice hidden" role="status"></div>
-</div>
+  <div class="panel">
+    <h2>Submit Bill Payment</h2>
+    <p class="muted">Submit a payment record for review. A submission is not proof of payment; an authorized reviewer must verify it.</p>
+    <form id="billPaymentForm">
+      <label for="billSelect">Bill</label>
+      <select id="billSelect" required><option value="">Load your bills first</option></select>
+      <label for="billPayAmount">Payment Amount (INR)</label>
+      <input id="billPayAmount" type="number" min="0.01" step="0.01" required>
+      <label for="paymentMethod">Payment Method</label>
+      <select id="paymentMethod">
+        <option value="manual">Manual</option>
+        <option value="bank_transfer">Bank Transfer</option>
+        <option value="upi">UPI</option>
+        <option value="other">Other</option>
+      </select>
+      <label for="paymentReference">Reference / Note</label>
+      <input id="paymentReference" maxlength="200">
+      <button id="submitBillPaymentBtn" style="margin-top:12px">Submit for Review</button>
+    </form>
+    <div id="billPaymentMessage" class="notice hidden" role="status"></div>
+  </div>
 
-<div class="panel"><h2>My Bill Payment History</h2>
-<button class="secondary" onclick="loadPaymentHistory()">Refresh Payment History</button>
-<div id="paymentHistory"></div>
-</div>
+  <div class="panel">
+    <h2>My Bill Payment History</h2>
+    <button class="secondary" onclick="loadPaymentHistory()">Refresh Payment History</button>
+    <div id="paymentHistory"></div>
+  </div>
 
-<div id="presidentBillReview" class="panel hidden">
-<h2>President — Bill Payment Reviews</h2>
-<p class="muted">Verify payments only after confirming the actual payment independently.</p>
-<button onclick="loadPaymentReviews()">Load Pending Reviews</button>
-<div id="paymentReviews"></div>
-</div>
+  <div id="presidentBillReview" class="panel hidden">
+    <h2>President — Bill Payment Reviews</h2>
+    <p class="muted">Verify a payment only after independently checking the relevant evidence.</p>
+    <button onclick="loadPaymentReviews()">Load Pending Reviews</button>
+    <div id="paymentReviews"></div>
+  </div>
 
-<div id="presidentCardReview" class="panel hidden">
-<h2>President — Card Requests</h2>
-<button onclick="loadCardReviews()">Load Pending Card Requests</button>
-<div id="cardReviews"></div>
-</div>
+  <div id="presidentCardReview" class="panel hidden">
+    <h2>President — Card Request Reviews</h2>
+    <p>Requires a separate President-wide review endpoint. The member's own card list is not an all-member review queue.</p>
+  </div>
 </section>
 </main>
 
-<footer>Classic Empire Ltd. · Head Office: Chakla Ghat, Kishanganj, Bihar, India</footer>
+<footer>Classic Empire Ltd. · Chakla Ghat, Kishanganj, Bihar, India</footer>
 
-<script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <script>
 "use strict";
 
 const SUPABASE_URL = "https://wcyozectzscqwvtzetkc.supabase.co";
 const SUPABASE_KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
-
 const LOGIN_FUNCTION = "member-login";
 const REGISTRATION_FUNCTION = "member-register";
 
@@ -305,19 +359,18 @@ const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
 
 let currentUser = null;
 let currentProfile = null;
-let loadedCardTypes = [];
 let loadedMyCards = [];
 let loadedBills = [];
+
+const $ = id => document.getElementById(id);
 
 function show(id) {
   const sections = [
     "home","members","updates","currency","salaries","login",
     "register","about","dashboard","cards","bills"
   ];
-  sections.forEach(s => {
-    document.getElementById(s).classList.add("hidden");
-  });
-  document.getElementById(id).classList.remove("hidden");
+  sections.forEach(s => $(s).classList.add("hidden"));
+  $(id).classList.remove("hidden");
 
   if (id === "cards" && currentUser) {
     loadCards();
@@ -332,126 +385,96 @@ function show(id) {
 }
 
 function message(id, text) {
-  const el = document.getElementById(id);
-  el.textContent = text;
-  el.classList.remove("hidden");
+  $(id).textContent = text;
+  $(id).classList.remove("hidden");
 }
-
 function clearMessage(id) {
-  const el = document.getElementById(id);
-  el.textContent = "";
-  el.classList.add("hidden");
+  $(id).textContent = "";
+  $(id).classList.add("hidden");
 }
-
 function money(value, currency = "INR") {
   const n = Number(value);
   if (!Number.isFinite(n)) return "—";
   return currency + " " + n.toLocaleString("en-IN", {
-    minimumFractionDigits: 2,
-    maximumFractionDigits: 2
+    minimumFractionDigits: 2, maximumFractionDigits: 2
   });
 }
-
 function dateText(value) {
   if (!value) return "—";
   const d = new Date(value);
   return Number.isNaN(d.getTime()) ? String(value) : d.toLocaleString("en-IN");
 }
-
 function addCell(row, value) {
   const td = document.createElement("td");
   td.textContent = value == null ? "—" : String(value);
   row.appendChild(td);
 }
-
 function makeTable(containerId, headers, rows) {
-  const root = document.getElementById(containerId);
+  const root = $(containerId);
   root.replaceChildren();
-
-  if (!rows || rows.length === 0) {
+  if (!rows || !rows.length) {
     root.textContent = "No records found.";
     return;
   }
-
   const wrap = document.createElement("div");
   wrap.className = "tablewrap";
   const table = document.createElement("table");
   const thead = document.createElement("thead");
-  const hr = document.createElement("tr");
+  const headRow = document.createElement("tr");
   headers.forEach(h => {
     const th = document.createElement("th");
     th.textContent = h;
-    hr.appendChild(th);
+    headRow.appendChild(th);
   });
-  thead.appendChild(hr);
+  thead.appendChild(headRow);
   table.appendChild(thead);
-
   const tbody = document.createElement("tbody");
   rows.forEach(values => {
     const tr = document.createElement("tr");
     values.forEach(v => addCell(tr, v));
     tbody.appendChild(tr);
   });
-
   table.appendChild(tbody);
   wrap.appendChild(table);
   root.appendChild(wrap);
 }
 
-function extractData(result) {
-  if (!result) return null;
-  return result.data ?? result;
+function isPresident() {
+  return String(currentProfile?.post || "").trim().toLowerCase() === "president";
 }
-
+function togglePresidentPanels() {
+  const visible = Boolean(currentUser && isPresident());
+  $("presidentBillReview").classList.toggle("hidden", !visible);
+  $("presidentCardReview").classList.toggle("hidden", !visible);
+}
+function extractData(result) {
+  return result?.data ?? result ?? null;
+}
 function functionErrorMessage(error, data) {
   if (data && typeof data === "object" && data.error) return data.error;
-  if (error && error.message) return error.message;
-  return "Request failed. Check the Edge Function logs.";
+  return error?.message || "Request failed. Check Edge Function logs.";
 }
-
 async function invokeFunction(name, body = {}) {
   if (!currentUser) throw new Error("Please log in first.");
-
   const { data, error } = await db.functions.invoke(name, { body });
-
   if (error) {
     let detail = error.message || "Edge Function request failed.";
     try {
       if (error.context && typeof error.context.json === "function") {
-        const payload = await error.context.json();
-        detail = functionErrorMessage(error, payload);
+        detail = functionErrorMessage(error, await error.context.json());
       }
     } catch (_) {}
     throw new Error(detail);
   }
-
   const result = extractData(data);
-  if (result && result.success === false) {
+  if (result?.success === false) {
     throw new Error(result.error || result.message || "Request failed.");
   }
   return result;
 }
 
-function requireLogin() {
-  if (!currentUser) {
-    show("login");
-    throw new Error("Please log in first.");
-  }
-}
-
-function isPresident() {
-  return String(currentProfile?.post || "").trim().toLowerCase() === "president";
-}
-
-function togglePresidentPanels() {
-  const visible = Boolean(currentUser && isPresident());
-  document.getElementById("presidentBillReview").classList.toggle("hidden", !visible);
-  document.getElementById("presidentCardReview").classList.toggle("hidden", !visible);
-}
-
 async function verifyProfile() {
   const { data: auth, error: authError } = await db.auth.getUser();
-
   if (authError || !auth.user) {
     currentUser = null;
     currentProfile = null;
@@ -487,42 +510,35 @@ async function verifyProfile() {
 
   currentUser = auth.user;
   currentProfile = data;
-
-  document.getElementById("profile").textContent =
+  $("profile").textContent =
     `${data.full_name} | ${data.account_number} | ${data.post} | ${data.status}`;
-
   togglePresidentPanels();
   show("dashboard");
   await loadWallet();
 }
 
-document.getElementById("loginForm").addEventListener("submit", async e => {
+$("loginForm").addEventListener("submit", async e => {
   e.preventDefault();
-  const btn = document.getElementById("loginBtn");
+  const btn = $("loginBtn");
   btn.disabled = true;
   message("loginMessage", "Signing in...");
-
   try {
     const { data, error } = await db.functions.invoke(LOGIN_FUNCTION, {
       body: {
-        account_number: document.getElementById("account").value.trim(),
-        password: document.getElementById("password").value
+        account_number: $("account").value.trim(),
+        password: $("password").value
       }
     });
-
     if (error) throw error;
-
     const session = data?.session || data?.data?.session || data;
     if (!session?.access_token || !session?.refresh_token) {
       throw new Error("Login function did not return a valid session.");
     }
-
     const { error: sessionError } = await db.auth.setSession({
       access_token: session.access_token,
       refresh_token: session.refresh_token
     });
     if (sessionError) throw sessionError;
-
     clearMessage("loginMessage");
     await verifyProfile();
   } catch (err) {
@@ -532,12 +548,11 @@ document.getElementById("loginForm").addEventListener("submit", async e => {
   }
 });
 
-document.getElementById("registerForm").addEventListener("submit", async e => {
+$("registerForm").addEventListener("submit", async e => {
   e.preventDefault();
-  const btn = document.getElementById("registerBtn");
-  const password = document.getElementById("regPassword").value;
-
-  if (password !== document.getElementById("regConfirm").value) {
+  const btn = $("registerBtn");
+  const password = $("regPassword").value;
+  if (password !== $("regConfirm").value) {
     message("registerMessage", "Passwords do not match.");
     return;
   }
@@ -545,24 +560,21 @@ document.getElementById("registerForm").addEventListener("submit", async e => {
     message("registerMessage", "Password must be at least 8 characters.");
     return;
   }
-
   btn.disabled = true;
   message("registerMessage", "Submitting registration...");
-
   try {
     const { data, error } = await db.functions.invoke(REGISTRATION_FUNCTION, {
       body: {
-        full_name: document.getElementById("regName").value.trim(),
-        email: document.getElementById("regEmail").value.trim(),
+        full_name: $("regName").value.trim(),
+        email: $("regEmail").value.trim(),
         password,
-        requested_post: document.getElementById("regPost").value
+        requested_post: $("regPost").value
       }
     });
     if (error) throw error;
-
     message("registerMessage",
-      data?.message || "Registration request submitted. Wait for administrator review.");
-    document.getElementById("registerForm").reset();
+      data?.message || "Registration submitted. Wait for administrator review.");
+    $("registerForm").reset();
   } catch (err) {
     message("registerMessage", "Registration failed: " + (err.message || "Unknown error"));
   } finally {
@@ -576,14 +588,19 @@ async function logout() {
   currentProfile = null;
   loadedMyCards = [];
   loadedBills = [];
-  document.getElementById("loginForm").reset();
+  $("profile").textContent = "Please log in to view your account.";
+  $("balanceCD").textContent = "—";
+  $("balanceINR").textContent = "—";
+  togglePresidentPanels();
   show("home");
 }
 
 async function loadWallet() {
-  if (!currentUser) return;
+  if (!currentUser) {
+    message("walletMessage", "Please log in first.");
+    return;
+  }
   message("walletMessage", "Loading wallet...");
-
   const { data, error } = await db.from("wallet_accounts")
     .select("balance_cd,balance_inr")
     .eq("user_id", currentUser.id)
@@ -594,47 +611,41 @@ async function loadWallet() {
     return;
   }
   if (!data) {
-    document.getElementById("balanceCD").textContent = "—";
-    document.getElementById("balanceINR").textContent = "—";
+    $("balanceCD").textContent = "—";
+    $("balanceINR").textContent = "—";
     message("walletMessage", "No wallet record found.");
     return;
   }
-
-  document.getElementById("balanceCD").textContent = money(data.balance_cd, "CD");
-  document.getElementById("balanceINR").textContent = money(data.balance_inr, "INR");
-  message("walletMessage", "Wallet record loaded.");
+  $("balanceCD").textContent = money(data.balance_cd, "CD");
+  $("balanceINR").textContent = money(data.balance_inr, "INR");
+  message("walletMessage", "Wallet loaded.");
   await loadTransactions();
 }
 
-document.getElementById("transferForm").addEventListener("submit", async e => {
+$("transferForm").addEventListener("submit", async e => {
   e.preventDefault();
   if (!currentUser) { show("login"); return; }
-
-  const btn = document.getElementById("transferBtn");
+  const btn = $("transferBtn");
   btn.disabled = true;
   message("transferMessage", "Processing transfer...");
-
   try {
-    const amount = Number(document.getElementById("amount").value);
+    const amount = Number($("amount").value);
     if (!Number.isFinite(amount) || amount <= 0) {
       throw new Error("Enter a positive amount.");
     }
-
     const { data, error } = await db.rpc("transfer_wallet", {
-      p_recipient_account_number: document.getElementById("recipient").value.trim(),
-      p_currency: document.getElementById("currencySelect").value,
+      p_recipient_account_number: $("recipient").value.trim(),
+      p_currency: $("currencySelect").value,
       p_amount: amount,
-      p_description: document.getElementById("description").value.trim()
+      p_description: $("description").value.trim()
     });
-
     if (error) throw error;
-    if (data && data.success === false) throw new Error(data.error || "Transfer failed.");
-
-    message("transferMessage", "Transfer request processed. Refresh wallet and history to confirm.");
-    document.getElementById("transferForm").reset();
+    if (data?.success === false) throw new Error(data.error || "Transfer failed.");
+    message("transferMessage", "Transfer processed. Refresh history to confirm.");
+    $("transferForm").reset();
     await loadWallet();
   } catch (err) {
-    message("transferMessage", "Transfer failed: " + (err.message || "Unknown error"));
+    message("transferMessage", "Transfer failed: " + err.message);
   } finally {
     btn.disabled = false;
   }
@@ -642,10 +653,8 @@ document.getElementById("transferForm").addEventListener("submit", async e => {
 
 async function loadTransactions() {
   if (!currentUser) return;
-  const tbody = document.getElementById("historyRows");
-  tbody.replaceChildren();
+  $("historyRows").replaceChildren();
   message("historyMessage", "Loading transaction history...");
-
   const { data, error } = await db.from("wallet_transactions")
     .select("created_at,transaction_type,amount,currency,status,transaction_code")
     .eq("user_id", currentUser.id)
@@ -660,16 +669,14 @@ async function loadTransactions() {
     message("historyMessage", "No transactions found.");
     return;
   }
-
-  document.getElementById("historyMessage").textContent = "Latest transactions";
+  $("historyMessage").textContent = "Latest transactions";
   data.forEach(t => {
     const tr = document.createElement("tr");
     [
-      dateText(t.created_at), t.transaction_type,
-      t.amount == null ? "—" : String(t.amount),
+      dateText(t.created_at), t.transaction_type, t.amount,
       t.currency, t.status, t.transaction_code
     ].forEach(v => addCell(tr, v));
-    tbody.appendChild(tr);
+    $("historyRows").appendChild(tr);
   });
 }
 
@@ -679,81 +686,61 @@ async function loadCards() {
     message("cardMessage", "Please log in to view card types.");
     return;
   }
-
-  const root = document.getElementById("cardTypes");
-  root.replaceChildren();
+  $("cardTypes").replaceChildren();
   message("cardMessage", "Loading card types...");
-
   try {
     const result = await invokeFunction("get-card-types");
-    loadedCardTypes = Array.isArray(result?.cards) ? result.cards : [];
-
-    if (!loadedCardTypes.length) {
-      message("cardMessage", "No active card types were returned.");
+    const cards = Array.isArray(result?.cards) ? result.cards : [];
+    if (!cards.length) {
+      message("cardMessage", "No active card types returned.");
       return;
     }
-
-    document.getElementById("cardMessage").textContent =
-      "Purchase currency: CD · Spending and bills: INR";
-
-    loadedCardTypes.forEach(card => {
+    $("cardMessage").textContent = "Purchase currency: CD · Spending and bills: INR";
+    cards.forEach(card => {
       const box = document.createElement("div");
       box.className = "card";
-
       const h = document.createElement("h3");
       h.textContent = card.name || card.code || "Empire Card";
       box.appendChild(h);
-
-      const price = document.createElement("p");
-      price.textContent = card.purchasable
-        ? "Purchase price: " + money(card.purchase_price_cd, "CD")
-        : "Not available for purchase";
-      box.appendChild(price);
-
-      const discount = document.createElement("p");
-      discount.textContent = "Discount: " + Number(card.discount_percent || 0) + "%";
-      box.appendChild(discount);
-
-      const limit = document.createElement("p");
-      limit.textContent = card.weekly_limit_inr == null
-        ? "Weekly spending limit: Unlimited"
-        : "Weekly spending limit: " + money(card.weekly_limit_inr, "INR");
-      box.appendChild(limit);
-
-      const waiver = document.createElement("p");
-      waiver.textContent = "Weekly waiver: " + money(card.weekly_waiver_inr || 0, "INR");
-      box.appendChild(waiver);
-
+      const details = [
+        card.purchasable
+          ? "Purchase price: " + money(card.purchase_price_cd, "CD")
+          : "Not available for direct purchase",
+        "Discount: " + Number(card.discount_percent || 0) + "%",
+        card.weekly_limit_inr == null
+          ? "Weekly limit: Unlimited"
+          : "Weekly limit: " + money(card.weekly_limit_inr, "INR"),
+        "Weekly waiver: " + money(card.weekly_waiver_inr || 0, "INR")
+      ];
+      details.forEach(t => {
+        const p = document.createElement("p");
+        p.textContent = t;
+        box.appendChild(p);
+      });
       const badge = document.createElement("span");
       badge.className = "pill";
       badge.textContent = card.purchasable ? "Request available" : "President discretion";
       box.appendChild(badge);
-
       const btn = document.createElement("button");
       btn.style.display = "block";
       btn.style.marginTop = "12px";
-      btn.textContent = card.purchasable ? "Request Card" : "Request President Review";
+      btn.textContent = "Request " + (card.code || "Card");
       btn.addEventListener("click", () => requestCard(card.code, btn));
       box.appendChild(btn);
-
-      root.appendChild(box);
+      $("cardTypes").appendChild(box);
     });
   } catch (err) {
     message("cardMessage", "Unable to load cards: " + err.message);
   }
 }
 
-async function requestCard(cardCode, btn) {
+async function requestCard(code, btn) {
   if (!currentUser) { show("login"); return; }
-  if (!confirm("Request " + cardCode + " Card? The request may need approval.")) return;
-
+  if (!confirm("Request " + code + " Card?")) return;
   btn.disabled = true;
   try {
-    const result = await invokeFunction("request-member-card", {
-      card_code: cardCode
-    });
-
-    alert(result?.message || "Card request submitted. Refresh My Cards to check its status.");
+    const result = await invokeFunction("request-member-card", { card_code: code });
+    alert(result?.message || "Request submitted. Refresh My Cards to check status.");
     await loadMyCards();
   } catch (err) {
     alert("Card request failed: " + err.message);
@@ -764,92 +751,67 @@ async function requestCard(cardCode, btn) {
 
 async function loadMyCards() {
   if (!currentUser) {
-    document.getElementById("myCards").textContent = "Please log in first.";
+    $("myCards").textContent = "Please log in first.";
     return;
   }
-
-  const root = document.getElementById("myCards");
-  root.replaceChildren();
-  const spendSelect = document.getElementById("spendCard");
-  spendSelect.replaceChildren(new Option("Select active card", ""));
-
+  $("myCards").replaceChildren();
+  $("spendCard").replaceChildren(new Option("Select active card", ""));
   try {
     const result = await invokeFunction("get-my-cards");
     loadedMyCards = Array.isArray(result?.cards) ? result.cards :
       Array.isArray(result?.data) ? result.data : [];
-
     if (!loadedMyCards.length) {
-      root.textContent = "No card requests or cards found.";
+      $("myCards").textContent = "No card requests or cards found.";
       return;
     }
-
     loadedMyCards.forEach(card => {
       const box = document.createElement("div");
       box.className = "card";
-
       const h = document.createElement("h3");
       h.textContent = card.card_code || card.card_name || "Empire Card";
       box.appendChild(h);
-
-      const status = document.createElement("p");
-      status.textContent = "Status: " + (card.status || "unknown") +
+      const p = document.createElement("p");
+      p.textContent = "Status: " + (card.status || "unknown") +
         " · Payment: " + (card.payment_status || "unknown");
-      box.appendChild(status);
-
+      box.appendChild(p);
       if (card.purchase_price_cd != null) {
         const price = document.createElement("p");
         price.textContent = "Price: " + money(card.purchase_price_cd, "CD");
         box.appendChild(price);
       }
-
       if (card.status === "pending") {
         const note = document.createElement("p");
-        note.className = "muted";
-        note.textContent = "Awaiting President review.";
+        note.textContent = "Awaiting review.";
         box.appendChild(note);
       }
-
       if (card.status === "approved" && card.payment_status === "unpaid") {
         const pay = document.createElement("button");
         pay.textContent = "Pay Card Price in CD";
         pay.addEventListener("click", () => payCardPrice(card.id, pay));
         box.appendChild(pay);
       }
-
-      if (card.status === "approved" && card.payment_status === "paid") {
-        const note = document.createElement("p");
-        note.className = "muted";
-        note.textContent = "Payment recorded. Awaiting activation.";
-        box.appendChild(note);
-      }
-
-      root.appendChild(box);
-
+      $("myCards").appendChild(box);
       if (card.status === "active" &&
-          (card.payment_status === "paid" || card.payment_status === "waived")) {
-        spendSelect.add(new Option(
+          ["paid", "waived"].includes(card.payment_status)) {
+        $("spendCard").add(new Option(
           (card.card_code || "Card") + " — " + String(card.id).slice(0, 8),
           card.id
         ));
       }
     });
   } catch (err) {
-    root.textContent = "Unable to load your cards: " + err.message;
+    $("myCards").textContent = "Unable to load cards: " + err.message;
   }
 }
 
 async function payCardPrice(cardId, btn) {
-  if (!confirm("Pay the card purchase price from your CD wallet?")) return;
+  if (!confirm("Pay the card purchase price from your internal CD wallet?")) return;
   btn.disabled = true;
-
   try {
-    const { data, error } = await db.rpc("pay_for_member_card", {
-      p_card_id: cardId
-    });
+    const { data, error } = await db.rpc("pay_for_member_card", { p_card_id: cardId });
     if (error) throw error;
-    if (data && data.success === false) throw new Error(data.error || "Payment failed.");
-
-    alert(data?.message || "Card payment request processed. Refresh cards to verify.");
+    if (data?.success === false) throw new Error(data.error || "Payment failed.");
+    alert(data?.message || "Payment processed. Refresh cards to verify.");
     await loadWallet();
     await loadMyCards();
   } catch (err) {
@@ -859,29 +821,23 @@ async function payCardPrice(cardId, btn) {
   }
 }
 
-/* RECORD CARD SPENDING */
-document.getElementById("spendForm").addEventListener("submit", async e => {
+/* SPENDING */
+$("spendForm").addEventListener("submit", async e => {
   e.preventDefault();
   if (!currentUser) { show("login"); return; }
-
-  const btn = document.getElementById("spendBtn");
+  const btn = $("spendBtn");
   btn.disabled = true;
   message("spendMessage", "Recording spending...");
-
   try {
-    const amount = Number(document.getElementById("spendAmount").value);
-    if (!Number.isFinite(amount) || amount <= 0) {
-      throw new Error("Enter a valid positive INR amount.");
-    }
-
+    const amount = Number($("spendAmount").value);
+    if (!Number.isFinite(amount) || amount <= 0) throw new Error("Enter a positive INR amount.");
     const result = await invokeFunction("record-card-spending", {
-      p_member_card_id: document.getElementById("spendCard").value,
+      p_member_card_id: $("spendCard").value,
       p_amount_inr: amount,
-      p_description: document.getElementById("spendDescription").value.trim()
+      p_description: $("spendDescription").value.trim()
     });
-
-    message("spendMessage", result?.message || "Spending request processed. Refresh history to confirm.");
-    document.getElementById("spendForm").reset();
+    message("spendMessage", result?.message || "Spending recorded. Refresh history to confirm.");
+    $("spendForm").reset();
     await loadMyCards();
     await loadSpendingHistory();
     await loadBills();
@@ -893,18 +849,16 @@ document.getElementById("spendForm").addEventListener("submit", async e => {
 });
 
 async function loadSpendingHistory() {
-  const root = document.getElementById("spendingHistory");
+  const root = $("spendingHistory");
   root.replaceChildren();
   if (!currentUser) { root.textContent = "Please log in first."; return; }
-
   try {
     const result = await invokeFunction("get-card-spending-history");
     const rows = Array.isArray(result?.spending) ? result.spending :
       Array.isArray(result?.records) ? result.records :
       Array.isArray(result?.data) ? result.data : [];
-
     makeTable("spendingHistory",
-      ["Date","Amount (INR)","Discount %","Discount (INR)","Billed (INR)","Status","Description"],
+      ["Date","Amount INR","Discount %","Discount INR","Billed INR","Status","Description"],
       rows.map(x => [
         dateText(x.created_at), x.amount_inr, x.discount_percent,
         x.discount_amount_inr, x.billed_amount_inr,
@@ -918,35 +872,26 @@ async function loadSpendingHistory() {
 
 /* WEEKLY BILLS */
 async function loadBills() {
-  if (!currentUser) {
-    document.getElementById("billList").textContent = "Please log in first.";
-    return;
-  }
-
-  const root = document.getElementById("billList");
-  root.replaceChildren();
-  const billSelect = document.getElementById("billSelect");
-  billSelect.replaceChildren(new Option("Select bill", ""));
-
+  if (!currentUser) { $("billList").textContent = "Please log in first."; return; }
+  $("billList").replaceChildren();
+  $("billSelect").replaceChildren(new Option("Select bill", ""));
   try {
     const result = await invokeFunction("get-my-card-bills");
     loadedBills = Array.isArray(result?.bills) ? result.bills :
       Array.isArray(result?.data) ? result.data : [];
-
     if (!loadedBills.length) {
-      root.textContent = "No weekly bills found yet.";
+      $("billList").textContent = "No weekly bills found yet.";
       return;
     }
-
     loadedBills.forEach(bill => {
       const box = document.createElement("div");
       box.className = "card";
       const h = document.createElement("h3");
-      h.textContent = "Weekly Bill · " + (bill.week_start || "—") + " to " + (bill.week_end || "—");
+      h.textContent = "Weekly Bill · " + (bill.week_start || "—") +
+        " to " + (bill.week_end || "—");
       box.appendChild(h);
-
       [
-        "Gross amount: " + money(bill.gross_amount_inr, "INR"),
+        "Gross: " + money(bill.gross_amount_inr, "INR"),
         "Waiver: " + money(bill.waiver_amount_inr, "INR"),
         "Payable: " + money(bill.payable_amount_inr, "INR"),
         "Paid: " + money(bill.paid_amount_inr, "INR"),
@@ -956,65 +901,55 @@ async function loadBills() {
         p.textContent = t;
         box.appendChild(p);
       });
-
-      root.appendChild(box);
-
+      $("billList").appendChild(box);
       if (bill.status !== "paid") {
-        billSelect.add(new Option(
+        $("billSelect").add(new Option(
           `${bill.week_start}–${bill.week_end} | Due ${bill.payable_amount_inr} INR`,
           bill.id
         ));
       }
     });
   } catch (err) {
-    root.textContent = "Unable to load bills: " + err.message;
+    $("billList").textContent = "Unable to load bills: " + err.message;
   }
 }
 
-document.getElementById("billPaymentForm").addEventListener("submit", async e => {
+$("billPaymentForm").addEventListener("submit", async e => {
   e.preventDefault();
   if (!currentUser) { show("login"); return; }
-
-  const btn = document.getElementById("submitBillPaymentBtn");
+  const btn = $("submitBillPaymentBtn");
   btn.disabled = true;
   message("billPaymentMessage", "Submitting payment for review...");
-
   try {
-    const amount = Number(document.getElementById("billPayAmount").value);
-    if (!Number.isFinite(amount) || amount <= 0) {
-      throw new Error("Enter a valid positive amount.");
-    }
-
+    const amount = Number($("billPayAmount").value);
+    if (!Number.isFinite(amount) || amount <= 0) throw new Error("Enter a positive amount.");
     const result = await invokeFunction("submit-card-bill-payment", {
-      p_bill_id: document.getElementById("billSelect").value,
+      p_bill_id: $("billSelect").value,
       p_amount_inr: amount,
-      p_payment_method: document.getElementById("paymentMethod").value,
-      p_reference_note: document.getElementById("paymentReference").value.trim()
+      p_payment_method: $("paymentMethod").value,
+      p_reference_note: $("paymentReference").value.trim()
     });
-
-    message("billPaymentMessage", result?.message || "Payment submitted for President review.");
-    document.getElementById("billPaymentForm").reset();
+    message("billPaymentMessage", result?.message || "Submitted for review.");
+    $("billPaymentForm").reset();
     await loadPaymentHistory();
     await loadBills();
   } catch (err) {
-    message("billPaymentMessage", "Payment submission failed: " + err.message);
+    message("billPaymentMessage", "Submission failed: " + err.message);
   } finally {
     btn.disabled = false;
   }
 });
 
 async function loadPaymentHistory() {
-  const root = document.getElementById("paymentHistory");
+  const root = $("paymentHistory");
   root.replaceChildren();
   if (!currentUser) { root.textContent = "Please log in first."; return; }
-
   try {
     const result = await invokeFunction("get-card-bill-payment-history");
     const rows = Array.isArray(result?.payments) ? result.payments :
       Array.isArray(result?.data) ? result.data : [];
-
     makeTable("paymentHistory",
-      ["Submitted","Amount (INR)","Method","Status","Reference","Reviewed","Review Note"],
+      ["Submitted","Amount INR","Method","Status","Reference","Reviewed","Review Note"],
       rows.map(x => [
         dateText(x.submitted_at), x.amount_inr, x.payment_method,
         x.status, x.reference_note, dateText(x.reviewed_at), x.review_note
@@ -1025,37 +960,27 @@ async function loadPaymentHistory() {
   }
 }
 
-/* PRESIDENT BILL PAYMENT REVIEWS */
 async function loadPaymentReviews() {
   if (!isPresident()) {
     message("paymentReviews", "President access required.");
     return;
   }
-
-  const root = document.getElementById("paymentReviews");
+  const root = $("paymentReviews");
   root.replaceChildren();
-
   try {
     const result = await invokeFunction("get-card-bill-payment-reviews", {
       p_status: "pending"
     });
-
     const rows = Array.isArray(result?.payments) ? result.payments :
       Array.isArray(result?.reviews) ? result.reviews :
       Array.isArray(result?.data) ? result.data : [];
-
     if (!rows.length) {
       root.textContent = "No pending payment reviews.";
       return;
     }
-
     rows.forEach(payment => {
       const box = document.createElement("div");
       box.className = "card";
-      const h = document.createElement("h3");
-      h.textContent = "Payment Review";
-      box.appendChild(h);
-
       [
         "Payment ID: " + payment.id,
         "Bill ID: " + payment.bill_id,
@@ -1068,18 +993,15 @@ async function loadPaymentReviews() {
         p.textContent = t;
         box.appendChild(p);
       });
-
       const note = document.createElement("input");
       note.placeholder = "Optional review note";
       note.maxLength = 200;
       box.appendChild(note);
-
       const verify = document.createElement("button");
       verify.textContent = "Verify Payment";
       verify.addEventListener("click", () =>
         reviewBillPayment(payment.id, "verified", note.value, verify));
       box.appendChild(verify);
-
       const reject = document.createElement("button");
       reject.className = "secondary";
       reject.style.marginLeft = "8px";
@@ -1087,7 +1009,6 @@ async function loadPaymentReviews() {
       reject.addEventListener("click", () =>
         reviewBillPayment(payment.id, "rejected", note.value, reject));
       box.appendChild(reject);
-
       root.appendChild(box);
     });
   } catch (err) {
@@ -1096,18 +1017,15 @@ async function loadPaymentReviews() {
 }
 
 async function reviewBillPayment(paymentId, decision, note, btn) {
-  const action = decision === "verified" ? "verify" : "reject";
-  if (!confirm("Are you sure you want to " + action + " this payment?")) return;
+  if (!confirm("Confirm " + decision + " for this payment?")) return;
   btn.disabled = true;
-
   try {
     const result = await invokeFunction("review-card-bill-payment", {
       p_payment_id: paymentId,
       p_decision: decision,
       p_review_note: note
     });
-
-    alert(result?.message || "Review submitted.");
+    alert(result?.message || "Review processed.");
     await loadPaymentReviews();
   } catch (err) {
     alert("Review failed: " + err.message);
@@ -1116,38 +1034,10 @@ async function reviewBillPayment(paymentId, decision, note, btn) {
   }
 }
 
-/* PRESIDENT CARD REQUEST REVIEWS */
-async function loadCardReviews() {
-  if (!isPresident()) {
-    message("cardReviews", "President access required.");
-    return;
-  }
-
-  const root = document.getElementById("cardReviews");
-  root.replaceChildren();
-
-  try {
-    const result = await invokeFunction("get-my-cards");
-    const rows = Array.isArray(result?.cards) ? result.cards :
-      Array.isArray(result?.data) ? result.data : [];
-
-    // This endpoint may return only the current President's own cards.
-    // Do not treat it as an all-members review queue.
-    root.textContent =
-      "Your existing get-my-cards endpoint is for the signed-in member. " +
-      "A separate President-wide card-review endpoint is required to list other members' requests. " +
-      "Use the Admin Panel / review-member-card workflow after that endpoint is verified.";
-  } catch (err) {
-    root.textContent = "Unable to check card requests: " + err.message;
-  }
-}
-
 (async function init() {
   try {
     const { data, error } = await db.auth.getSession();
-    if (!error && data.session) {
-      await verifyProfile();
-    }
+    if (!error && data.session) await verifyProfile();
   } catch (_) {
     show("home");
   }
