@@ -6,78 +6,73 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#FFFFFF">
 <title>Classic Empire Ltd. | Official Website</title>
+
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+<script src="https://unpkg.com/html5-qrcode"></script>
+
 <style>
-:root{
-  --bg:#FFFFFF;
-  --panel:#F8F8F8;
-  --gold:#D4AF37;
-  --bright:#FFD700;
-  --text:#111111;
-  --muted:#666666;
-  --line:#E5D7A4;
+:root {
+  --bg:#fff; --panel:#f8f8f8; --gold:#d4af37;
+  --bright:#ffd700; --text:#111; --muted:#666; --line:#e5d7a4;
 }
-*{box-sizing:border-box}
-body{
-  margin:0;background:var(--bg);color:var(--text);
-  font-family:Arial,sans-serif;
+* { box-sizing:border-box; }
+body { margin:0; background:var(--bg); color:var(--text); font-family:Arial,sans-serif; }
+header {
+  display:flex; align-items:center; gap:14px; padding:15px;
+  background:#fff; border-bottom:2px solid var(--gold);
+  position:sticky; top:0; z-index:10;
 }
-header{
-  display:flex;align-items:center;gap:14px;padding:15px;
-  background:#fff;border-bottom:2px solid var(--gold);
-  position:sticky;top:0;z-index:10;
+.logo { width:55px; height:55px; object-fit:contain; }
+.brand { font-size:19px; font-weight:bold; color:#8b6b00; }
+.small,.muted { font-size:13px; color:var(--muted); }
+nav { display:flex; gap:8px; flex-wrap:wrap; padding:12px; border-bottom:1px solid var(--line); }
+button {
+  padding:11px 14px; border:1px solid var(--gold); border-radius:7px;
+  background:var(--gold); color:#111; font-weight:bold; cursor:pointer;
 }
-.logo{width:55px;height:55px;object-fit:contain}
-.brand{font-size:19px;font-weight:bold;color:#8B6B00}
-.small,.muted{font-size:13px;color:var(--muted)}
-nav{
-  display:flex;gap:8px;flex-wrap:wrap;padding:12px;
-  background:#fff;border-bottom:1px solid var(--line);
+button:hover { background:var(--bright); }
+button:disabled { opacity:.5; cursor:wait; }
+.secondary { background:#fff; color:#775b00; }
+main { max-width:1100px; margin:auto; padding:16px; }
+.panel,.hero,.stat {
+  background:var(--panel); border:1px solid var(--line);
+  border-radius:12px; padding:17px; margin-bottom:14px;
 }
-button{
-  padding:11px 14px;border:1px solid var(--gold);
-  border-radius:7px;background:var(--gold);color:#111;
-  font-weight:bold;cursor:pointer;
+.hero { text-align:center; padding:30px 15px; background:#fff; }
+h1,h2,h3 { color:#8b6b00; }
+p { line-height:1.5; }
+.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; }
+label { display:block; margin:12px 0 6px; font-weight:bold; }
+input,select,textarea {
+  width:100%; padding:12px; border:1px solid #d8c477;
+  border-radius:7px; background:#fff; color:#111; font:inherit;
 }
-button:hover{background:var(--bright)}
-button:disabled{opacity:.5;cursor:wait}
-.secondary{background:#fff;color:#775B00}
-main{max-width:1100px;margin:auto;padding:16px}
-.panel,.hero,.stat{
-  background:var(--panel);border:1px solid var(--line);
-  border-radius:12px;padding:17px;margin-bottom:14px;
+textarea { min-height:70px; }
+.hidden { display:none!important; }
+.notice {
+  padding:12px; background:#fff8db; border:1px solid var(--line);
+  border-radius:7px; margin:12px 0; overflow-wrap:anywhere;
 }
-.hero{text-align:center;padding:30px 15px;background:#fff}
-h1,h2,h3{color:#8B6B00}
-p{line-height:1.5}
-.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(190px,1fr));gap:12px}
-label{display:block;margin:12px 0 6px;font-weight:bold}
-input,select,textarea{
-  width:100%;padding:12px;border:1px solid #D8C477;
-  border-radius:7px;background:#fff;color:#111;font:inherit;
-}
-textarea{min-height:70px}
-.hidden{display:none!important}
-.notice{
-  padding:12px;background:#FFF8DB;border:1px solid var(--line);
-  border-radius:7px;margin:12px 0;overflow-wrap:anywhere;
-}
-.amount{font-size:23px;color:#8B6B00;font-weight:bold;overflow-wrap:anywhere}
-.tablewrap{overflow-x:auto}
-table{width:100%;border-collapse:collapse;font-size:13px;background:#fff}
-th,td{text-align:left;padding:10px;border-bottom:1px solid var(--line);overflow-wrap:anywhere}
-th{background:#FFF4C2}
-.card{border:1px solid var(--gold);border-radius:12px;padding:15px;background:#fff;margin:9px 0}
-.pill{display:inline-block;padding:4px 8px;border:1px solid var(--gold);border-radius:20px;font-size:12px;color:#775B00}
-footer{text-align:center;padding:22px;border-top:1px solid var(--line);color:var(--muted);font-size:12px}
-hr{border:0;border-top:1px solid var(--line);margin:17px 0}
-.actions{display:flex;gap:8px;flex-wrap:wrap;margin-top:12px}
+.amount { font-size:23px; color:#8b6b00; font-weight:bold; overflow-wrap:anywhere; }
+.tablewrap { overflow-x:auto; }
+table { width:100%; border-collapse:collapse; font-size:13px; background:#fff; }
+th,td { text-align:left; padding:10px; border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
+th { background:#fff4c2; }
+.card { border:1px solid var(--gold); border-radius:12px; padding:15px; background:#fff; margin:9px 0; }
+.pill { display:inline-block; padding:4px 8px; border:1px solid var(--gold); border-radius:20px; font-size:12px; color:#775b00; }
+footer { text-align:center; padding:22px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
+hr { border:0; border-top:1px solid var(--line); margin:17px 0; }
+.actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
+.qr-center { display:flex; justify-content:center; align-items:center; padding:15px; min-height:40px; }
+#attendanceScanner { width:100%; max-width:500px; margin:12px auto; }
+#attendanceScanner video { max-width:100%; }
 </style>
 </head>
 <body>
+
 <header>
-  <img class="logo" src="classic-empire-logo.png"
-       alt="Classic Empire Ltd. logo"
+  <img class="logo" src="classic-empire-logo.png" alt="Classic Empire Ltd. logo"
        onerror="this.style.display='none'">
   <div>
     <div class="brand">CLASSIC EMPIRE LTD.</div>
@@ -93,7 +88,7 @@ hr{border:0;border-top:1px solid var(--line);margin:17px 0}
   <button onclick="show('salaries')">Salaries</button>
   <button onclick="show('login')">Member Login</button>
   <button onclick="show('register')">Registration</button>
-  <button onclick="show('dashboard')">Member Account</button>
+  <button onclick="openMemberAccount()">Member Account</button>
   <button onclick="show('cards')">Empire Cards</button>
   <button onclick="show('bills')">Card Bills</button>
   <button onclick="show('about')">About / Contact</button>
@@ -103,7 +98,7 @@ hr{border:0;border-top:1px solid var(--line);margin:17px 0}
 <section id="home">
   <div class="hero">
     <h1>Welcome to Classic Empire Ltd.</h1>
-    <p>Member accounts, Empire Wallet and Classic Empire Card services.</p>
+    <p>Member accounts, Empire Wallet, Classic Empire Cards and attendance services.</p>
     <div class="actions" style="justify-content:center">
       <button onclick="show('login')">Member Login</button>
       <button class="secondary" onclick="show('register')">Create Account</button>
@@ -111,8 +106,9 @@ hr{border:0;border-top:1px solid var(--line);margin:17px 0}
   </div>
   <div class="grid">
     <div class="stat"><h3>Member Accounts</h3><p>Authorized member access.</p></div>
-    <div class="stat"><h3>Empire Wallet</h3><p>View your internal CD and INR balances.</p></div>
+    <div class="stat"><h3>Empire Wallet</h3><p>View internal CD and INR balances.</p></div>
     <div class="stat"><h3>Empire Cards</h3><p>View card requests, spending and bills.</p></div>
+    <div class="stat"><h3>Attendance QR</h3><p>Secure member attendance check-in.</p></div>
   </div>
   <div class="panel">
     <h2>Important Notice</h2>
@@ -142,7 +138,7 @@ hr{border:0;border-top:1px solid var(--line);margin:17px 0}
       <div class="stat"><h3>Classic Dinar</h3><p>Code: CLD</p><p>Short code: CD</p><p>Symbol: د.ك</p></div>
       <div class="stat"><h3>Indian Rupee</h3><p>Code: INR</p><p>Symbol: ₹</p></div>
     </div>
-    <p class="muted">Card purchases use CD. Card spending and bills use INR, according to the configured card system.</p>
+    <p class="muted">Card purchases use CD. Card spending and bills use INR according to the configured card system.</p>
   </div>
 </section>
 
@@ -212,6 +208,51 @@ hr{border:0;border-top:1px solid var(--line);margin:17px 0}
       <button class="secondary" onclick="loadWallet()">Refresh Wallet</button>
       <button class="secondary" onclick="loadTransactions()">Refresh History</button>
       <button onclick="logout()">Logout</button>
+    </div>
+  </div>
+
+  <!-- Attendance QR -->
+  <div class="panel">
+    <h2>Attendance QR & My Attendance</h2>
+    <p class="muted">Attendance QR sessions expire after five minutes. Check-in requires an active member account.</p>
+
+    <div id="presidentQRControls" class="hidden">
+      <h3>President — Generate Attendance QR</h3>
+      <label for="attendanceSessionName">Session Name</label>
+      <input id="attendanceSessionName" maxlength="100" value="Member Attendance">
+      <button id="generateAttendanceQRBtn" type="button">Generate Attendance QR</button>
+    </div>
+
+    <div id="attendanceQRMessage" class="notice" role="status">Log in to use Attendance QR.</div>
+
+    <div id="attendanceQRDisplay" class="card hidden">
+      <h3>Current Attendance QR</h3>
+      <div id="attendanceQRCode" class="qr-center"></div>
+      <p id="attendanceQRExpiry" class="muted"></p>
+      <p class="muted">Keep this QR visible only during the attendance session.</p>
+    </div>
+
+    <hr>
+    <h3>Scan Attendance QR</h3>
+    <p class="muted">Allow camera access when prompted. Camera scanning requires HTTPS.</p>
+    <div class="actions">
+      <button id="startAttendanceScannerBtn" type="button">Start QR Scanner</button>
+      <button id="stopAttendanceScannerBtn" class="secondary" type="button">Stop Scanner</button>
+    </div>
+    <div id="attendanceScanner"></div>
+    <div id="attendanceCheckinMessage" class="notice hidden" role="status"></div>
+
+    <hr>
+    <h3>My Attendance History</h3>
+    <button id="refreshAttendanceBtn" class="secondary" type="button">Refresh Attendance</button>
+    <div id="attendanceHistoryMessage" class="notice">Log in to view your attendance.</div>
+    <div class="tablewrap">
+      <table>
+        <thead>
+          <tr><th>Date</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Method</th></tr>
+        </thead>
+        <tbody id="attendanceHistoryRows"></tbody>
+      </table>
     </div>
   </div>
 
@@ -299,7 +340,7 @@ hr{border:0;border-top:1px solid var(--line);margin:17px 0}
 
   <div class="panel">
     <h2>Submit Bill Payment</h2>
-    <p class="muted">Submit a payment record for review. A submission is not proof of payment; an authorized reviewer must verify it.</p>
+    <p class="muted">A submitted payment record is not proof of payment; an authorized reviewer must verify it.</p>
     <form id="billPaymentForm">
       <label for="billSelect">Bill</label>
       <select id="billSelect" required><option value="">Load your bills first</option></select>
@@ -334,7 +375,7 @@ hr{border:0;border-top:1px solid var(--line);margin:17px 0}
 
   <div id="presidentCardReview" class="panel hidden">
     <h2>President — Card Request Reviews</h2>
-    <p>Requires a separate President-wide review endpoint. The member's own card list is not an all-member review queue.</p>
+    <p>A separate President-wide card review endpoint is required for an all-member review queue.</p>
   </div>
 </section>
 </main>
@@ -361,6 +402,10 @@ let currentUser = null;
 let currentProfile = null;
 let loadedMyCards = [];
 let loadedBills = [];
+let attendanceScanner = null;
+let scannerRunning = false;
+let attendanceScanBusy = false;
+let attendanceQRExpiryTimer = null;
 
 const $ = id => document.getElementById(id);
 
@@ -382,8 +427,15 @@ function show(id) {
     loadPaymentHistory();
     togglePresidentPanels();
   }
+  if (id === "dashboard" && currentUser) {
+    togglePresidentPanels();
+    loadAttendanceHistory();
+  }
 }
-
+function openMemberAccount() {
+  if (currentUser) show("dashboard");
+  else show("login");
+}
 function message(id, text) {
   $(id).textContent = text;
   $(id).classList.remove("hidden");
@@ -438,7 +490,6 @@ function makeTable(containerId, headers, rows) {
   wrap.appendChild(table);
   root.appendChild(wrap);
 }
-
 function isPresident() {
   return String(currentProfile?.post || "").trim().toLowerCase() === "president";
 }
@@ -446,6 +497,7 @@ function togglePresidentPanels() {
   const visible = Boolean(currentUser && isPresident());
   $("presidentBillReview").classList.toggle("hidden", !visible);
   $("presidentCardReview").classList.toggle("hidden", !visible);
+  $("presidentQRControls").classList.toggle("hidden", !visible);
 }
 function extractData(result) {
   return result?.data ?? result ?? null;
@@ -473,6 +525,7 @@ async function invokeFunction(name, body = {}) {
   return result;
 }
 
+/* AUTHENTICATION */
 async function verifyProfile() {
   const { data: auth, error: authError } = await db.auth.getUser();
   if (authError || !auth.user) {
@@ -512,9 +565,11 @@ async function verifyProfile() {
   currentProfile = data;
   $("profile").textContent =
     `${data.full_name} | ${data.account_number} | ${data.post} | ${data.status}`;
+
   togglePresidentPanels();
   show("dashboard");
   await loadWallet();
+  await loadAttendanceHistory();
 }
 
 $("loginForm").addEventListener("submit", async e => {
@@ -583,6 +638,8 @@ $("registerForm").addEventListener("submit", async e => {
 });
 
 async function logout() {
+  await stopAttendanceScanner();
+  if (attendanceQRExpiryTimer) clearTimeout(attendanceQRExpiryTimer);
   await db.auth.signOut();
   currentUser = null;
   currentProfile = null;
@@ -591,10 +648,195 @@ async function logout() {
   $("profile").textContent = "Please log in to view your account.";
   $("balanceCD").textContent = "—";
   $("balanceINR").textContent = "—";
+  $("attendanceQRCode").replaceChildren();
+  $("attendanceQRDisplay").classList.add("hidden");
+  $("presidentQRControls").classList.add("hidden");
+  $("attendanceHistoryRows").replaceChildren();
   togglePresidentPanels();
   show("home");
 }
 
+/* ATTENDANCE QR */
+function attendanceMessage(id, text) {
+  message(id, text);
+}
+async function generateAttendanceQR() {
+  if (!currentUser || !currentProfile || !isPresident()) {
+    attendanceMessage("attendanceQRMessage", "Only the active President can generate an Attendance QR.");
+    return;
+  }
+  if (typeof QRCode === "undefined") {
+    attendanceMessage("attendanceQRMessage", "QR generator library did not load. Refresh the page and try again.");
+    return;
+  }
+
+  const btn = $("generateAttendanceQRBtn");
+  btn.disabled = true;
+  attendanceMessage("attendanceQRMessage", "Generating a new QR session...");
+
+  try {
+    const { data, error } = await db.rpc("create_attendance_qr_session", {
+      p_session_name: $("attendanceSessionName").value.trim() || "Member Attendance"
+    });
+    if (error) throw error;
+
+    const session = Array.isArray(data) ? data[0] : data;
+    if (!session?.qr_token || !session?.expires_at) {
+      throw new Error("QR session data was not returned.");
+    }
+
+    $("attendanceQRCode").replaceChildren();
+    $("attendanceQRDisplay").classList.remove("hidden");
+
+    new QRCode($("attendanceQRCode"), {
+      text: session.qr_token,
+      width: 220,
+      height: 220,
+      correctLevel: QRCode.CorrectLevel.M
+    });
+
+    $("attendanceQRExpiry").textContent = "Expires: " + dateText(session.expires_at);
+    attendanceMessage("attendanceQRMessage", "Attendance QR generated successfully.");
+
+    if (attendanceQRExpiryTimer) clearTimeout(attendanceQRExpiryTimer);
+    const remaining = new Date(session.expires_at).getTime() - Date.now();
+
+    attendanceQRExpiryTimer = setTimeout(() => {
+      $("attendanceQRCode").replaceChildren();
+      $("attendanceQRDisplay").classList.add("hidden");
+      attendanceMessage("attendanceQRMessage", "QR expired. Generate a new one.");
+    }, Math.max(0, remaining));
+  } catch (err) {
+    attendanceMessage("attendanceQRMessage", "QR generation failed: " + err.message);
+  } finally {
+    btn.disabled = false;
+  }
+}
+
+async function startAttendanceScanner() {
+  if (!currentUser) {
+    attendanceMessage("attendanceCheckinMessage", "Please log in first.");
+    return;
+  }
+  if (scannerRunning) return;
+  if (typeof Html5Qrcode === "undefined") {
+    attendanceMessage("attendanceCheckinMessage", "Scanner library did not load. Refresh and try again.");
+    return;
+  }
+
+  try {
+    attendanceScanner = new Html5Qrcode("attendanceScanner");
+    attendanceMessage("attendanceCheckinMessage", "Starting camera...");
+
+    await attendanceScanner.start(
+      { facingMode: "environment" },
+      { fps: 10, qrbox: { width: 230, height: 230 } },
+      async decodedText => {
+        if (attendanceScanBusy) return;
+        const token = decodedText.trim();
+
+        if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token)) {
+          attendanceMessage("attendanceCheckinMessage", "This is not a valid Attendance QR token.");
+          return;
+        }
+
+        attendanceScanBusy = true;
+        try {
+          await stopAttendanceScanner();
+          await checkInWithAttendanceQR(token);
+        } finally {
+          attendanceScanBusy = false;
+        }
+      },
+      () => {}
+    );
+
+    scannerRunning = true;
+    attendanceMessage("attendanceCheckinMessage", "Scanner ready. Point the camera at the Attendance QR.");
+  } catch (err) {
+    scannerRunning = false;
+    attendanceMessage("attendanceCheckinMessage", "Could not start camera: " + err.message);
+  }
+}
+
+async function stopAttendanceScanner() {
+  if (!attendanceScanner) return;
+  try {
+    if (scannerRunning) await attendanceScanner.stop();
+  } catch (_) {}
+  try {
+    attendanceScanner.clear();
+  } catch (_) {}
+  attendanceScanner = null;
+  scannerRunning = false;
+}
+
+async function checkInWithAttendanceQR(token) {
+  try {
+    const { data, error } = await db.rpc("check_in_with_attendance_qr", {
+      p_qr_token: token
+    });
+    if (error) throw error;
+
+    const result = Array.isArray(data) ? data[0] : data;
+    attendanceMessage(
+      "attendanceCheckinMessage",
+      result?.result === "checked_in"
+        ? "Attendance marked successfully."
+        : "Check-in response received."
+    );
+    await loadAttendanceHistory();
+  } catch (err) {
+    attendanceMessage("attendanceCheckinMessage", "Check-in failed: " + err.message);
+  }
+}
+
+async function loadAttendanceHistory() {
+  const rows = $("attendanceHistoryRows");
+  rows.replaceChildren();
+
+  if (!currentUser) {
+    attendanceMessage("attendanceHistoryMessage", "Please log in first.");
+    return;
+  }
+
+  attendanceMessage("attendanceHistoryMessage", "Loading attendance history...");
+
+  const { data, error } = await db.from("attendance_records")
+    .select("attendance_date,check_in_at,check_in,check_out,attendance_status,status,method")
+    .eq("member_user_id", currentUser.id)
+    .order("attendance_date", { ascending: false })
+    .limit(50);
+
+  if (error) {
+    attendanceMessage("attendanceHistoryMessage", "History error: " + error.message);
+    return;
+  }
+  if (!data?.length) {
+    attendanceMessage("attendanceHistoryMessage", "No attendance records found.");
+    return;
+  }
+
+  data.forEach(item => {
+    const tr = document.createElement("tr");
+    [
+      item.attendance_date,
+      dateText(item.check_in_at || item.check_in),
+      dateText(item.check_out),
+      item.attendance_status || item.status,
+      item.method
+    ].forEach(v => addCell(tr, v));
+    rows.appendChild(tr);
+  });
+  attendanceMessage("attendanceHistoryMessage", "Attendance history loaded.");
+}
+
+$("generateAttendanceQRBtn").addEventListener("click", generateAttendanceQR);
+$("startAttendanceScannerBtn").addEventListener("click", startAttendanceScanner);
+$("stopAttendanceScannerBtn").addEventListener("click", stopAttendanceScanner);
+$("refreshAttendanceBtn").addEventListener("click", loadAttendanceHistory);
+
+/* WALLET */
 async function loadWallet() {
   if (!currentUser) {
     message("walletMessage", "Please log in first.");
@@ -630,9 +872,7 @@ $("transferForm").addEventListener("submit", async e => {
   message("transferMessage", "Processing transfer...");
   try {
     const amount = Number($("amount").value);
-    if (!Number.isFinite(amount) || amount <= 0) {
-      throw new Error("Enter a positive amount.");
-    }
+    if (!Number.isFinite(amount) || amount <= 0) throw new Error("Enter a positive amount.");
     const { data, error } = await db.rpc("transfer_wallet", {
       p_recipient_account_number: $("recipient").value.trim(),
       p_currency: $("currencySelect").value,
@@ -672,10 +912,8 @@ async function loadTransactions() {
   $("historyMessage").textContent = "Latest transactions";
   data.forEach(t => {
     const tr = document.createElement("tr");
-    [
-      dateText(t.created_at), t.transaction_type, t.amount,
-      t.currency, t.status, t.transaction_code
-    ].forEach(v => addCell(tr, v));
+    [dateText(t.created_at),t.transaction_type,t.amount,t.currency,t.status,t.transaction_code]
+      .forEach(v => addCell(tr, v));
     $("historyRows").appendChild(tr);
   });
 }
@@ -702,25 +940,23 @@ async function loadCards() {
       const h = document.createElement("h3");
       h.textContent = card.name || card.code || "Empire Card";
       box.appendChild(h);
-      const details = [
-        card.purchasable
-          ? "Purchase price: " + money(card.purchase_price_cd, "CD")
-          : "Not available for direct purchase",
+
+      [
+        card.purchasable ? "Purchase price: " + money(card.purchase_price_cd, "CD") : "Not available for direct purchase",
         "Discount: " + Number(card.discount_percent || 0) + "%",
-        card.weekly_limit_inr == null
-          ? "Weekly limit: Unlimited"
-          : "Weekly limit: " + money(card.weekly_limit_inr, "INR"),
+        card.weekly_limit_inr == null ? "Weekly limit: Unlimited" : "Weekly limit: " + money(card.weekly_limit_inr, "INR"),
         "Weekly waiver: " + money(card.weekly_waiver_inr || 0, "INR")
-      ];
-      details.forEach(t => {
+      ].forEach(t => {
         const p = document.createElement("p");
         p.textContent = t;
         box.appendChild(p);
       });
+
       const badge = document.createElement("span");
       badge.className = "pill";
       badge.textContent = card.purchasable ? "Request available" : "President discretion";
       box.appendChild(badge);
+
       const btn = document.createElement("button");
       btn.style.display = "block";
       btn.style.marginTop = "12px";
@@ -770,10 +1006,12 @@ async function loadMyCards() {
       const h = document.createElement("h3");
       h.textContent = card.card_code || card.card_name || "Empire Card";
       box.appendChild(h);
+
       const p = document.createElement("p");
       p.textContent = "Status: " + (card.status || "unknown") +
         " · Payment: " + (card.payment_status || "unknown");
       box.appendChild(p);
+
       if (card.purchase_price_cd != null) {
         const price = document.createElement("p");
         price.textContent = "Price: " + money(card.purchase_price_cd, "CD");
@@ -790,12 +1028,11 @@ async function loadMyCards() {
         pay.addEventListener("click", () => payCardPrice(card.id, pay));
         box.appendChild(pay);
       }
+
       $("myCards").appendChild(box);
-      if (card.status === "active" &&
-          ["paid", "waived"].includes(card.payment_status)) {
+      if (card.status === "active" && ["paid","waived"].includes(card.payment_status)) {
         $("spendCard").add(new Option(
-          (card.card_code || "Card") + " — " + String(card.id).slice(0, 8),
-          card.id
+          (card.card_code || "Card") + " — " + String(card.id).slice(0,8), card.id
         ));
       }
     });
@@ -860,9 +1097,8 @@ async function loadSpendingHistory() {
     makeTable("spendingHistory",
       ["Date","Amount INR","Discount %","Discount INR","Billed INR","Status","Description"],
       rows.map(x => [
-        dateText(x.created_at), x.amount_inr, x.discount_percent,
-        x.discount_amount_inr, x.billed_amount_inr,
-        x.spending_status, x.description
+        dateText(x.created_at),x.amount_inr,x.discount_percent,x.discount_amount_inr,
+        x.billed_amount_inr,x.spending_status,x.description
       ])
     );
   } catch (err) {
@@ -887,8 +1123,7 @@ async function loadBills() {
       const box = document.createElement("div");
       box.className = "card";
       const h = document.createElement("h3");
-      h.textContent = "Weekly Bill · " + (bill.week_start || "—") +
-        " to " + (bill.week_end || "—");
+      h.textContent = "Weekly Bill · " + (bill.week_start || "—") + " to " + (bill.week_end || "—");
       box.appendChild(h);
       [
         "Gross: " + money(bill.gross_amount_inr, "INR"),
@@ -904,8 +1139,7 @@ async function loadBills() {
       $("billList").appendChild(box);
       if (bill.status !== "paid") {
         $("billSelect").add(new Option(
-          `${bill.week_start}–${bill.week_end} | Due ${bill.payable_amount_inr} INR`,
-          bill.id
+          `${bill.week_start}–${bill.week_end} | Due ${bill.payable_amount_inr} INR`, bill.id
         ));
       }
     });
@@ -951,8 +1185,8 @@ async function loadPaymentHistory() {
     makeTable("paymentHistory",
       ["Submitted","Amount INR","Method","Status","Reference","Reviewed","Review Note"],
       rows.map(x => [
-        dateText(x.submitted_at), x.amount_inr, x.payment_method,
-        x.status, x.reference_note, dateText(x.reviewed_at), x.review_note
+        dateText(x.submitted_at),x.amount_inr,x.payment_method,x.status,
+        x.reference_note,dateText(x.reviewed_at),x.review_note
       ])
     );
   } catch (err) {
@@ -968,9 +1202,7 @@ async function loadPaymentReviews() {
   const root = $("paymentReviews");
   root.replaceChildren();
   try {
-    const result = await invokeFunction("get-card-bill-payment-reviews", {
-      p_status: "pending"
-    });
+    const result = await invokeFunction("get-card-bill-payment-reviews", { p_status: "pending" });
     const rows = Array.isArray(result?.payments) ? result.payments :
       Array.isArray(result?.reviews) ? result.reviews :
       Array.isArray(result?.data) ? result.data : [];
@@ -997,17 +1229,17 @@ async function loadPaymentReviews() {
       note.placeholder = "Optional review note";
       note.maxLength = 200;
       box.appendChild(note);
+
       const verify = document.createElement("button");
       verify.textContent = "Verify Payment";
-      verify.addEventListener("click", () =>
-        reviewBillPayment(payment.id, "verified", note.value, verify));
+      verify.addEventListener("click", () => reviewBillPayment(payment.id, "verified", note.value, verify));
       box.appendChild(verify);
+
       const reject = document.createElement("button");
       reject.className = "secondary";
       reject.style.marginLeft = "8px";
       reject.textContent = "Reject";
-      reject.addEventListener("click", () =>
-        reviewBillPayment(payment.id, "rejected", note.value, reject));
+      reject.addEventListener("click", () => reviewBillPayment(payment.id, "rejected", note.value, reject));
       box.appendChild(reject);
       root.appendChild(box);
     });
@@ -1034,10 +1266,15 @@ async function reviewBillPayment(paymentId, decision, note, btn) {
   }
 }
 
+/* INITIAL SESSION */
 (async function init() {
   try {
     const { data, error } = await db.auth.getSession();
-    if (!error && data.session) await verifyProfile();
+    if (!error && data.session) {
+      await verifyProfile();
+    } else {
+      show("home");
+    }
   } catch (_) {
     show("home");
   }
