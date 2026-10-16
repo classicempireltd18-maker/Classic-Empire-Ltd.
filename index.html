@@ -1,1283 +1,573 @@
 
 <!DOCTYPE html>
-<html lang="en">
+<html lang="hi">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="theme-color" content="#FFFFFF">
-<title>Classic Empire Ltd. | Official Website</title>
-
+<meta name="theme-color" content="#080808">
+<title>Classic Empire Ltd. | President Admin</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
-<script src="https://unpkg.com/html5-qrcode"></script>
-
 <style>
-:root {
-  --bg:#fff; --panel:#f8f8f8; --gold:#d4af37;
-  --bright:#ffd700; --text:#111; --muted:#666; --line:#e5d7a4;
+:root{
+  --bg:#080808;--panel:#151515;--gold:#ffd700;
+  --text:#f5f5f5;--muted:#aaa;--line:#3b3420;
+  --green:#35d07f;--red:#ff6262
 }
-* { box-sizing:border-box; }
-body { margin:0; background:var(--bg); color:var(--text); font-family:Arial,sans-serif; }
-header {
-  display:flex; align-items:center; gap:14px; padding:15px;
-  background:#fff; border-bottom:2px solid var(--gold);
-  position:sticky; top:0; z-index:10;
-}
-.logo { width:55px; height:55px; object-fit:contain; }
-.brand { font-size:19px; font-weight:bold; color:#8b6b00; }
-.small,.muted { font-size:13px; color:var(--muted); }
-nav { display:flex; gap:8px; flex-wrap:wrap; padding:12px; border-bottom:1px solid var(--line); }
-button {
-  padding:11px 14px; border:1px solid var(--gold); border-radius:7px;
-  background:var(--gold); color:#111; font-weight:bold; cursor:pointer;
-}
-button:hover { background:var(--bright); }
-button:disabled { opacity:.5; cursor:wait; }
-.secondary { background:#fff; color:#775b00; }
-main { max-width:1100px; margin:auto; padding:16px; }
-.panel,.hero,.stat {
-  background:var(--panel); border:1px solid var(--line);
-  border-radius:12px; padding:17px; margin-bottom:14px;
-}
-.hero { text-align:center; padding:30px 15px; background:#fff; }
-h1,h2,h3 { color:#8b6b00; }
-p { line-height:1.5; }
-.grid { display:grid; grid-template-columns:repeat(auto-fit,minmax(190px,1fr)); gap:12px; }
-label { display:block; margin:12px 0 6px; font-weight:bold; }
-input,select,textarea {
-  width:100%; padding:12px; border:1px solid #d8c477;
-  border-radius:7px; background:#fff; color:#111; font:inherit;
-}
-textarea { min-height:70px; }
-.hidden { display:none!important; }
-.notice {
-  padding:12px; background:#fff8db; border:1px solid var(--line);
-  border-radius:7px; margin:12px 0; overflow-wrap:anywhere;
-}
-.amount { font-size:23px; color:#8b6b00; font-weight:bold; overflow-wrap:anywhere; }
-.tablewrap { overflow-x:auto; }
-table { width:100%; border-collapse:collapse; font-size:13px; background:#fff; }
-th,td { text-align:left; padding:10px; border-bottom:1px solid var(--line); overflow-wrap:anywhere; }
-th { background:#fff4c2; }
-.card { border:1px solid var(--gold); border-radius:12px; padding:15px; background:#fff; margin:9px 0; }
-.pill { display:inline-block; padding:4px 8px; border:1px solid var(--gold); border-radius:20px; font-size:12px; color:#775b00; }
-footer { text-align:center; padding:22px; border-top:1px solid var(--line); color:var(--muted); font-size:12px; }
-hr { border:0; border-top:1px solid var(--line); margin:17px 0; }
-.actions { display:flex; gap:8px; flex-wrap:wrap; margin-top:12px; }
-.qr-center { display:flex; justify-content:center; align-items:center; padding:15px; min-height:40px; }
-#attendanceScanner { width:100%; max-width:500px; margin:12px auto; }
-#attendanceScanner video { max-width:100%; }
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:var(--text);
+font-family:Arial,sans-serif}
+header{padding:20px;background:#111;border-bottom:1px solid var(--line)}
+h1{font-size:23px;color:var(--gold);margin:0 0 7px}
+h2{font-size:19px;color:var(--gold)}
+p{line-height:1.5}
+small,.muted{color:var(--muted)}
+main{max-width:1100px;margin:auto;padding:18px}
+.card{background:var(--panel);border:1px solid var(--line);
+border-radius:13px;padding:17px;margin-bottom:17px}
+input,select,button{width:100%;padding:12px;border-radius:8px;
+font-size:15px;margin:6px 0}
+input,select{background:#080808;color:white;border:1px solid #514721}
+button{background:var(--gold);color:#111;border:0;font-weight:bold;
+cursor:pointer}
+button:disabled{opacity:.5;cursor:wait}
+button.secondary{background:#333;color:white}
+button.reject{background:#662727;color:white}
+button.smallbtn{padding:9px}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));
+gap:12px}
+.row{border:1px solid var(--line);border-radius:10px;
+padding:14px;margin:12px 0;background:#101010}
+.row h3{margin:0 0 8px;font-size:17px}
+.tag{display:inline-block;border-radius:20px;padding:5px 10px;
+background:#332d10;color:var(--gold);font-size:12px}
+.status{padding:12px;border-radius:8px;margin:10px 0;display:none;
+white-space:pre-wrap;overflow-wrap:anywhere}
+.status.ok{display:block;background:#103322;color:#b4ffcf}
+.status.err{display:block;background:#421b1b;color:#ffd0d0}
+.tabs{display:flex;gap:8px;flex-wrap:wrap;margin-bottom:15px}
+.tabs button{width:auto;flex:1;min-width:120px}
+.hidden{display:none!important}
+.tablewrap{overflow-x:auto}
+table{width:100%;border-collapse:collapse;min-width:550px}
+th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line)}
+th{color:var(--gold)}
+label{display:block;margin-top:10px;color:#ddd;font-size:13px}
+footer{text-align:center;padding:20px;color:var(--muted);font-size:12px}
 </style>
 </head>
 <body>
 
 <header>
-  <img class="logo" src="classic-empire-logo.png" alt="Classic Empire Ltd. logo"
-       onerror="this.style.display='none'">
-  <div>
-    <div class="brand">CLASSIC EMPIRE LTD.</div>
-    <div class="small">Official Website</div>
-  </div>
+  <h1>CLASSIC EMPIRE LTD.</h1>
+  <div class="muted">President Administration Panel</div>
 </header>
 
-<nav>
-  <button onclick="show('home')">Home</button>
-  <button onclick="show('members')">Members</button>
-  <button onclick="show('updates')">Empire Updates</button>
-  <button onclick="show('currency')">Currency</button>
-  <button onclick="show('salaries')">Salaries</button>
-  <button onclick="show('login')">Member Login</button>
-  <button onclick="show('register')">Registration</button>
-  <button onclick="openMemberAccount()">Member Account</button>
-  <button onclick="show('cards')">Empire Cards</button>
-  <button onclick="show('bills')">Card Bills</button>
-  <button onclick="show('about')">About / Contact</button>
-</nav>
-
 <main>
-<section id="home">
-  <div class="hero">
-    <h1>Welcome to Classic Empire Ltd.</h1>
-    <p>Member accounts, Empire Wallet, Classic Empire Cards and attendance services.</p>
-    <div class="actions" style="justify-content:center">
-      <button onclick="show('login')">Member Login</button>
-      <button class="secondary" onclick="show('register')">Create Account</button>
-    </div>
-  </div>
-  <div class="grid">
-    <div class="stat"><h3>Member Accounts</h3><p>Authorized member access.</p></div>
-    <div class="stat"><h3>Empire Wallet</h3><p>View internal CD and INR balances.</p></div>
-    <div class="stat"><h3>Empire Cards</h3><p>View card requests, spending and bills.</p></div>
-    <div class="stat"><h3>Attendance QR</h3><p>Secure member attendance check-in.</p></div>
-  </div>
-  <div class="panel">
-    <h2>Important Notice</h2>
-    <p>Classic Dinar and balances shown here are fictional internal project records, not real money or legal tender.</p>
-  </div>
-</section>
+  <div id="notice" class="status"></div>
 
-<section id="members" class="hidden">
-  <div class="panel">
-    <h2>Members</h2>
-    <p>Private member information is available only to authorized members.</p>
-    <button onclick="show('login')">Member Login</button>
-  </div>
-</section>
-
-<section id="updates" class="hidden">
-  <div class="panel">
-    <h2>Empire Updates</h2>
-    <div id="noticeList">Notice API has not been connected on this page.</div>
-  </div>
-</section>
-
-<section id="currency" class="hidden">
-  <div class="panel">
-    <h2>Internal Project Currency</h2>
-    <div class="grid">
-      <div class="stat"><h3>Classic Dinar</h3><p>Code: CLD</p><p>Short code: CD</p><p>Symbol: د.ك</p></div>
-      <div class="stat"><h3>Indian Rupee</h3><p>Code: INR</p><p>Symbol: ₹</p></div>
-    </div>
-    <p class="muted">Card purchases use CD. Card spending and bills use INR according to the configured card system.</p>
-  </div>
-</section>
-
-<section id="salaries" class="hidden">
-  <div class="panel">
-    <h2>Salaries</h2>
-    <p>Salary information is managed by the authorized administration system.</p>
-    <p class="muted">Live salary records have not been connected to this public page.</p>
-  </div>
-</section>
-
-<section id="about" class="hidden">
-  <div class="panel">
-    <h2>About Classic Empire Ltd.</h2>
-    <p>Member accounts and internal project services.</p>
-    <p><b>Head Office:</b> Chakla Ghat, Kishanganj, Bihar, India</p>
-  </div>
-</section>
-
-<section id="login" class="hidden">
-  <div class="panel">
-    <h2>Member Login</h2>
+  <section id="loginPanel" class="card">
+    <h2>President Login</h2>
+    <p class="muted">केवल सक्रिय President का अकाउंट इस पैनल को खोल सकता है।</p>
     <form id="loginForm">
-      <label for="account">Account Number</label>
-      <input id="account" autocomplete="username" placeholder="CE000001" required>
-      <label for="password">Password</label>
-      <input id="password" type="password" autocomplete="current-password" required>
-      <button id="loginBtn" style="margin-top:15px">Login</button>
+      <label>Account Number</label>
+      <input id="loginAccount" autocomplete="username"
+        placeholder="जैसे CE000001" required>
+      <label>Password</label>
+      <input id="loginPassword" type="password"
+        autocomplete="current-password" required>
+      <button id="loginButton" type="submit">Secure Login</button>
     </form>
-    <div id="loginMessage" class="notice hidden" role="status"></div>
-  </div>
-</section>
+  </section>
 
-<section id="register" class="hidden">
-  <div class="panel">
-    <h2>Member Registration</h2>
-    <p class="muted">Registration requests require administrator approval.</p>
-    <form id="registerForm">
-      <label for="regName">Full Name</label>
-      <input id="regName" maxlength="100" required>
-      <label for="regEmail">Email Address</label>
-      <input id="regEmail" type="email" required>
-      <label for="regPassword">Password</label>
-      <input id="regPassword" type="password" minlength="8" autocomplete="new-password" required>
-      <label for="regConfirm">Confirm Password</label>
-      <input id="regConfirm" type="password" minlength="8" autocomplete="new-password" required>
-      <label for="regPost">Requested Post</label>
-      <select id="regPost" required>
-        <option value="">Select post</option>
-        <option>Other Employee</option>
-        <option>President's Assistant</option>
-        <option>DM</option>
-        <option>DM's Assistant</option>
-        <option>SDM</option><option>SP</option><option>DSP</option>
-      </select>
-      <button id="registerBtn" style="margin-top:15px">Submit Registration</button>
-    </form>
-    <div id="registerMessage" class="notice hidden" role="status"></div>
-  </div>
-</section>
-
-<section id="dashboard" class="hidden">
-  <div class="panel">
-    <h2>Member Account</h2>
-    <div id="profile">Please log in to view your account.</div>
-    <div class="actions">
-      <button class="secondary" onclick="loadWallet()">Refresh Wallet</button>
-      <button class="secondary" onclick="loadTransactions()">Refresh History</button>
-      <button onclick="logout()">Logout</button>
-    </div>
-  </div>
-
-  <!-- Attendance QR -->
-  <div class="panel">
-    <h2>Attendance QR & My Attendance</h2>
-    <p class="muted">Attendance QR sessions expire after five minutes. Check-in requires an active member account.</p>
-
-    <div id="presidentQRControls" class="hidden">
-      <h3>President — Generate Attendance QR</h3>
-      <label for="attendanceSessionName">Session Name</label>
-      <input id="attendanceSessionName" maxlength="100" value="Member Attendance">
-      <button id="generateAttendanceQRBtn" type="button">Generate Attendance QR</button>
+  <section id="adminPanel" class="hidden">
+    <div class="card">
+      <div class="grid">
+        <div>
+          <div class="muted">Logged in as</div>
+          <h2 id="presidentName">President</h2>
+          <div id="presidentAccount" class="muted"></div>
+        </div>
+        <div>
+          <button id="refreshButton">Refresh Data</button>
+          <button id="logoutButton" class="secondary">Logout</button>
+        </div>
+      </div>
     </div>
 
-    <div id="attendanceQRMessage" class="notice" role="status">Log in to use Attendance QR.</div>
-
-    <div id="attendanceQRDisplay" class="card hidden">
-      <h3>Current Attendance QR</h3>
-      <div id="attendanceQRCode" class="qr-center"></div>
-      <p id="attendanceQRExpiry" class="muted"></p>
-      <p class="muted">Keep this QR visible only during the attendance session.</p>
+    <div class="tabs">
+      <button data-tab="registrations">Registrations</button>
+      <button data-tab="members" class="secondary">Member Accounts</button>
     </div>
 
-    <hr>
-    <h3>Scan Attendance QR</h3>
-    <p class="muted">Allow camera access when prompted. Camera scanning requires HTTPS.</p>
-    <div class="actions">
-      <button id="startAttendanceScannerBtn" type="button">Start QR Scanner</button>
-      <button id="stopAttendanceScannerBtn" class="secondary" type="button">Stop Scanner</button>
-    </div>
-    <div id="attendanceScanner"></div>
-    <div id="attendanceCheckinMessage" class="notice hidden" role="status"></div>
+    <section id="registrationsTab" class="card">
+      <h2>Pending Registrations</h2>
+      <p class="muted">Approve करने पर सदस्य का पासवर्ड सेट करना जरूरी है।</p>
+      <div id="pendingList">Loading...</div>
+    </section>
 
-    <hr>
-    <h3>My Attendance History</h3>
-    <button id="refreshAttendanceBtn" class="secondary" type="button">Refresh Attendance</button>
-    <div id="attendanceHistoryMessage" class="notice">Log in to view your attendance.</div>
-    <div class="tablewrap">
-      <table>
-        <thead>
-          <tr><th>Date</th><th>Check-in</th><th>Check-out</th><th>Status</th><th>Method</th></tr>
-        </thead>
-        <tbody id="attendanceHistoryRows"></tbody>
-      </table>
-    </div>
-  </div>
-
-  <div class="panel">
-    <h2>Empire Wallet</h2>
-    <div class="grid">
-      <div class="stat"><p class="muted">Classic Dinar (CD)</p><div class="amount" id="balanceCD">—</div></div>
-      <div class="stat"><p class="muted">Indian Rupees (INR)</p><div class="amount" id="balanceINR">—</div></div>
-    </div>
-    <div id="walletMessage" class="notice">Log in to load your wallet.</div>
-  </div>
-
-  <div class="panel">
-    <h2>Money Transfer</h2>
-    <form id="transferForm">
-      <label for="recipient">Recipient Account Number</label>
-      <input id="recipient" required>
-      <label for="currencySelect">Currency</label>
-      <select id="currencySelect">
-        <option value="CD">Classic Dinar (CD)</option>
-        <option value="INR">Indian Rupees (INR)</option>
-      </select>
-      <label for="amount">Amount</label>
-      <input id="amount" type="number" min="0.01" step="any" required>
-      <label for="description">Description (optional)</label>
-      <input id="description" maxlength="200">
-      <button id="transferBtn" style="margin-top:15px">Transfer</button>
-    </form>
-    <div id="transferMessage" class="notice hidden" role="status"></div>
-  </div>
-
-  <div class="panel">
-    <h2>Transaction History</h2>
-    <div id="historyMessage" class="notice">No history loaded.</div>
-    <div class="tablewrap"><table>
-      <thead><tr><th>Date</th><th>Type</th><th>Amount</th><th>Currency</th><th>Status</th><th>Transaction ID</th></tr></thead>
-      <tbody id="historyRows"></tbody>
-    </table></div>
-  </div>
-</section>
-
-<section id="cards" class="hidden">
-  <div class="panel">
-    <h2>Classic Empire Ltd. Cards</h2>
-    <p class="muted">Card purchase prices use CD. Spending and bills use INR. Requests and activation depend on the configured approval process.</p>
-    <button onclick="loadCards()">Refresh Cards</button>
-    <div id="cardMessage" class="notice">Log in to load cards.</div>
-    <div id="cardTypes" class="grid"></div>
-  </div>
-
-  <div class="panel">
-    <h2>My Card Requests and Cards</h2>
-    <button class="secondary" onclick="loadMyCards()">Refresh My Cards</button>
-    <div id="myCards"></div>
-  </div>
-
-  <div class="panel">
-    <h2>Record Card Spending</h2>
-    <p class="muted">This records an internal project entry; it does not process a real-world card payment.</p>
-    <form id="spendForm">
-      <label for="spendCard">Active Card</label>
-      <select id="spendCard" required><option value="">Load your cards first</option></select>
-      <label for="spendAmount">Purchase Amount (INR)</label>
-      <input id="spendAmount" type="number" min="0.01" step="0.01" required>
-      <label for="spendDescription">Description</label>
-      <input id="spendDescription" maxlength="200" required>
-      <button id="spendBtn" style="margin-top:12px">Record Spending</button>
-    </form>
-    <div id="spendMessage" class="notice hidden" role="status"></div>
-  </div>
-
-  <div class="panel">
-    <h2>Spending History</h2>
-    <button class="secondary" onclick="loadSpendingHistory()">Refresh Spending History</button>
-    <div id="spendingHistory"></div>
-  </div>
-</section>
-
-<section id="bills" class="hidden">
-  <div class="panel">
-    <h2>My Weekly Card Bills</h2>
-    <button onclick="loadBills()">Refresh Bills</button>
-    <div id="billList"></div>
-  </div>
-
-  <div class="panel">
-    <h2>Submit Bill Payment</h2>
-    <p class="muted">A submitted payment record is not proof of payment; an authorized reviewer must verify it.</p>
-    <form id="billPaymentForm">
-      <label for="billSelect">Bill</label>
-      <select id="billSelect" required><option value="">Load your bills first</option></select>
-      <label for="billPayAmount">Payment Amount (INR)</label>
-      <input id="billPayAmount" type="number" min="0.01" step="0.01" required>
-      <label for="paymentMethod">Payment Method</label>
-      <select id="paymentMethod">
-        <option value="manual">Manual</option>
-        <option value="bank_transfer">Bank Transfer</option>
-        <option value="upi">UPI</option>
-        <option value="other">Other</option>
-      </select>
-      <label for="paymentReference">Reference / Note</label>
-      <input id="paymentReference" maxlength="200">
-      <button id="submitBillPaymentBtn" style="margin-top:12px">Submit for Review</button>
-    </form>
-    <div id="billPaymentMessage" class="notice hidden" role="status"></div>
-  </div>
-
-  <div class="panel">
-    <h2>My Bill Payment History</h2>
-    <button class="secondary" onclick="loadPaymentHistory()">Refresh Payment History</button>
-    <div id="paymentHistory"></div>
-  </div>
-
-  <div id="presidentBillReview" class="panel hidden">
-    <h2>President — Bill Payment Reviews</h2>
-    <p class="muted">Verify a payment only after independently checking the relevant evidence.</p>
-    <button onclick="loadPaymentReviews()">Load Pending Reviews</button>
-    <div id="paymentReviews"></div>
-  </div>
-
-  <div id="presidentCardReview" class="panel hidden">
-    <h2>President — Card Request Reviews</h2>
-    <p>A separate President-wide card review endpoint is required for an all-member review queue.</p>
-  </div>
-</section>
+    <section id="membersTab" class="card hidden">
+      <h2>Member Accounts</h2>
+      <div class="grid">
+        <div>
+          <label>Search Member</label>
+          <input id="memberSearch" placeholder="Account, name या member ID">
+        </div>
+        <div>
+          <label>Status</label>
+          <select id="memberStatus">
+            <option value="all">All Members</option>
+            <option value="active">Active</option>
+            <option value="inactive">Inactive</option>
+            <option value="pending">Pending</option>
+          </select>
+        </div>
+      </div>
+      <div id="membersList">Loading...</div>
+    </section>
+  </section>
 </main>
 
-<footer>Classic Empire Ltd. · Chakla Ghat, Kishanganj, Bihar, India</footer>
+<footer>Classic Empire Ltd. · Internal application administration</footer>
 
 <script>
-"use strict";
+(() => {
+  "use strict";
 
-const SUPABASE_URL = "https://wcyozectzscqwvtzetkc.supabase.co";
-const SUPABASE_KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
-const LOGIN_FUNCTION = "member-login";
-const REGISTRATION_FUNCTION = "member-register";
+  const SUPABASE_URL =
+    "https://wcyozectzscqwvtzetkc.supabase.co";
 
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
-  auth: {
-    persistSession: true,
-    autoRefreshToken: true,
-    detectSessionInUrl: true
-  }
-});
+  const SUPABASE_KEY =
+    "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_N1VJZXd";
 
-let currentUser = null;
-let currentProfile = null;
-let loadedMyCards = [];
-let loadedBills = [];
-let attendanceScanner = null;
-let scannerRunning = false;
-let attendanceScanBusy = false;
-let attendanceQRExpiryTimer = null;
+  const db = window.supabase.createClient(
+    SUPABASE_URL,
+    SUPABASE_KEY,
+    {
+      auth: {
+        persistSession: true,
+        autoRefreshToken: true,
+        detectSessionInUrl: true
+      }
+    }
+  );
 
-const $ = id => document.getElementById(id);
+  const $ = id => document.getElementById(id);
 
-function show(id) {
-  const sections = [
-    "home","members","updates","currency","salaries","login",
-    "register","about","dashboard","cards","bills"
+  const allowedPosts = [
+    "President Assistant",
+    "DM",
+    "DM Assistant",
+    "SDM",
+    "SP",
+    "DSP",
+    "Other Employees"
   ];
-  sections.forEach(s => $(s).classList.add("hidden"));
-  $(id).classList.remove("hidden");
 
-  if (id === "cards" && currentUser) {
-    loadCards();
-    loadMyCards();
-    loadSpendingHistory();
+  let currentProfile = null;
+  let pendingMembers = [];
+  let allMembers = [];
+
+  function escapeHTML(value) {
+    return String(value ?? "").replace(/[&<>"']/g, ch => ({
+      "&": "&amp;",
+      "<": "&lt;",
+      ">": "&gt;",
+      '"': "&quot;",
+      "'": "&#39;"
+    })[ch]);
   }
-  if (id === "bills" && currentUser) {
-    loadBills();
-    loadPaymentHistory();
-    togglePresidentPanels();
+
+  function showMessage(message, type = "ok") {
+    const el = $("notice");
+    el.textContent = message;
+    el.className = "status " + type;
+    window.scrollTo({ top: 0, behavior: "smooth" });
   }
-  if (id === "dashboard" && currentUser) {
-    togglePresidentPanels();
-    loadAttendanceHistory();
+
+  function setBusy(button, busy, text) {
+    if (!button) return;
+    if (busy) {
+      button.dataset.originalText = button.textContent;
+      button.textContent = text || "Please wait...";
+      button.disabled = true;
+    } else {
+      button.textContent =
+        button.dataset.originalText || button.textContent;
+      button.disabled = false;
+    }
   }
-}
-function openMemberAccount() {
-  if (currentUser) show("dashboard");
-  else show("login");
-}
-function message(id, text) {
-  $(id).textContent = text;
-  $(id).classList.remove("hidden");
-}
-function clearMessage(id) {
-  $(id).textContent = "";
-  $(id).classList.add("hidden");
-}
-function money(value, currency = "INR") {
-  const n = Number(value);
-  if (!Number.isFinite(n)) return "—";
-  return currency + " " + n.toLocaleString("en-IN", {
-    minimumFractionDigits: 2, maximumFractionDigits: 2
-  });
-}
-function dateText(value) {
-  if (!value) return "—";
-  const d = new Date(value);
-  return Number.isNaN(d.getTime()) ? String(value) : d.toLocaleString("en-IN");
-}
-function addCell(row, value) {
-  const td = document.createElement("td");
-  td.textContent = value == null ? "—" : String(value);
-  row.appendChild(td);
-}
-function makeTable(containerId, headers, rows) {
-  const root = $(containerId);
-  root.replaceChildren();
-  if (!rows || !rows.length) {
-    root.textContent = "No records found.";
-    return;
+
+  function showAdmin(profile) {
+    currentProfile = profile;
+    $("loginPanel").classList.add("hidden");
+    $("adminPanel").classList.remove("hidden");
+    $("presidentName").textContent = profile.full_name || "President";
+    $("presidentAccount").textContent =
+      (profile.account_number || "") + " · " + (profile.post || "");
   }
-  const wrap = document.createElement("div");
-  wrap.className = "tablewrap";
-  const table = document.createElement("table");
-  const thead = document.createElement("thead");
-  const headRow = document.createElement("tr");
-  headers.forEach(h => {
-    const th = document.createElement("th");
-    th.textContent = h;
-    headRow.appendChild(th);
-  });
-  thead.appendChild(headRow);
-  table.appendChild(thead);
-  const tbody = document.createElement("tbody");
-  rows.forEach(values => {
-    const tr = document.createElement("tr");
-    values.forEach(v => addCell(tr, v));
-    tbody.appendChild(tr);
-  });
-  table.appendChild(tbody);
-  wrap.appendChild(table);
-  root.appendChild(wrap);
-}
-function isPresident() {
-  return String(currentProfile?.post || "").trim().toLowerCase() === "president";
-}
-function togglePresidentPanels() {
-  const visible = Boolean(currentUser && isPresident());
-  $("presidentBillReview").classList.toggle("hidden", !visible);
-  $("presidentCardReview").classList.toggle("hidden", !visible);
-  $("presidentQRControls").classList.toggle("hidden", !visible);
-}
-function extractData(result) {
-  return result?.data ?? result ?? null;
-}
-function functionErrorMessage(error, data) {
-  if (data && typeof data === "object" && data.error) return data.error;
-  return error?.message || "Request failed. Check Edge Function logs.";
-}
-async function invokeFunction(name, body = {}) {
-  if (!currentUser) throw new Error("Please log in first.");
-  const { data, error } = await db.functions.invoke(name, { body });
-  if (error) {
-    let detail = error.message || "Edge Function request failed.";
+
+  function showLogin() {
+    currentProfile = null;
+    $("adminPanel").classList.add("hidden");
+    $("loginPanel").classList.remove("hidden");
+  }
+
+  async function getVerifiedPresident() {
+    const { data: userData, error: userError } =
+      await db.auth.getUser();
+
+    if (userError || !userData.user) {
+      throw new Error("कृपया दोबारा लॉगिन करें।");
+    }
+
+    const { data: profile, error } = await db
+      .from("member_profiles")
+      .select("user_id,account_number,member_id,full_name,post,status")
+      .eq("user_id", userData.user.id)
+      .maybeSingle();
+
+    if (error) throw error;
+
+    if (
+      !profile ||
+      profile.post !== "President" ||
+      profile.status !== "active"
+    ) {
+      await db.auth.signOut();
+      throw new Error("यह पैनल केवल Active President के लिए है।");
+    }
+
+    return profile;
+  }
+
+  $("loginForm").addEventListener("submit", async event => {
+    event.preventDefault();
+
+    const button = $("loginButton");
+    setBusy(button, true, "Logging in...");
+
     try {
-      if (error.context && typeof error.context.json === "function") {
-        detail = functionErrorMessage(error, await error.context.json());
+      const account = $("loginAccount").value.trim();
+      const password = $("loginPassword").value;
+
+      const { data, error } = await db.functions.invoke("member-login", {
+        body: {
+          account_number: account,
+          password: password
+        }
+      });
+
+      if (error) throw error;
+      if (!data || data.error) {
+        throw new Error(data?.error || "Login failed");
       }
-    } catch (_) {}
-    throw new Error(detail);
-  }
-  const result = extractData(data);
-  if (result?.success === false) {
-    throw new Error(result.error || result.message || "Request failed.");
-  }
-  return result;
-}
 
-/* AUTHENTICATION */
-async function verifyProfile() {
-  const { data: auth, error: authError } = await db.auth.getUser();
-  if (authError || !auth.user) {
-    currentUser = null;
-    currentProfile = null;
-    show("login");
-    message("loginMessage", "Please sign in again.");
-    return;
-  }
+      // Accept common session response formats.
+      const sessionData = data.session || data;
+      const accessToken =
+        sessionData.access_token || data.access_token;
+      const refreshToken =
+        sessionData.refresh_token || data.refresh_token;
 
-  const { data, error } = await db.from("member_profiles")
-    .select("user_id,account_number,member_id,full_name,post,status")
-    .eq("user_id", auth.user.id)
-    .maybeSingle();
-
-  if (error || !data) {
-    await db.auth.signOut();
-    currentUser = null;
-    currentProfile = null;
-    show("login");
-    message("loginMessage", error
-      ? "Profile lookup failed: " + error.message
-      : "No member profile is linked to this account.");
-    return;
-  }
-
-  if (String(data.status || "").toLowerCase() !== "active") {
-    await db.auth.signOut();
-    currentUser = null;
-    currentProfile = null;
-    show("login");
-    message("loginMessage", "This member account is not active.");
-    return;
-  }
-
-  currentUser = auth.user;
-  currentProfile = data;
-  $("profile").textContent =
-    `${data.full_name} | ${data.account_number} | ${data.post} | ${data.status}`;
-
-  togglePresidentPanels();
-  show("dashboard");
-  await loadWallet();
-  await loadAttendanceHistory();
-}
-
-$("loginForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  const btn = $("loginBtn");
-  btn.disabled = true;
-  message("loginMessage", "Signing in...");
-  try {
-    const { data, error } = await db.functions.invoke(LOGIN_FUNCTION, {
-      body: {
-        account_number: $("account").value.trim(),
-        password: $("password").value
+      if (accessToken && refreshToken) {
+        const { error: sessionError } = await db.auth.setSession({
+          access_token: accessToken,
+          refresh_token: refreshToken
+        });
+        if (sessionError) throw sessionError;
       }
-    });
-    if (error) throw error;
-    const session = data?.session || data?.data?.session || data;
-    if (!session?.access_token || !session?.refresh_token) {
-      throw new Error("Login function did not return a valid session.");
+
+      const { data: sessionResult } = await db.auth.getSession();
+
+      if (!sessionResult.session) {
+        throw new Error(
+          "Login response में Supabase session नहीं मिला। " +
+          "member-login का response format जाँचें।"
+        );
+      }
+
+      const profile = await getVerifiedPresident();
+      showAdmin(profile);
+      showMessage("President login सफल रहा।");
+      await loadAll();
+    } catch (error) {
+      showMessage(error.message || "Login failed", "err");
+    } finally {
+      setBusy(button, false);
     }
-    const { error: sessionError } = await db.auth.setSession({
-      access_token: session.access_token,
-      refresh_token: session.refresh_token
-    });
-    if (sessionError) throw sessionError;
-    clearMessage("loginMessage");
-    await verifyProfile();
-  } catch (err) {
-    message("loginMessage", "Login failed: " + (err.message || "Unknown error"));
-  } finally {
-    btn.disabled = false;
-  }
-});
+  });
 
-$("registerForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  const btn = $("registerBtn");
-  const password = $("regPassword").value;
-  if (password !== $("regConfirm").value) {
-    message("registerMessage", "Passwords do not match.");
-    return;
-  }
-  if (password.length < 8) {
-    message("registerMessage", "Password must be at least 8 characters.");
-    return;
-  }
-  btn.disabled = true;
-  message("registerMessage", "Submitting registration...");
-  try {
-    const { data, error } = await db.functions.invoke(REGISTRATION_FUNCTION, {
-      body: {
-        full_name: $("regName").value.trim(),
-        email: $("regEmail").value.trim(),
-        password,
-        requested_post: $("regPost").value
-      }
-    });
-    if (error) throw error;
-    message("registerMessage",
-      data?.message || "Registration submitted. Wait for administrator review.");
-    $("registerForm").reset();
-  } catch (err) {
-    message("registerMessage", "Registration failed: " + (err.message || "Unknown error"));
-  } finally {
-    btn.disabled = false;
-  }
-});
+  async function loadPending() {
+    $("pendingList").textContent = "Loading...";
 
-async function logout() {
-  await stopAttendanceScanner();
-  if (attendanceQRExpiryTimer) clearTimeout(attendanceQRExpiryTimer);
-  await db.auth.signOut();
-  currentUser = null;
-  currentProfile = null;
-  loadedMyCards = [];
-  loadedBills = [];
-  $("profile").textContent = "Please log in to view your account.";
-  $("balanceCD").textContent = "—";
-  $("balanceINR").textContent = "—";
-  $("attendanceQRCode").replaceChildren();
-  $("attendanceQRDisplay").classList.add("hidden");
-  $("presidentQRControls").classList.add("hidden");
-  $("attendanceHistoryRows").replaceChildren();
-  togglePresidentPanels();
-  show("home");
-}
+    const { data, error } = await db
+      .from("member_profiles")
+      .select(
+        "user_id,member_id,account_number,full_name,requested_post,status,created_at"
+      )
+      .eq("status", "pending")
+      .order("created_at", { ascending: true });
 
-/* ATTENDANCE QR */
-function attendanceMessage(id, text) {
-  message(id, text);
-}
-async function generateAttendanceQR() {
-  if (!currentUser || !currentProfile || !isPresident()) {
-    attendanceMessage("attendanceQRMessage", "Only the active President can generate an Attendance QR.");
-    return;
-  }
-  if (typeof QRCode === "undefined") {
-    attendanceMessage("attendanceQRMessage", "QR generator library did not load. Refresh the page and try again.");
-    return;
-  }
-
-  const btn = $("generateAttendanceQRBtn");
-  btn.disabled = true;
-  attendanceMessage("attendanceQRMessage", "Generating a new QR session...");
-
-  try {
-    const { data, error } = await db.rpc("create_attendance_qr_session", {
-      p_session_name: $("attendanceSessionName").value.trim() || "Member Attendance"
-    });
     if (error) throw error;
 
-    const session = Array.isArray(data) ? data[0] : data;
-    if (!session?.qr_token || !session?.expires_at) {
-      throw new Error("QR session data was not returned.");
+    pendingMembers = data || [];
+    renderPending();
+  }
+
+  function renderPending() {
+    if (!pendingMembers.length) {
+      $("pendingList").innerHTML =
+        '<p class="muted">कोई Pending Registration नहीं है।</p>';
+      return;
     }
 
-    $("attendanceQRCode").replaceChildren();
-    $("attendanceQRDisplay").classList.remove("hidden");
+    $("pendingList").innerHTML = pendingMembers.map(member => `
+      <article class="row" data-user="${escapeHTML(member.user_id)}">
+        <h3>${escapeHTML(member.full_name || "New Member")}</h3>
+        <p>
+          <span class="tag">${escapeHTML(member.status)}</span>
+        </p>
+        <p>
+          Account: <strong>${escapeHTML(member.account_number)}</strong><br>
+          Member ID: ${escapeHTML(member.member_id)}<br>
+          Requested Post: ${escapeHTML(member.requested_post || "Other Employees")}
+        </p>
 
-    new QRCode($("attendanceQRCode"), {
-      text: session.qr_token,
-      width: 220,
-      height: 220,
-      correctLevel: QRCode.CorrectLevel.M
-    });
+        <label>Assign Post</label>
+        <select class="assignedPost">
+          ${allowedPosts.map(post => `
+            <option value="${escapeHTML(post)}"
+              ${post === member.requested_post ? "selected" : ""}>
+              ${escapeHTML(post)}
+            </option>
+          `).join("")}
+        </select>
 
-    $("attendanceQRExpiry").textContent = "Expires: " + dateText(session.expires_at);
-    attendanceMessage("attendanceQRMessage", "Attendance QR generated successfully.");
+        <label>Set Member Password</label>
+        <input class="newPassword" type="password"
+          autocomplete="new-password"
+          minlength="8" maxlength="72"
+          placeholder="कम-से-कम 8 characters">
 
-    if (attendanceQRExpiryTimer) clearTimeout(attendanceQRExpiryTimer);
-    const remaining = new Date(session.expires_at).getTime() - Date.now();
+        <label>Confirm Password</label>
+        <input class="confirmPassword" type="password"
+          autocomplete="new-password"
+          minlength="8" maxlength="72"
+          placeholder="पासवर्ड दोबारा लिखें">
 
-    attendanceQRExpiryTimer = setTimeout(() => {
-      $("attendanceQRCode").replaceChildren();
-      $("attendanceQRDisplay").classList.add("hidden");
-      attendanceMessage("attendanceQRMessage", "QR expired. Generate a new one.");
-    }, Math.max(0, remaining));
-  } catch (err) {
-    attendanceMessage("attendanceQRMessage", "QR generation failed: " + err.message);
-  } finally {
-    btn.disabled = false;
-  }
-}
+        <button class="approveButton">Approve & Activate</button>
+        <button class="reject rejectButton">Reject Application</button>
+      </article>
+    `).join("");
 
-async function startAttendanceScanner() {
-  if (!currentUser) {
-    attendanceMessage("attendanceCheckinMessage", "Please log in first.");
-    return;
-  }
-  if (scannerRunning) return;
-  if (typeof Html5Qrcode === "undefined") {
-    attendanceMessage("attendanceCheckinMessage", "Scanner library did not load. Refresh and try again.");
-    return;
-  }
+    $("pendingList").querySelectorAll(".approveButton").forEach(button => {
+      button.addEventListener("click", async () => {
+        const row = button.closest("[data-user]");
+        const userId = row.dataset.user;
+        const assignedPost = row.querySelector(".assignedPost").value;
+        const password = row.querySelector(".newPassword").value;
+        const confirmPassword =
+          row.querySelector(".confirmPassword").value;
 
-  try {
-    attendanceScanner = new Html5Qrcode("attendanceScanner");
-    attendanceMessage("attendanceCheckinMessage", "Starting camera...");
-
-    await attendanceScanner.start(
-      { facingMode: "environment" },
-      { fps: 10, qrbox: { width: 230, height: 230 } },
-      async decodedText => {
-        if (attendanceScanBusy) return;
-        const token = decodedText.trim();
-
-        if (!/^[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}$/i.test(token)) {
-          attendanceMessage("attendanceCheckinMessage", "This is not a valid Attendance QR token.");
+        if (password.length < 8 || password.length > 72) {
+          showMessage("पासवर्ड 8 से 72 characters का होना चाहिए।", "err");
           return;
         }
 
-        attendanceScanBusy = true;
-        try {
-          await stopAttendanceScanner();
-          await checkInWithAttendanceQR(token);
-        } finally {
-          attendanceScanBusy = false;
+        if (password !== confirmPassword) {
+          showMessage("दोनों पासवर्ड एक जैसे नहीं हैं।", "err");
+          return;
         }
-      },
-      () => {}
-    );
 
-    scannerRunning = true;
-    attendanceMessage("attendanceCheckinMessage", "Scanner ready. Point the camera at the Attendance QR.");
-  } catch (err) {
-    scannerRunning = false;
-    attendanceMessage("attendanceCheckinMessage", "Could not start camera: " + err.message);
-  }
-}
+        if (!confirm(
+          "इस सदस्य को Active करना और पासवर्ड सेट करना चाहते हैं?"
+        )) return;
 
-async function stopAttendanceScanner() {
-  if (!attendanceScanner) return;
-  try {
-    if (scannerRunning) await attendanceScanner.stop();
-  } catch (_) {}
-  try {
-    attendanceScanner.clear();
-  } catch (_) {}
-  attendanceScanner = null;
-  scannerRunning = false;
-}
-
-async function checkInWithAttendanceQR(token) {
-  try {
-    const { data, error } = await db.rpc("check_in_with_attendance_qr", {
-      p_qr_token: token
+        await reviewMember(button, {
+          user_id: userId,
+          decision: "accept",
+          assigned_post: assignedPost,
+          password: password
+        });
+      });
     });
+
+    $("pendingList").querySelectorAll(".rejectButton").forEach(button => {
+      button.addEventListener("click", async () => {
+        const row = button.closest("[data-user]");
+        if (!confirm("इस Registration को Reject करना चाहते हैं?")) return;
+
+        await reviewMember(button, {
+          user_id: row.dataset.user,
+          decision: "reject"
+        });
+      });
+    });
+  }
+
+  async function reviewMember(button, payload) {
+    setBusy(button, true, "Processing...");
+
+    try {
+      // Confirm that the caller still has an active President profile.
+      await getVerifiedPresident();
+
+      const { data, error } = await db.functions.invoke(
+        "admin-review-member",
+        { body: payload }
+      );
+
+      if (error) {
+        let detail = error.message || "Function request failed";
+        try {
+          const context = error.context;
+          if (context && typeof context.json === "function") {
+            const responseBody = await context.json();
+            detail = responseBody.error || detail;
+          }
+        } catch (_) {}
+        throw new Error(detail);
+      }
+
+      if (!data || !data.success) {
+        throw new Error(data?.error || "Application review failed");
+      }
+
+      if (payload.decision === "accept") {
+        showMessage(
+          "Member approved. Account: " +
+          (data.member?.account_number || "updated") +
+          ". यदि सदस्य लॉगिन नहीं कर पाए, तो पहले status जाँचें।"
+        );
+      } else {
+        showMessage("Registration Reject कर दिया गया।");
+      }
+
+      await loadAll();
+    } catch (error) {
+      showMessage(error.message || "Operation failed", "err");
+    } finally {
+      setBusy(button, false);
+    }
+  }
+
+  async function loadMembers() {
+    $("membersList").textContent = "Loading...";
+
+    const { data, error } = await db
+      .from("member_profiles")
+      .select("user_id,member_id,account_number,full_name,post,status")
+      .order("account_number", { ascending: true })
+      .limit(500);
+
     if (error) throw error;
 
-    const result = Array.isArray(data) ? data[0] : data;
-    attendanceMessage(
-      "attendanceCheckinMessage",
-      result?.result === "checked_in"
-        ? "Attendance marked successfully."
-        : "Check-in response received."
-    );
-    await loadAttendanceHistory();
-  } catch (err) {
-    attendanceMessage("attendanceCheckinMessage", "Check-in failed: " + err.message);
-  }
-}
-
-async function loadAttendanceHistory() {
-  const rows = $("attendanceHistoryRows");
-  rows.replaceChildren();
-
-  if (!currentUser) {
-    attendanceMessage("attendanceHistoryMessage", "Please log in first.");
-    return;
+    allMembers = data || [];
+    renderMembers();
   }
 
-  attendanceMessage("attendanceHistoryMessage", "Loading attendance history...");
+  function renderMembers() {
+    const query = $("memberSearch").value.trim().toLowerCase();
+    const status = $("memberStatus").value;
 
-  const { data, error } = await db.from("attendance_records")
-    .select("attendance_date,check_in_at,check_in,check_out,attendance_status,status,method")
-    .eq("member_user_id", currentUser.id)
-    .order("attendance_date", { ascending: false })
-    .limit(50);
+    const filtered = allMembers.filter(member => {
+      const matchesQuery = [
+        member.full_name,
+        member.account_number,
+        member.member_id,
+        member.post
+      ].some(value => String(value || "").toLowerCase().includes(query));
 
-  if (error) {
-    attendanceMessage("attendanceHistoryMessage", "History error: " + error.message);
-    return;
+      return matchesQuery &&
+        (status === "all" || member.status === status);
+    });
+
+    if (!filtered.length) {
+      $("membersList").innerHTML =
+        '<p class="muted">कोई matching member नहीं मिला।</p>';
+      return;
+    }
+
+    $("membersList").innerHTML = `
+      <div class="tablewrap">
+      <table>
+        <thead><tr>
+          <th>Account</th><th>Name</th><th>Member ID</th>
+          <th>Post</th><th>Status</th>
+        </tr></thead>
+        <tbody>
+          ${filtered.map(member => `
+            <tr>
+              <td>${escapeHTML(member.account_number)}</td>
+              <td>${escapeHTML(member.full_name)}</td>
+              <td>${escapeHTML(member.member_id)}</td>
+              <td>${escapeHTML(member.post)}</td>
+              <td>${escapeHTML(member.status)}</td>
+            </tr>
+          `).join("")}
+        </tbody>
+      </table>
+      </div>
+      <p class="muted">Showing ${filtered.length} members (maximum 500 loaded).</p>
+    `;
   }
-  if (!data?.length) {
-    attendanceMessage("attendanceHistoryMessage", "No attendance records found.");
-    return;
+
+  async function loadAll() {
+    try {
+      await getVerifiedPresident();
+      await Promise.all([loadPending(), loadMembers()]);
+    } catch (error) {
+      showMessage(error.message || "Data load failed", "err");
+    }
   }
 
-  data.forEach(item => {
-    const tr = document.createElement("tr");
-    [
-      item.attendance_date,
-      dateText(item.check_in_at || item.check_in),
-      dateText(item.check_out),
-      item.attendance_status || item.status,
-      item.method
-    ].forEach(v => addCell(tr, v));
-    rows.appendChild(tr);
+  document.querySelectorAll("[data-tab]").forEach(button => {
+    button.addEventListener("click", () => {
+      const tab = button.dataset.tab;
+      $("registrationsTab").classList.toggle(
+        "hidden", tab !== "registrations"
+      );
+      $("membersTab").classList.toggle("hidden", tab !== "members");
+
+      document.querySelectorAll("[data-tab]").forEach(item => {
+        item.classList.toggle("secondary", item !== button);
+      });
+    });
   });
-  attendanceMessage("attendanceHistoryMessage", "Attendance history loaded.");
-}
 
-$("generateAttendanceQRBtn").addEventListener("click", generateAttendanceQR);
-$("startAttendanceScannerBtn").addEventListener("click", startAttendanceScanner);
-$("stopAttendanceScannerBtn").addEventListener("click", stopAttendanceScanner);
-$("refreshAttendanceBtn").addEventListener("click", loadAttendanceHistory);
-
-/* WALLET */
-async function loadWallet() {
-  if (!currentUser) {
-    message("walletMessage", "Please log in first.");
-    return;
-  }
-  message("walletMessage", "Loading wallet...");
-  const { data, error } = await db.from("wallet_accounts")
-    .select("balance_cd,balance_inr")
-    .eq("user_id", currentUser.id)
-    .maybeSingle();
-
-  if (error) {
-    message("walletMessage", "Wallet error: " + error.message);
-    return;
-  }
-  if (!data) {
-    $("balanceCD").textContent = "—";
-    $("balanceINR").textContent = "—";
-    message("walletMessage", "No wallet record found.");
-    return;
-  }
-  $("balanceCD").textContent = money(data.balance_cd, "CD");
-  $("balanceINR").textContent = money(data.balance_inr, "INR");
-  message("walletMessage", "Wallet loaded.");
-  await loadTransactions();
-}
-
-$("transferForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  if (!currentUser) { show("login"); return; }
-  const btn = $("transferBtn");
-  btn.disabled = true;
-  message("transferMessage", "Processing transfer...");
-  try {
-    const amount = Number($("amount").value);
-    if (!Number.isFinite(amount) || amount <= 0) throw new Error("Enter a positive amount.");
-    const { data, error } = await db.rpc("transfer_wallet", {
-      p_recipient_account_number: $("recipient").value.trim(),
-      p_currency: $("currencySelect").value,
-      p_amount: amount,
-      p_description: $("description").value.trim()
-    });
-    if (error) throw error;
-    if (data?.success === false) throw new Error(data.error || "Transfer failed.");
-    message("transferMessage", "Transfer processed. Refresh history to confirm.");
-    $("transferForm").reset();
-    await loadWallet();
-  } catch (err) {
-    message("transferMessage", "Transfer failed: " + err.message);
-  } finally {
-    btn.disabled = false;
-  }
-});
-
-async function loadTransactions() {
-  if (!currentUser) return;
-  $("historyRows").replaceChildren();
-  message("historyMessage", "Loading transaction history...");
-  const { data, error } = await db.from("wallet_transactions")
-    .select("created_at,transaction_type,amount,currency,status,transaction_code")
-    .eq("user_id", currentUser.id)
-    .order("created_at", { ascending: false })
-    .limit(50);
-
-  if (error) {
-    message("historyMessage", "History error: " + error.message);
-    return;
-  }
-  if (!data?.length) {
-    message("historyMessage", "No transactions found.");
-    return;
-  }
-  $("historyMessage").textContent = "Latest transactions";
-  data.forEach(t => {
-    const tr = document.createElement("tr");
-    [dateText(t.created_at),t.transaction_type,t.amount,t.currency,t.status,t.transaction_code]
-      .forEach(v => addCell(tr, v));
-    $("historyRows").appendChild(tr);
+  $("refreshButton").addEventListener("click", async () => {
+    try {
+      await loadAll();
+      showMessage("Data refresh हो गया।");
+    } catch (error) {
+      showMessage(error.message || "Refresh failed", "err");
+    }
   });
-}
 
-/* CARD TYPES */
-async function loadCards() {
-  if (!currentUser) {
-    message("cardMessage", "Please log in to view card types.");
-    return;
-  }
-  $("cardTypes").replaceChildren();
-  message("cardMessage", "Loading card types...");
-  try {
-    const result = await invokeFunction("get-card-types");
-    const cards = Array.isArray(result?.cards) ? result.cards : [];
-    if (!cards.length) {
-      message("cardMessage", "No active card types returned.");
-      return;
-    }
-    $("cardMessage").textContent = "Purchase currency: CD · Spending and bills: INR";
-    cards.forEach(card => {
-      const box = document.createElement("div");
-      box.className = "card";
-      const h = document.createElement("h3");
-      h.textContent = card.name || card.code || "Empire Card";
-      box.appendChild(h);
+  $("logoutButton").addEventListener("click", async () => {
+    await db.auth.signOut();
+    showLogin();
+    $("loginPassword").value = "";
+    showMessage("Logout सफल रहा।");
+  });
 
-      [
-        card.purchasable ? "Purchase price: " + money(card.purchase_price_cd, "CD") : "Not available for direct purchase",
-        "Discount: " + Number(card.discount_percent || 0) + "%",
-        card.weekly_limit_inr == null ? "Weekly limit: Unlimited" : "Weekly limit: " + money(card.weekly_limit_inr, "INR"),
-        "Weekly waiver: " + money(card.weekly_waiver_inr || 0, "INR")
-      ].forEach(t => {
-        const p = document.createElement("p");
-        p.textContent = t;
-        box.appendChild(p);
-      });
+  $("memberSearch").addEventListener("input", renderMembers);
+  $("memberStatus").addEventListener("change", renderMembers);
 
-      const badge = document.createElement("span");
-      badge.className = "pill";
-      badge.textContent = card.purchasable ? "Request available" : "President discretion";
-      box.appendChild(badge);
-
-      const btn = document.createElement("button");
-      btn.style.display = "block";
-      btn.style.marginTop = "12px";
-      btn.textContent = "Request " + (card.code || "Card");
-      btn.addEventListener("click", () => requestCard(card.code, btn));
-      box.appendChild(btn);
-      $("cardTypes").appendChild(box);
-    });
-  } catch (err) {
-    message("cardMessage", "Unable to load cards: " + err.message);
-  }
-}
-
-async function requestCard(code, btn) {
-  if (!currentUser) { show("login"); return; }
-  if (!confirm("Request " + code + " Card?")) return;
-  btn.disabled = true;
-  try {
-    const result = await invokeFunction("request-member-card", { card_code: code });
-    alert(result?.message || "Request submitted. Refresh My Cards to check status.");
-    await loadMyCards();
-  } catch (err) {
-    alert("Card request failed: " + err.message);
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-async function loadMyCards() {
-  if (!currentUser) {
-    $("myCards").textContent = "Please log in first.";
-    return;
-  }
-  $("myCards").replaceChildren();
-  $("spendCard").replaceChildren(new Option("Select active card", ""));
-  try {
-    const result = await invokeFunction("get-my-cards");
-    loadedMyCards = Array.isArray(result?.cards) ? result.cards :
-      Array.isArray(result?.data) ? result.data : [];
-    if (!loadedMyCards.length) {
-      $("myCards").textContent = "No card requests or cards found.";
-      return;
-    }
-    loadedMyCards.forEach(card => {
-      const box = document.createElement("div");
-      box.className = "card";
-      const h = document.createElement("h3");
-      h.textContent = card.card_code || card.card_name || "Empire Card";
-      box.appendChild(h);
-
-      const p = document.createElement("p");
-      p.textContent = "Status: " + (card.status || "unknown") +
-        " · Payment: " + (card.payment_status || "unknown");
-      box.appendChild(p);
-
-      if (card.purchase_price_cd != null) {
-        const price = document.createElement("p");
-        price.textContent = "Price: " + money(card.purchase_price_cd, "CD");
-        box.appendChild(price);
+  // Restore an existing session, if one is available.
+  (async () => {
+    try {
+      const { data } = await db.auth.getSession();
+      if (data.session) {
+        const profile = await getVerifiedPresident();
+        showAdmin(profile);
+        await loadAll();
       }
-      if (card.status === "pending") {
-        const note = document.createElement("p");
-        note.textContent = "Awaiting review.";
-        box.appendChild(note);
-      }
-      if (card.status === "approved" && card.payment_status === "unpaid") {
-        const pay = document.createElement("button");
-        pay.textContent = "Pay Card Price in CD";
-        pay.addEventListener("click", () => payCardPrice(card.id, pay));
-        box.appendChild(pay);
-      }
-
-      $("myCards").appendChild(box);
-      if (card.status === "active" && ["paid","waived"].includes(card.payment_status)) {
-        $("spendCard").add(new Option(
-          (card.card_code || "Card") + " — " + String(card.id).slice(0,8), card.id
-        ));
-      }
-    });
-  } catch (err) {
-    $("myCards").textContent = "Unable to load cards: " + err.message;
-  }
-}
-
-async function payCardPrice(cardId, btn) {
-  if (!confirm("Pay the card purchase price from your internal CD wallet?")) return;
-  btn.disabled = true;
-  try {
-    const { data, error } = await db.rpc("pay_for_member_card", { p_card_id: cardId });
-    if (error) throw error;
-    if (data?.success === false) throw new Error(data.error || "Payment failed.");
-    alert(data?.message || "Payment processed. Refresh cards to verify.");
-    await loadWallet();
-    await loadMyCards();
-  } catch (err) {
-    alert("Card payment failed: " + err.message);
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-/* SPENDING */
-$("spendForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  if (!currentUser) { show("login"); return; }
-  const btn = $("spendBtn");
-  btn.disabled = true;
-  message("spendMessage", "Recording spending...");
-  try {
-    const amount = Number($("spendAmount").value);
-    if (!Number.isFinite(amount) || amount <= 0) throw new Error("Enter a positive INR amount.");
-    const result = await invokeFunction("record-card-spending", {
-      p_member_card_id: $("spendCard").value,
-      p_amount_inr: amount,
-      p_description: $("spendDescription").value.trim()
-    });
-    message("spendMessage", result?.message || "Spending recorded. Refresh history to confirm.");
-    $("spendForm").reset();
-    await loadMyCards();
-    await loadSpendingHistory();
-    await loadBills();
-  } catch (err) {
-    message("spendMessage", "Spending failed: " + err.message);
-  } finally {
-    btn.disabled = false;
-  }
-});
-
-async function loadSpendingHistory() {
-  const root = $("spendingHistory");
-  root.replaceChildren();
-  if (!currentUser) { root.textContent = "Please log in first."; return; }
-  try {
-    const result = await invokeFunction("get-card-spending-history");
-    const rows = Array.isArray(result?.spending) ? result.spending :
-      Array.isArray(result?.records) ? result.records :
-      Array.isArray(result?.data) ? result.data : [];
-    makeTable("spendingHistory",
-      ["Date","Amount INR","Discount %","Discount INR","Billed INR","Status","Description"],
-      rows.map(x => [
-        dateText(x.created_at),x.amount_inr,x.discount_percent,x.discount_amount_inr,
-        x.billed_amount_inr,x.spending_status,x.description
-      ])
-    );
-  } catch (err) {
-    root.textContent = "Unable to load spending history: " + err.message;
-  }
-}
-
-/* WEEKLY BILLS */
-async function loadBills() {
-  if (!currentUser) { $("billList").textContent = "Please log in first."; return; }
-  $("billList").replaceChildren();
-  $("billSelect").replaceChildren(new Option("Select bill", ""));
-  try {
-    const result = await invokeFunction("get-my-card-bills");
-    loadedBills = Array.isArray(result?.bills) ? result.bills :
-      Array.isArray(result?.data) ? result.data : [];
-    if (!loadedBills.length) {
-      $("billList").textContent = "No weekly bills found yet.";
-      return;
+    } catch (_) {
+      await db.auth.signOut();
+      showLogin();
     }
-    loadedBills.forEach(bill => {
-      const box = document.createElement("div");
-      box.className = "card";
-      const h = document.createElement("h3");
-      h.textContent = "Weekly Bill · " + (bill.week_start || "—") + " to " + (bill.week_end || "—");
-      box.appendChild(h);
-      [
-        "Gross: " + money(bill.gross_amount_inr, "INR"),
-        "Waiver: " + money(bill.waiver_amount_inr, "INR"),
-        "Payable: " + money(bill.payable_amount_inr, "INR"),
-        "Paid: " + money(bill.paid_amount_inr, "INR"),
-        "Status: " + (bill.status || "unknown")
-      ].forEach(t => {
-        const p = document.createElement("p");
-        p.textContent = t;
-        box.appendChild(p);
-      });
-      $("billList").appendChild(box);
-      if (bill.status !== "paid") {
-        $("billSelect").add(new Option(
-          `${bill.week_start}–${bill.week_end} | Due ${bill.payable_amount_inr} INR`, bill.id
-        ));
-      }
-    });
-  } catch (err) {
-    $("billList").textContent = "Unable to load bills: " + err.message;
-  }
-}
-
-$("billPaymentForm").addEventListener("submit", async e => {
-  e.preventDefault();
-  if (!currentUser) { show("login"); return; }
-  const btn = $("submitBillPaymentBtn");
-  btn.disabled = true;
-  message("billPaymentMessage", "Submitting payment for review...");
-  try {
-    const amount = Number($("billPayAmount").value);
-    if (!Number.isFinite(amount) || amount <= 0) throw new Error("Enter a positive amount.");
-    const result = await invokeFunction("submit-card-bill-payment", {
-      p_bill_id: $("billSelect").value,
-      p_amount_inr: amount,
-      p_payment_method: $("paymentMethod").value,
-      p_reference_note: $("paymentReference").value.trim()
-    });
-    message("billPaymentMessage", result?.message || "Submitted for review.");
-    $("billPaymentForm").reset();
-    await loadPaymentHistory();
-    await loadBills();
-  } catch (err) {
-    message("billPaymentMessage", "Submission failed: " + err.message);
-  } finally {
-    btn.disabled = false;
-  }
-});
-
-async function loadPaymentHistory() {
-  const root = $("paymentHistory");
-  root.replaceChildren();
-  if (!currentUser) { root.textContent = "Please log in first."; return; }
-  try {
-    const result = await invokeFunction("get-card-bill-payment-history");
-    const rows = Array.isArray(result?.payments) ? result.payments :
-      Array.isArray(result?.data) ? result.data : [];
-    makeTable("paymentHistory",
-      ["Submitted","Amount INR","Method","Status","Reference","Reviewed","Review Note"],
-      rows.map(x => [
-        dateText(x.submitted_at),x.amount_inr,x.payment_method,x.status,
-        x.reference_note,dateText(x.reviewed_at),x.review_note
-      ])
-    );
-  } catch (err) {
-    root.textContent = "Unable to load payment history: " + err.message;
-  }
-}
-
-async function loadPaymentReviews() {
-  if (!isPresident()) {
-    message("paymentReviews", "President access required.");
-    return;
-  }
-  const root = $("paymentReviews");
-  root.replaceChildren();
-  try {
-    const result = await invokeFunction("get-card-bill-payment-reviews", { p_status: "pending" });
-    const rows = Array.isArray(result?.payments) ? result.payments :
-      Array.isArray(result?.reviews) ? result.reviews :
-      Array.isArray(result?.data) ? result.data : [];
-    if (!rows.length) {
-      root.textContent = "No pending payment reviews.";
-      return;
-    }
-    rows.forEach(payment => {
-      const box = document.createElement("div");
-      box.className = "card";
-      [
-        "Payment ID: " + payment.id,
-        "Bill ID: " + payment.bill_id,
-        "Amount: " + money(payment.amount_inr, "INR"),
-        "Method: " + (payment.payment_method || "—"),
-        "Reference: " + (payment.reference_note || "—"),
-        "Status: " + (payment.status || "—")
-      ].forEach(t => {
-        const p = document.createElement("p");
-        p.textContent = t;
-        box.appendChild(p);
-      });
-      const note = document.createElement("input");
-      note.placeholder = "Optional review note";
-      note.maxLength = 200;
-      box.appendChild(note);
-
-      const verify = document.createElement("button");
-      verify.textContent = "Verify Payment";
-      verify.addEventListener("click", () => reviewBillPayment(payment.id, "verified", note.value, verify));
-      box.appendChild(verify);
-
-      const reject = document.createElement("button");
-      reject.className = "secondary";
-      reject.style.marginLeft = "8px";
-      reject.textContent = "Reject";
-      reject.addEventListener("click", () => reviewBillPayment(payment.id, "rejected", note.value, reject));
-      box.appendChild(reject);
-      root.appendChild(box);
-    });
-  } catch (err) {
-    root.textContent = "Unable to load reviews: " + err.message;
-  }
-}
-
-async function reviewBillPayment(paymentId, decision, note, btn) {
-  if (!confirm("Confirm " + decision + " for this payment?")) return;
-  btn.disabled = true;
-  try {
-    const result = await invokeFunction("review-card-bill-payment", {
-      p_payment_id: paymentId,
-      p_decision: decision,
-      p_review_note: note
-    });
-    alert(result?.message || "Review processed.");
-    await loadPaymentReviews();
-  } catch (err) {
-    alert("Review failed: " + err.message);
-  } finally {
-    btn.disabled = false;
-  }
-}
-
-/* INITIAL SESSION */
-(async function init() {
-  try {
-    const { data, error } = await db.auth.getSession();
-    if (!error && data.session) {
-      await verifyProfile();
-    } else {
-      show("home");
-    }
-  } catch (_) {
-    show("home");
-  }
+  })();
 })();
 </script>
 </body>
