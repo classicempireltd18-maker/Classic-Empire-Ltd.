@@ -1,313 +1,350 @@
+
 <!DOCTYPE html>
 <html lang="hi">
 <head>
 <meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
+<meta name="viewport" content="width=device-width,initial-scale=1">
 <meta name="theme-color" content="#ffffff">
-<title>Classic Empire Ltd. | Member Portal</title>
+<title>Classic Empire Ltd.</title>
 <script src="https://cdn.jsdelivr.net/npm/@supabase/supabase-js@2"></script>
 <style>
-:root{--bg:#f5f7fb;--panel:#fff;--ink:#172033;--muted:#667085;--gold:#b8860b;--gold2:#f4c542;--line:#e5e7eb;--green:#16794b;--red:#b42318;--blue:#175cd3;--shadow:0 8px 28px rgba(16,24,40,.07)}
-*{box-sizing:border-box}body{margin:0;background:var(--bg);color:var(--ink);font-family:Arial,Helvetica,sans-serif}button,input,select,textarea{font:inherit}button{cursor:pointer;border:0;border-radius:10px;padding:12px 16px;background:var(--gold2);color:#241b00;font-weight:700}button:disabled{opacity:.55;cursor:wait}input,select,textarea{width:100%;padding:12px;border:1px solid #d0d5dd;border-radius:10px;background:#fff;color:var(--ink);margin:6px 0}label{display:block;font-size:13px;font-weight:700;color:#344054;margin-top:10px}header{background:#fff;border-bottom:1px solid var(--line);position:sticky;top:0;z-index:5}.topbar{max-width:1200px;margin:auto;padding:12px 18px;display:flex;align-items:center;gap:14px}.logo{width:58px;height:58px;object-fit:contain;border-radius:12px}.brand{min-width:0;flex:1}.brand h1{font-size:19px;margin:0;color:#6f4e00;letter-spacing:.4px}.brand p{margin:4px 0 0;color:var(--muted);font-size:12px}.top-actions{display:flex;gap:8px;flex-wrap:wrap}.secondary{background:#eef2f6;color:#344054}.danger{background:#fee4e2;color:#912018}.outline{background:#fff;border:1px solid #d0d5dd;color:#344054}.wrap{max-width:1200px;margin:auto;padding:20px 16px 50px}.hero{background:linear-gradient(135deg,#fff 0%,#fff8dc 100%);border:1px solid #f0df9c;border-radius:22px;padding:28px;display:grid;grid-template-columns:1.5fr 1fr;gap:22px;align-items:center;box-shadow:var(--shadow)}.hero h2{font-size:clamp(25px,4vw,40px);line-height:1.12;margin:0 0 12px}.hero p{color:#475467;line-height:1.65}.hero-logo{display:flex;justify-content:center}.hero-logo img{width:min(230px,75%);max-height:210px;object-fit:contain}.actions{display:flex;gap:10px;flex-wrap:wrap;margin-top:18px}.actions button{width:auto}.section-title{margin:26px 0 12px;font-size:21px}.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(220px,1fr));gap:14px}.card{background:var(--panel);border:1px solid var(--line);border-radius:16px;padding:18px;box-shadow:var(--shadow);min-width:0}.card h3{margin:0 0 8px;font-size:17px}.muted{color:var(--muted)}.small{font-size:12px}.value{font-size:25px;font-weight:800;margin:9px 0}.pill{display:inline-block;padding:5px 9px;border-radius:999px;background:#fff3c4;color:#704f00;font-size:12px;font-weight:700}.status{display:none;white-space:pre-wrap;overflow-wrap:anywhere;padding:12px 14px;border-radius:10px;margin:12px 0}.status.ok{display:block;background:#dcfae6;color:#05603a}.status.err{display:block;background:#fee4e2;color:#912018}.hidden{display:none!important}.auth-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(290px,1fr));gap:16px;margin-top:22px}.form-card{background:#fff;border:1px solid var(--line);border-radius:16px;padding:20px;box-shadow:var(--shadow)}.form-card h2{margin:0 0 8px}.form-card button{width:100%;margin-top:12px}.dashboard-head{display:flex;align-items:center;justify-content:space-between;gap:12px;flex-wrap:wrap}.nav{display:flex;gap:8px;overflow-x:auto;padding:12px 0;margin:8px 0 16px}.nav button{white-space:nowrap;flex:0 0 auto;padding:10px 14px}.nav button.active{background:#1d2939;color:#fff}.panel{display:none}.panel.active{display:block}.two-col{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:15px}.table-wrap{overflow-x:auto}table{width:100%;border-collapse:collapse;min-width:500px}th,td{text-align:left;padding:11px;border-bottom:1px solid var(--line);font-size:14px}th{background:#f9fafb;color:#475467}footer{text-align:center;padding:24px;color:#667085;font-size:12px}.note{border:1px solid #f0df9c;background:#fffbeb;color:#7a5300;padding:12px;border-radius:10px;line-height:1.5}.hidden-public{display:none!important}@media(max-width:650px){.topbar{align-items:flex-start}.logo{width:45px;height:45px}.brand h1{font-size:15px}.top-actions button{padding:9px;font-size:12px}.hero{grid-template-columns:1fr;padding:22px}.hero-logo{order:-1;justify-content:flex-start}.hero-logo img{width:95px;height:95px}.hero h2{font-size:29px}.wrap{padding:14px 12px 35px}}
+:root{--gold:#b58a18;--line:#e8e0c8;--muted:#666;--bg:#fff}
+*{box-sizing:border-box}
+body{margin:0;background:var(--bg);color:#171717;font:16px/1.5 Arial,sans-serif}
+header{padding:16px 5%;border-bottom:1px solid var(--line);display:flex;justify-content:space-between;align-items:center;gap:12px;flex-wrap:wrap}
+.brand{font-size:20px;font-weight:bold;color:#9a7410}
+main{max-width:1000px;margin:auto;padding:24px 16px}
+.hero{padding:30px 0}
+h1{font-size:clamp(30px,6vw,48px);line-height:1.15}
+.gold{color:var(--gold)}
+.grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px}
+.panel{border:1px solid var(--line);border-radius:14px;padding:20px;background:#fff}
+label{display:block;font-weight:bold;font-size:14px;margin:12px 0 5px}
+input,select{width:100%;padding:12px;border:1px solid #ccc;border-radius:8px;background:white}
+button,.btn{display:inline-block;padding:11px 15px;border:1px solid var(--gold);border-radius:8px;background:#fff;color:#222;font-weight:bold;text-decoration:none;cursor:pointer}
+.primary{background:var(--gold);color:white}
+button:disabled{opacity:.5}
+.status{display:none;margin-top:12px;padding:12px;border-radius:8px;overflow-wrap:anywhere}
+.status.show{display:block}.error{background:#fff0ef;color:#a21d16}.success{background:#eafaf0;color:#126b38}
+.muted{color:var(--muted)}.hidden{display:none!important}
+nav{display:flex;gap:7px;overflow-x:auto;margin:16px 0}
+nav button{white-space:nowrap}
+.stat{border:1px solid var(--line);border-radius:10px;padding:14px}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(160px,1fr));gap:10px}
+table{width:100%;border-collapse:collapse;min-width:480px}
+th,td{padding:10px;border-bottom:1px solid var(--line);text-align:left}
+.tablewrap{overflow-x:auto}
+footer{text-align:center;padding:25px;color:#777;border-top:1px solid var(--line)}
 </style>
 </head>
 <body>
 <header>
-  <div class="topbar">
-    <img class="logo" src="classic-empire-logo.png" alt="Classic Empire Ltd. Logo" onerror="this.style.display='none'">
-    <div class="brand"><h1>CLASSIC EMPIRE LTD.</h1><p>Official Member Portal · Secure Internal Account Services</p></div>
-    <div class="top-actions" id="publicActions">
-      <button class="outline" onclick="goToAuth('login')">Member Login</button>
-      <button onclick="goToAuth('register')">New Registration</button>
-      <a href="admin.html" style="text-decoration:none"><button class="secondary" type="button">Admin Login</button></a>
-    </div>
-    <div class="top-actions hidden" id="memberActions">
-      <button class="secondary" id="headerLogout">Logout</button>
-    </div>
+  <div class="brand">CLASSIC EMPIRE LTD.</div>
+  <div>
+    <button onclick="showForm('login')">Member Login</button>
+    <button class="primary" onclick="showForm('register')">Registration</button>
+    <a class="btn" href="admin.html">Admin Login</a>
   </div>
 </header>
-<main class="wrap">
-  <div id="notice" class="status"></div>
 
-  <section id="publicHome">
-    <div class="hero">
-      <div>
-        <span class="pill">WELCOME TO THE EMPIRE</span>
-        <h2>One Portal. Your Empire Account.</h2>
-        <p>अपने Classic Empire Ltd. अकाउंट में सुरक्षित रूप से लॉगिन करें। लॉगिन के बाद आपको Wallet, Money Transfer, Currency Converter, Transactions और उपलब्ध Member Services एक ही जगह मिलेंगी।</p>
-        <div class="actions">
-          <button onclick="goToAuth('login')">Member Login</button>
-          <button class="outline" onclick="goToAuth('register')">Member Registration</button>
-          <a href="admin.html" style="text-decoration:none"><button class="secondary" type="button">Admin Login</button></a>
-        </div>
-        <p class="small muted">नए सदस्य का अकाउंट Admin approval के बाद Active होगा। पासवर्ड Admin approval के समय सेट करेगा।</p>
-      </div>
-      <div class="hero-logo"><img src="classic-empire-logo.png" alt="Classic Empire Ltd. Logo" onerror="this.style.display='none'"></div>
+<main>
+<section id="public">
+  <div class="hero">
+    <p class="gold"><b>MEMBER PORTAL</b></p>
+    <h1>Welcome to <span class="gold">Classic Empire Ltd.</span></h1>
+    <p class="muted">Member registration, account profile, internal wallet records and transfer services.</p>
+    <p class="muted">CD/INR balances are simulated internal application records, not real bank deposits or payments.</p>
+  </div>
+
+  <div class="grid">
+    <section class="panel" id="loginPanel">
+      <h2>Member Login</h2>
+      <form id="loginForm">
+        <label for="account">Account Number</label>
+        <input id="account" autocomplete="username" placeholder="CE000001" required>
+        <label for="password">Password</label>
+        <input id="password" type="password" autocomplete="current-password" required>
+        <p><button class="primary" id="loginBtn">Login</button></p>
+      </form>
+      <div id="loginStatus" class="status"></div>
+    </section>
+
+    <section class="panel" id="registerPanel">
+      <h2>Member Registration</h2>
+      <p class="muted">Registration में password न भरें। Approval के समय Admin password set करेगा।</p>
+      <form id="registerForm">
+        <label for="fullName">Full Name</label>
+        <input id="fullName" minlength="2" maxlength="100" required>
+        <label for="email">Email</label>
+        <input id="email" type="email" maxlength="254" required>
+        <label for="post">Requested Post</label>
+        <select id="post" required>
+          <option>Other Employees</option>
+          <option>President Assistant</option>
+          <option>DM</option>
+          <option>DM Assistant</option>
+          <option>SDM</option>
+          <option>SP</option>
+          <option>DSP</option>
+        </select>
+        <p><button class="primary" id="registerBtn">Submit Registration</button></p>
+      </form>
+      <div id="registerStatus" class="status"></div>
+    </section>
+  </div>
+</section>
+
+<section id="dashboard" class="hidden">
+  <h2 id="welcome">Member Dashboard</h2>
+  <p id="profileLine" class="muted"></p>
+  <button id="logoutBtn">Logout</button>
+  <nav>
+    <button data-page="overview">Overview</button>
+    <button data-page="wallet">My Wallet</button>
+    <button data-page="transfer">Money Transfer</button>
+    <button data-page="converter">Money Converter</button>
+    <button data-page="history">Transaction History</button>
+    <button data-page="expenses">Expenses</button>
+    <button data-page="services">Other Services</button>
+    <button data-page="profile">My Profile</button>
+  </nav>
+
+  <section class="page" id="page-overview">
+    <div class="stats">
+      <div class="stat">CD Balance<h3 id="cd1">—</h3></div>
+      <div class="stat">INR Balance<h3 id="inr1">—</h3></div>
+      <div class="stat">Status<h3 id="memberStatus">—</h3></div>
     </div>
+    <h3>Recent Transactions</h3><div id="recent"></div>
+  </section>
 
-    <div class="auth-grid" id="authArea">
-      <section class="form-card" id="loginCard">
-        <h2>Member Login</h2><p class="muted">अपने Account Number और Admin द्वारा सेट किए गए password से लॉगिन करें।</p>
-        <form id="loginForm">
-          <label>Account Number</label><input id="loginAccount" autocomplete="username" placeholder="उदाहरण: CE000001" required>
-          <label>Password</label><input id="loginPassword" type="password" autocomplete="current-password" required>
-          <button id="loginButton" type="submit">Secure Login</button>
-        </form>
-      </section>
-      <section class="form-card" id="registerCard">
-        <h2>New Member Registration</h2><p class="muted">आवेदन भेजें। पासवर्ड यहाँ नहीं बनाना है; Admin approval के समय सेट करेगा।</p>
-        <form id="registerForm">
-          <label>Full Name</label><input id="regName" autocomplete="name" maxlength="100" required>
-          <label>Email Address</label><input id="regEmail" type="email" autocomplete="email" required>
-          <label>Requested Post</label>
-          <select id="regPost" required>
-            <option value="Other Employees">Other Employees</option><option value="President Assistant">President Assistant</option><option value="DM">DM</option><option value="DM Assistant">DM Assistant</option><option value="SDM">SDM</option><option value="SP">SP</option><option value="DSP">DSP</option>
-          </select>
-          <button id="registerButton" type="submit">Submit Registration</button>
-          <p class="small muted">Registration के बाद आपका account Pending रहेगा। Active होने और password मिलने तक लॉगिन नहीं होगा।</p>
-        </form>
-      </section>
+  <section class="page hidden" id="page-wallet">
+    <div class="panel"><h3>My Wallet</h3>
+      <p>CD Balance: <b id="cd2">—</b></p>
+      <p>INR Balance: <b id="inr2">—</b></p>
+      <button id="refreshBtn">Refresh</button>
     </div>
   </section>
 
-  <section id="memberDashboard" class="hidden">
-    <div class="card dashboard-head">
-      <div><span class="pill">MEMBER DASHBOARD</span><h2 id="memberName" style="margin:9px 0 4px">Member</h2><div class="muted" id="memberMeta"></div></div>
-      <button class="secondary" id="dashboardRefresh">Refresh Data</button>
+  <section class="page hidden" id="page-transfer">
+    <div class="panel"><h3>Internal Member Transfer</h3>
+      <form id="transferForm">
+        <label for="recipient">Recipient Account Number</label><input id="recipient" required>
+        <label for="currency">Currency</label>
+        <select id="currency"><option>CD</option><option>INR</option></select>
+        <label for="amount">Amount</label><input id="amount" type="number" min="0.01" step="0.01" required>
+        <label for="description">Description</label><input id="description" maxlength="200">
+        <p><button class="primary" id="transferBtn">Submit Transfer</button></p>
+      </form>
+      <div id="transferStatus" class="status"></div>
     </div>
-    <nav class="nav" aria-label="Member navigation">
-      <button class="active" data-panel="overview">Overview</button>
-      <button data-panel="wallet">My Wallet</button>
-      <button data-panel="transfer">Money Transfer</button>
-      <button data-panel="converter">Money Converter</button>
-      <button data-panel="history">Transaction History</button>
-      <button data-panel="expenses">Expenses</button>
-      <button data-panel="services">Other Services</button>
-      <button data-panel="profile">My Profile</button>
-    </nav>
-
-    <section class="panel active" id="panel-overview">
-      <h2 class="section-title">Account Overview</h2>
-      <div class="cards">
-        <div class="card"><div class="muted">CD Balance</div><div class="value" id="overviewCD">— CD</div><div class="small muted">Internal app balance</div></div>
-        <div class="card"><div class="muted">INR Balance</div><div class="value" id="overviewINR">₹—</div><div class="small muted">Internal app balance</div></div>
-        <div class="card"><div class="muted">Account Status</div><div class="value" id="overviewStatus">Active</div><div class="small muted">Member account</div></div>
-      </div>
-      <h3 class="section-title">Quick Actions</h3>
-      <div class="cards">
-        <div class="card"><h3>Money Transfer</h3><p class="muted">दूसरे Active Member को CD या INR भेजें।</p><button onclick="showPanel('transfer')">Open Transfer</button></div>
-        <div class="card"><h3>Money Converter</h3><p class="muted">CD और INR की internal rate के अनुसार conversion देखें।</p><button onclick="showPanel('converter')">Open Converter</button></div>
-        <div class="card"><h3>Transaction History</h3><p class="muted">उपलब्ध transaction records देखें।</p><button onclick="showPanel('history')">View History</button></div>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-wallet">
-      <h2 class="section-title">My Wallet</h2>
-      <div class="cards">
-        <div class="card"><h3>CD Wallet</h3><div class="value" id="walletCD">— CD</div></div>
-        <div class="card"><h3>INR Wallet</h3><div class="value" id="walletINR">₹—</div></div>
-      </div>
-      <p class="note">ये balances Classic Empire Ltd. के internal application records हैं; इन्हें वास्तविक बैंक जमा या वास्तविक धन न समझें।</p>
-    </section>
-
-    <section class="panel" id="panel-transfer">
-      <h2 class="section-title">Money Transfer</h2>
-      <div class="two-col">
-        <div class="card"><h3>Send Money to Member</h3>
-          <form id="transferForm">
-            <label>Recipient Account Number</label><input id="recipientAccount" placeholder="उदाहरण: CE000002" required>
-            <label>Currency</label><select id="transferCurrency"><option value="CD">CD</option><option value="INR">INR (₹)</option></select>
-            <label>Amount</label><input id="transferAmount" type="number" min="0.01" step="0.01" required>
-            <label>Description (optional)</label><input id="transferDescription" maxlength="160" placeholder="Transfer note">
-            <button id="transferButton" type="submit">Confirm Transfer</button>
-          </form>
-          <p class="small muted">Transfer से पहले recipient account और amount जाँच लें।</p>
-        </div>
-        <div class="card"><h3>Transfer Guide</h3><p class="muted">1. सदस्य का Account Number भरें।<br>2. CD या INR चुनें।<br>3. Amount भरकर transfer करें।<br>4. सफल transfer के बाद wallet refresh होगा।</p><div class="note">Exchange rate: 1 CD = ₹93,600 (internal configured rate). Transfer operation आपके Supabase `transfer_wallet` RPC के नियमों पर निर्भर है।</div></div>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-converter">
-      <h2 class="section-title">Money Converter</h2>
-      <div class="two-col">
-        <div class="card"><h3>Convert Amount</h3>
-          <label>Amount</label><input id="convertAmount" type="number" min="0" step="any" value="1">
-          <label>From</label><select id="convertFrom"><option value="CD">CD</option><option value="INR">INR (₹)</option></select>
-          <label>To</label><select id="convertTo"><option value="INR">INR (₹)</option><option value="CD">CD</option></select>
-          <div class="value" id="convertResult">₹93,600.00</div><div class="muted small">Rate: 1 CD = ₹93,600</div>
-        </div>
-        <div class="card"><h3>Important</h3><p class="muted">यह converter केवल गणना दिखाता है। यह अपने-आप wallet से पैसा नहीं काटता या जमा नहीं करता। वास्तविक internal transfer के लिए Money Transfer section इस्तेमाल करें।</p></div>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-history">
-      <h2 class="section-title">Transaction History</h2>
-      <div class="card"><div id="historyList" class="muted">Login के बाद records लोड होंगे।</div></div>
-    </section>
-
-    <section class="panel" id="panel-expenses">
-      <h2 class="section-title">Expenses</h2>
-      <div class="card"><h3>Expense Records</h3><p class="muted">यहाँ आपके account से जुड़े खर्चों के records दिखाए जा सकते हैं। इस version में expense table/RPC का नाम उपलब्ध नहीं है, इसलिए कोई काल्पनिक खर्च या entry नहीं बनाई जाएगी।</p><div class="note">Expenses को पूरी तरह चालू करने के लिए आपके Supabase में expense table और उसके RLS rules / API की पुष्टि जरूरी है।</div></div>
-    </section>
-
-    <section class="panel" id="panel-services">
-      <h2 class="section-title">Other Member Services</h2>
-      <div class="cards">
-        <div class="card"><h3>Member Cards</h3><p class="muted">Member card requests और card status के लिए।</p><button class="outline" onclick="showMessage('Card service को आपके configured card APIs से जोड़ना बाकी है।','err')">Open Cards</button></div>
-        <div class="card"><h3>Notices & Updates</h3><p class="muted">Company announcements और updates।</p><button class="outline" onclick="showMessage('Notices service के table/API की पुष्टि के बाद इसे जोड़ेंगे।','err')">Open Notices</button></div>
-        <div class="card"><h3>Salary & Benefits</h3><p class="muted">उपलब्ध salary और benefits जानकारी।</p><button class="outline" onclick="showMessage('Salary service को आपके मौजूदा database API से जोड़ना बाकी है।','err')">Open Salary</button></div>
-      </div>
-    </section>
-
-    <section class="panel" id="panel-profile">
-      <h2 class="section-title">My Profile</h2>
-      <div class="card"><div class="table-wrap"><table><tbody>
-        <tr><th>Full Name</th><td id="profileName">—</td></tr>
-        <tr><th>Account Number</th><td id="profileAccount">—</td></tr>
-        <tr><th>Member ID</th><td id="profileMemberId">—</td></tr>
-        <tr><th>Post</th><td id="profilePost">—</td></tr>
-        <tr><th>Status</th><td id="profileStatus">—</td></tr>
-      </tbody></table></div></div>
-    </section>
   </section>
+
+  <section class="page hidden" id="page-converter">
+    <div class="panel"><h3>Money Converter</h3>
+      <p>Fixed internal rate: <b>1 CD = ₹93,600</b></p>
+      <label for="convertAmount">Amount</label><input id="convertAmount" type="number" min="0" value="1">
+      <label for="convertType">Conversion</label>
+      <select id="convertType"><option value="toINR">CD to INR</option><option value="toCD">INR to CD</option></select>
+      <p id="converted">₹93,600.00</p>
+    </div>
+  </section>
+
+  <section class="page hidden" id="page-history">
+    <h3>Transaction History</h3><div id="history"></div>
+  </section>
+
+  <section class="page hidden" id="page-expenses">
+    <div class="panel"><h3>Expenses</h3><p class="muted">Expense table/API जुड़ने के बाद ही वास्तविक records दिखेंगे।</p></div>
+  </section>
+
+  <section class="page hidden" id="page-services">
+    <div class="panel"><h3>Other Services</h3><p class="muted">Additional services के लिए database/API integration आवश्यक है।</p></div>
+  </section>
+
+  <section class="page hidden" id="page-profile">
+    <div class="panel"><h3>My Profile</h3><div id="profileDetails"></div></div>
+  </section>
+  <div id="dashStatus" class="status"></div>
+</section>
 </main>
-<footer>Classic Empire Ltd. · Internal application portal · CD/INR values are internal records only</footer>
+<footer>Classic Empire Ltd. · Internal application records</footer>
 
 <script>
 (() => {
 "use strict";
-  
-const SUPABASE_URL = "https://wcyozectzscqwvtzetkc.supabase.co";
-const SUPABASE_KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_N1VJZXd"
-  
-);
+
+const URL = "https://wcyozectzscqwvtzetkc.supabase.co";
+const KEY = "sb_publishable_DhKG-EwwSHa3WHMKTKfhuQ_ND1VJZXd";
 const RATE = 93600;
-const db = window.supabase.createClient(SUPABASE_URL, SUPABASE_KEY, {
+const REGISTER = URL + "/functions/v1/member-register";
+const LOGIN = URL + "/functions/v1/member-login";
+const $ = id => document.getElementById(id);
+let sb, user, profile;
+
+function message(id, text, type="error") {
+  const el=$(id); el.textContent=text; el.className="status show "+type;
+}
+function clear(id){ $(id).textContent=""; $(id).className="status"; }
+function money(n, cur) {
+  const v=Number(n||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});
+  return cur==="INR" ? "₹"+v : v+" CD";
+}
+window.showForm = which => {
+  $("loginPanel").classList.toggle("hidden",which==="register");
+  $("registerPanel").classList.toggle("hidden",which==="login");
+};
+
+if (!window.supabase || !window.supabase.createClient) {
+  message("loginStatus","Supabase library load नहीं हुई। Internet जाँचें।");
+  return;
+}
+sb=window.supabase.createClient(URL,KEY,{
   auth:{persistSession:true,autoRefreshToken:true,detectSessionInUrl:true}
 });
-const $ = id => document.getElementById(id);
-let profile = null, wallet = null;
 
-window.showMessage = function(message,type="ok"){
-  const el=$("notice");el.textContent=message;el.className="status "+type;
-  window.scrollTo({top:0,behavior:"smooth"});
-};
-window.goToAuth = function(which){
-  $("authArea").scrollIntoView({behavior:"smooth",block:"start"});
-  if(which==="register") $("regName").focus(); else $("loginAccount").focus();
-};
-window.showPanel = function(name){
-  document.querySelectorAll(".panel").forEach(p=>p.classList.remove("active"));
-  const target=$("panel-"+name);if(target)target.classList.add("active");
-  document.querySelectorAll("[data-panel]").forEach(b=>b.classList.toggle("active",b.dataset.panel===name));
-};
-function busy(button,on,label){
-  if(on){button.dataset.old=button.textContent;button.textContent=label||"Please wait...";button.disabled=true;}
-  else{button.textContent=button.dataset.old||button.textContent;button.disabled=false;}
-}
-function money(v){return Number(v||0).toLocaleString("en-IN",{minimumFractionDigits:2,maximumFractionDigits:2});}
-function showPublic(){
-  profile=null;wallet=null;$("publicHome").classList.remove("hidden");$("memberDashboard").classList.add("hidden");
-  $("publicActions").classList.remove("hidden");$("memberActions").classList.add("hidden");
-}
-function showMember(p){
-  profile=p;$("publicHome").classList.add("hidden");$("memberDashboard").classList.remove("hidden");
-  $("publicActions").classList.add("hidden");$("memberActions").classList.remove("hidden");
-  $("memberName").textContent=p.full_name||"Member";
-  $("memberMeta").textContent=(p.account_number||"")+" · "+(p.member_id||"")+" · "+(p.post||"Member");
-  $("profileName").textContent=p.full_name||"—";$("profileAccount").textContent=p.account_number||"—";
-  $("profileMemberId").textContent=p.member_id||"—";$("profilePost").textContent=p.post||"—";$("profileStatus").textContent=p.status||"—";
-  $("overviewStatus").textContent=p.status||"—";
-}
-async function getProfile(){
-  const {data:ud,error:ue}=await db.auth.getUser();if(ue||!ud.user)throw new Error("Session नहीं मिली। दोबारा लॉगिन करें।");
-  const {data,error}=await db.from("member_profiles").select("user_id,member_id,account_number,full_name,post,status").eq("user_id",ud.user.id).maybeSingle();
-  if(error)throw error;if(!data)throw new Error("Member profile नहीं मिला।");
-  if(data.status!=="active"){await db.auth.signOut();throw new Error("आपका account अभी Active नहीं है। Admin approval का इंतज़ार करें।");}
+async function postFunction(url, body) {
+  const res=await fetch(url,{
+    method:"POST",
+    headers:{"Content-Type":"application/json","apikey":KEY},
+    body:JSON.stringify(body)
+  });
+  let data={};
+  try { data=await res.json(); } catch {}
+  if(!res.ok) throw new Error((data.error||data.message||"Request failed")+" [HTTP "+res.status+"]");
   return data;
 }
-async function loadWallet(){
-  const {data,error}=await db.from("wallet_accounts").select("balance_cd,balance_inr").eq("user_id",profile.user_id).maybeSingle();
-  if(error)throw error;wallet=data||{balance_cd:0,balance_inr:0};
-  $("overviewCD").textContent=money(wallet.balance_cd)+" CD";$("walletCD").textContent=money(wallet.balance_cd)+" CD";
-  $("overviewINR").textContent="₹"+money(wallet.balance_inr);$("walletINR").textContent="₹"+money(wallet.balance_inr);
-}
-async function loadHistory(){
-  const box=$("historyList");box.textContent="Loading transactions...";
-  const {data,error}=await db.from("wallet_transactions").select("*").order("created_at",{ascending:false}).limit(50);
-  if(error){box.textContent="Transaction history अभी उपलब्ध नहीं है: "+error.message;return;}
-  if(!data||!data.length){box.textContent="अभी कोई transaction record नहीं मिला।";return;}
-  const rows=data.map(t=>{
-    const amount=t.amount??t.amount_cd??t.amount_inr??"—";
-    const currency=t.currency||t.currency_code||"";
-    const type=t.transaction_type||t.type||t.description||"Transaction";
-    const date=t.created_at?new Date(t.created_at).toLocaleString("en-IN"):"—";
-    return `<tr><td>${escapeHTML(date)}</td><td>${escapeHTML(type)}</td><td>${escapeHTML(currency)}</td><td>${escapeHTML(amount)}</td><td>${escapeHTML(t.description||"")}</td></tr>`;
-  }).join("");
-  box.innerHTML=`<div class="table-wrap"><table><thead><tr><th>Date</th><th>Type</th><th>Currency</th><th>Amount</th><th>Description</th></tr></thead><tbody>${rows}</tbody></table></div>`;
-}
-function escapeHTML(v){return String(v??"").replace(/[&<>"']/g,c=>({"&":"&amp;","<":"&lt;",">":"&gt;",'"':"&quot;","'":"&#39;"}[c]));}
-async function refreshData(){try{profile=await getProfile();showMember(profile);await Promise.all([loadWallet(),loadHistory()]);}catch(e){showMessage(e.message||"Data load failed","err");}}
-$("loginForm").addEventListener("submit",async e=>{
-  e.preventDefault();const b=$("loginButton");busy(b,true,"Logging in...");
-  try{
-    const {data,error}=await db.functions.invoke("member-login",{body:{account_number:$("loginAccount").value.trim(),password:$("loginPassword").value}});
-    if(error)throw error;if(!data||data.error)throw new Error(data?.error||"Login failed");
-    const s=data.session||data,access=s.access_token||data.access_token,refresh=s.refresh_token||data.refresh_token;
-    if(!access||!refresh)throw new Error("member-login response में access_token/refresh_token नहीं मिले।");
-    const {error:se}=await db.auth.setSession({access_token:access,refresh_token:refresh});if(se)throw se;
-    const p=await getProfile();showMember(p);await Promise.all([loadWallet(),loadHistory()]);
-    showMessage("Member login सफल रहा।");window.scrollTo({top:0,behavior:"smooth"});
-  }catch(err){showMessage(err.message||"Login failed","err");}
-  finally{busy(b,false);}
-});
+
 $("registerForm").addEventListener("submit",async e=>{
-  e.preventDefault();const b=$("registerButton");busy(b,true,"Submitting...");
+  e.preventDefault(); clear("registerStatus");
+  const btn=$("registerBtn");btn.disabled=true;btn.textContent="Submitting...";
   try{
-    const body={full_name:$("regName").value.trim(),email:$("regEmail").value.trim().toLowerCase(),requested_post:$("regPost").value};
-    if(body.full_name.length<2)throw new Error("कृपया पूरा नाम लिखें।");
-    const {data,error}=await db.functions.invoke("member-register",{body});
-    if(error){
-      let message=error.message||"Registration failed";
-      try{if(error.context&&typeof error.context.json==="function"){const x=await error.context.json();message=x.error||message;}}catch(_){}
-      throw new Error(message);
-    }
-    if(!data||data.error||data.success===false)throw new Error(data?.error||"Registration failed");
+    const data=await postFunction(REGISTER,{
+      full_name:$("fullName").value.trim(),
+      email:$("email").value.trim(),
+      requested_post:$("post").value
+    });
+    message("registerStatus",
+      (data.message||"Registration submitted.")+
+      (data.account_number?" Account Number: "+data.account_number:""),"success");
     $("registerForm").reset();
-    showMessage(data.message||"Registration request भेज दिया गया है। Admin approval और password set होने के बाद login करें।");
-  }catch(err){showMessage((err.message||"Registration failed")+"\nजाँचें कि Supabase में `member-register` Edge Function deploy है और उसके Verify JWT विकल्प OFF हैं।","err");}
-  finally{busy(b,false);}
+  }catch(err){
+    console.error("member-register:",err);
+    message("registerStatus",err.message||"Registration failed.");
+  }finally{btn.disabled=false;btn.textContent="Submit Registration";}
 });
-$("transferForm").addEventListener("submit",async e=>{
-  e.preventDefault();const b=$("transferButton");busy(b,true,"Processing transfer...");
+
+$("loginForm").addEventListener("submit",async e=>{
+  e.preventDefault();clear("loginStatus");
+  const btn=$("loginBtn");btn.disabled=true;btn.textContent="Signing in...";
   try{
-    await getProfile();
-    const recipient=$("recipientAccount").value.trim(),currency=$("transferCurrency").value,amount=Number($("transferAmount").value),description=$("transferDescription").value.trim();
-    if(!recipient)throw new Error("Recipient account number भरें।");
-    if(!Number.isFinite(amount)||amount<=0)throw new Error("Amount शून्य से अधिक होना चाहिए।");
-    if(!confirm(`${recipient} को ${amount} ${currency} transfer करना है?`))return;
-    const {data,error}=await db.rpc("transfer_wallet",{p_recipient_account_number:recipient,p_currency:currency,p_amount:amount,p_description:description||"Member transfer"});
+    const data=await postFunction(LOGIN,{
+      account_number:$("account").value.trim(),
+      password:$("password").value
+    });
+    const access=data.access_token||data.session?.access_token;
+    const refresh=data.refresh_token||data.session?.refresh_token;
+    if(!access||!refresh) throw new Error("member-login response में access_token/refresh_token नहीं हैं।");
+    const {error}=await sb.auth.setSession({access_token:access,refresh_token:refresh});
+    if(error) throw error;
+    await loadDashboard();
+  }catch(err){
+    console.error("member-login:",err);
+    message("loginStatus",err.message||"Login failed.");
+  }finally{btn.disabled=false;btn.textContent="Login";}
+});
+
+async function loadDashboard(){
+  const {data:{user:u},error:ue}=await sb.auth.getUser();
+  if(ue||!u) throw new Error("Login session verify नहीं हुई।");
+  user=u;
+  const {data:p,error}=await sb.from("member_profiles")
+    .select("user_id,member_id,account_number,full_name,post,requested_post,status,created_at")
+    .eq("user_id",u.id).maybeSingle();
+  if(error) throw new Error("Profile error: "+error.message);
+  if(!p) throw new Error("Member profile नहीं मिली। Admin से संपर्क करें।");
+  if(p.status!=="active") throw new Error("Account status: "+p.status+". Admin approval के बाद Login करें।");
+  profile=p;
+  $("public").classList.add("hidden");$("dashboard").classList.remove("hidden");
+  $("welcome").textContent="Welcome, "+(p.full_name||"Member");
+  $("profileLine").textContent=(p.account_number||"")+" · "+(p.post||"");
+  const d=$("profileDetails");d.replaceChildren();
+  [["Full name",p.full_name],["Account number",p.account_number],["Member ID",p.member_id],
+   ["Post",p.post],["Requested post",p.requested_post],["Status",p.status],["Email",u.email]]
+   .forEach(([k,v])=>{const line=document.createElement("p");line.textContent=k+": "+(v||"—");d.append(line);});
+  await refreshWallet();await refreshHistory();
+}
+async function refreshWallet(){
+  if(!user)return;
+  const {data,error}=await sb.from("wallet_accounts").select("*").eq("user_id",user.id).maybeSingle();
+  if(error){message("dashStatus","Wallet error: "+error.message);return;}
+  const cd=data?.balance_cd??0,inr=data?.balance_inr??0;
+  $("cd1").textContent=money(cd,"CD");$("cd2").textContent=money(cd,"CD");
+  $("inr1").textContent=money(inr,"INR");$("inr2").textContent=money(inr,"INR");
+  $("memberStatus").textContent=profile?.status||"—";
+}
+function renderRows(target, rows){
+  const box=$(target);box.replaceChildren();
+  if(!rows||!rows.length){box.textContent="कोई transaction record नहीं है।";return;}
+  const wrap=document.createElement("div");wrap.className="tablewrap";
+  const table=document.createElement("table"),head=document.createElement("tr");
+  ["Date","Type","Amount","Currency","Description"].forEach(v=>{const th=document.createElement("th");th.textContent=v;head.append(th);});
+  const thead=document.createElement("thead");thead.append(head);table.append(thead);
+  const body=document.createElement("tbody");
+  rows.forEach(r=>{
+    const tr=document.createElement("tr");
+    [r.created_at?new Date(r.created_at).toLocaleString("en-IN"):"—",
+     r.transaction_type||r.type||"—",r.amount==null?"—":String(r.amount),r.currency||"—",r.description||"—"]
+    .forEach(v=>{const td=document.createElement("td");td.textContent=String(v);tr.append(td);});
+    body.append(tr);
+  });
+  table.append(body);wrap.append(table);box.append(wrap);
+}
+async function refreshHistory(){
+  if(!user)return;
+  const {data,error}=await sb.from("wallet_transactions").select("*").order("created_at",{ascending:false}).limit(30);
+  if(error){$("history").textContent="History error: "+error.message;$("recent").textContent="History error: "+error.message;return;}
+  renderRows("history",data);renderRows("recent",(data||[]).slice(0,5));
+}
+$("transferForm").addEventListener("submit",async e=>{
+  e.preventDefault();clear("transferStatus");
+  const btn=$("transferBtn");btn.disabled=true;btn.textContent="Processing...";
+  try{
+    if(!user)throw new Error("पहले Login करें।");
+    const amount=Number($("amount").value);
+    if(!Number.isFinite(amount)||amount<=0)throw new Error("Positive amount भरें।");
+    const {data,error}=await sb.rpc("transfer_wallet",{
+      p_recipient_account_number:$("recipient").value.trim(),
+      p_currency:$("currency").value,
+      p_amount:amount,
+      p_description:$("description").value.trim()||null
+    });
     if(error)throw error;
-    if(data&&data.success===false)throw new Error(data.message||data.error||"Transfer failed");
-    showMessage("Transfer request पूरी हुई। Wallet और transaction history refresh किए जा रहे हैं।");
-    $("transferForm").reset();await Promise.all([loadWallet(),loadHistory()]);
-  }catch(err){showMessage(err.message||"Transfer failed","err");}
-  finally{busy(b,false);}
+    message("transferStatus",typeof data==="string"?data:"Transfer request पूरी हुई।","success");
+    $("transferForm").reset();await refreshWallet();await refreshHistory();
+  }catch(err){message("transferStatus",err.message||"Transfer failed.");}
+  finally{btn.disabled=false;btn.textContent="Submit Transfer";}
 });
 function updateConverter(){
-  const amount=Number($("convertAmount").value||0),from=$("convertFrom").value,to=$("convertTo").value;
-  let result=amount;if(from!==to)result=from==="CD"?amount*RATE:amount/RATE;
-  $("convertResult").textContent=to==="INR"?"₹"+money(result):money(result)+" CD";
+  const n=Number($("convertAmount").value||0);
+  if(!Number.isFinite(n)||n<0){$("converted").textContent="Valid amount भरें।";return;}
+  $("converted").textContent=$("convertType").value==="toINR"
+    ?money(n*RATE,"INR"):money(n/RATE,"CD");
 }
-["convertAmount","convertFrom","convertTo"].forEach(id=>$(id).addEventListener("input",updateConverter));
-$("dashboardRefresh").addEventListener("click",refreshData);
-$("headerLogout").addEventListener("click",async()=>{await db.auth.signOut();showPublic();$("loginPassword").value="";showMessage("Logout सफल रहा।");});
-document.querySelectorAll("[data-panel]").forEach(b=>b.addEventListener("click",()=>showPanel(b.dataset.panel)));
-(async()=>{
-  try{const {data}=await db.auth.getSession();if(data.session){const p=await getProfile();showMember(p);await Promise.all([loadWallet(),loadHistory()]);}}
-  catch(_){await db.auth.signOut();showPublic();}
-  updateConverter();
-})();
+$("convertAmount").addEventListener("input",updateConverter);
+$("convertType").addEventListener("change",updateConverter);
+document.querySelectorAll("[data-page]").forEach(btn=>btn.addEventListener("click",()=>{
+  document.querySelectorAll(".page").forEach(p=>p.classList.toggle("hidden",p.id!=="page-"+btn.dataset.page));
+}));
+$("refreshBtn").addEventListener("click",async()=>{await refreshWallet();await refreshHistory();});
+$("logoutBtn").addEventListener("click",async()=>{
+  await sb.auth.signOut();user=null;profile=null;
+  $("dashboard").classList.add("hidden");$("public").classList.remove("hidden");showForm("login");
+});
+sb.auth.getSession().then(async ({data,error})=>{
+  if(!error&&data.session){try{await loadDashboard();}catch(e){console.warn(e.message);await sb.auth.signOut();}}
+});
+updateConverter();
 })();
 </script>
 </body>
